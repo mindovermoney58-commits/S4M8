@@ -10,7 +10,7 @@
    Note: this is still a client-side gate. It keeps visitors out of the UI, but a
    determined person with devtools can bypass it. Fine for a personal dashboard. */
 (function () {
-  var PASSWORD_HASH = "d2365149fab433702d2fa4c34700b2d609530857092b27168d23fa003f8eb135";
+  var PASSWORD_HASH = "f3ad3f4d0263716a3df172242f7c5594853ed8baa2b53b2efe225ecd26e9b521";
   var KEY = "dash_unlocked";
   var DEVICE_KEY = "dash_device_trusted";
 
