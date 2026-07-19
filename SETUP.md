@@ -85,7 +85,7 @@ Replace the old URL/key in these files:
 1. **developer.whoop.com** → create an app.
 2. Set its **Redirect URI** to exactly: `https://your-app.vercel.app/api/whoop-callback`
    (use your real Vercel domain — add every domain you'll open the site from).
-3. Put your app's **Client ID** in [`health.html`](health.html) (`const CLIENT_ID = '...'`),
+3. Put your app's **Client ID** in [`index.html`](index.html) (`const WH_CLIENT_ID = '...'`),
    and add these in Vercel → **Settings → Environment Variables**, then redeploy:
 
 | Variable | Value |
@@ -93,7 +93,7 @@ Replace the old URL/key in these files:
 | `WHOOP_CLIENT_ID` | your WHOOP app's Client ID |
 | `WHOOP_CLIENT_SECRET` | your WHOOP app's Client Secret (**secret**) |
 
-4. Open the site at that exact domain → Health page → **Connect WHOOP**.
+4. Open the site at that exact domain → home page → Your Data panel → **Connect WHOOP**.
 
 > The callback auto-detects the domain, so you do **not** need a `WHOOP_REDIRECT_URI` env var.
 
@@ -101,9 +101,9 @@ Replace the old URL/key in these files:
 
 ## 4. Nova (AI mentor / gym coach) — optional
 
-No setup or key in the repo. Each user **pastes their own Anthropic API key** on the
-**Nova** tile; it's stored only in their browser and sent straight to Anthropic. Get a key at
-console.anthropic.com.
+No setup or key in the repo. Each user **pastes their own Anthropic API key** when the
+gym coach first asks for it; it's stored only in their browser and sent straight to Anthropic.
+Get a key at console.anthropic.com.
 
 ---
 
@@ -111,5 +111,5 @@ console.anthropic.com.
 1. Fork → import to Vercel → deploy.
 2. New Supabase → run the **SQL** above → paste your **URL + anon key** into `sync.js`,
    `topbar.js`, `gym.html`.
-3. (Optional) WHOOP: Client ID in `health.html` + the two env vars in Vercel.
+3. (Optional) WHOOP: Client ID in `index.html` + the two env vars in Vercel.
 4. Set your own password hash in `lock.js`. Done.

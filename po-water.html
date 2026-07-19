@@ -1119,7 +1119,7 @@ html, body {
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  // When embedded in health.html, the parent owns sync for the 'health'
+  // When embedded in another page, the parent owns sync for the 'health'
   // row — running our own sync here would race and wipe sibling keys.
   try { if (window.self !== window.top) return; } catch (e) { return; }
   if (typeof initCloudSync !== 'function') return;

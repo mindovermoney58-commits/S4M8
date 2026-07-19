@@ -250,20 +250,6 @@ body::after {
     </a>
 
     <!-- Small tile -->
-    <a class="tile" href="health.html" style="--accent:#A7F3D0">
-      <div class="tile-top">
-        <span class="tile-num">·03</span>
-        <span class="tile-emoji">💊</span>
-      </div>
-      <div class="tile-spacer"></div>
-      <h2 class="tile-title">Health</h2>
-      <div class="tile-foot">
-        <span class="tile-sub">Supplements & vitals</span>
-        <span class="tile-arrow">→</span>
-      </div>
-    </a>
-
-    <!-- Small tile -->
     <a class="tile" href="po-water.html" style="--accent:#60A5FA">
       <div class="tile-top">
         <span class="tile-num">·04</span>
@@ -301,20 +287,6 @@ body::after {
       <h2 class="tile-title">Caffeine</h2>
       <div class="tile-foot">
         <span class="tile-sub">Intake & timing</span>
-        <span class="tile-arrow">→</span>
-      </div>
-    </a>
-
-    <!-- Wide tile -->
-    <a class="tile wide" href="nova-lite.html" style="--accent:#A78BFA">
-      <div class="tile-top">
-        <span class="tile-num">·07</span>
-        <span class="tile-emoji">🧠</span>
-      </div>
-      <div class="tile-spacer"></div>
-      <h2 class="tile-title">Nova</h2>
-      <div class="tile-foot">
-        <span class="tile-sub">Your AI mentor</span>
         <span class="tile-arrow">→</span>
       </div>
     </a>
@@ -413,9 +385,20 @@ body::after {
   const WATER_KEY = 'po_water_v1';
   const WHOOP_KEY = 'whoop_tokens_v1';
   const SYNC_KEY  = 'whoop_last_sync';
+  const WH_CLIENT_ID = '3b9d1b01-31fb-4bd8-b18c-c7fa27deed2f';
+  const WH_REDIRECT  = window.location.origin + '/api/whoop-callback';
+  const WH_SCOPES    = 'read:recovery read:sleep read:workout read:cycles read:profile read:body_measurement offline';
 
   function loadJSON(k, f) { try { return JSON.parse(localStorage.getItem(k)) || f; } catch (e) { return f; } }
   function saveJSON(k, v) { localStorage.setItem(k, JSON.stringify(v)); }
+
+  // Returning from the WHOOP OAuth callback: capture tokens from the URL hash.
+  if (location.hash && location.hash.indexOf('whoop_access') !== -1) {
+    const h = new URLSearchParams(location.hash.slice(1));
+    const access = h.get('whoop_access'), refresh = h.get('whoop_refresh');
+    const expires = Number(h.get('whoop_expires')) || Date.now() + 3500e3;
+    if (access) { saveJSON(WHOOP_KEY, { access, refresh, expires }); history.replaceState(null, '', location.pathname + location.search); }
+  }
 
   // Mirror of topbar.js defaultWaterState so we never clobber the water tracker.
   function defaultWater() {
@@ -523,7 +506,7 @@ body::after {
     if (!t || !t.access) {
       statusEl.classList.remove('on'); txt.textContent = 'Not connected';
       syncEl.textContent = ''; $('whStats').style.display = 'none';
-      action.textContent = 'Connect on Health page';
+      action.textContent = 'Connect WHOOP';
       return;
     }
     statusEl.classList.add('on'); txt.textContent = err ? 'Connected (sync failed)' : 'Connected';
@@ -576,7 +559,15 @@ body::after {
   }
   $('whAction').addEventListener('click', () => {
     const t = loadJSON(WHOOP_KEY, null);
-    if (!t || !t.access) { window.location.href = 'health.html'; return; }
+    if (!t || !t.access) {
+      window.location.href = 'https://api.prod.whoop.com/oauth/oauth2/auth'
+        + '?client_id='    + encodeURIComponent(WH_CLIENT_ID)
+        + '&redirect_uri=' + encodeURIComponent(WH_REDIRECT)
+        + '&response_type=code'
+        + '&scope='        + encodeURIComponent(WH_SCOPES)
+        + '&state='        + Math.random().toString(36).slice(2);
+      return;
+    }
     $('whAction').textContent = 'Syncing…'; syncWhoop();
   });
 })();

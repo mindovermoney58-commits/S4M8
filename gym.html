@@ -3660,9 +3660,14 @@ img, video, canvas, svg { max-width: 100%; }
 
   async function ask(text){
     text = (text||'').trim(); if (!text || busy) return;
-    const key = savedKey();
+    let key = savedKey();
     addMsg('user', md(text));
-    if (!key){ addMsg('coach', md("Paste your **Anthropic API key** on the Nova page first (the 🧠 tile on the home screen) — it's saved in this browser and I'll use it here too.")); return; }
+    if (!key){
+      const entered = window.prompt('Paste your Anthropic API key (stored only in this browser):');
+      if (!entered || !entered.trim()){ addMsg('coach', md("I need an **Anthropic API key** to chat — tap send again when you have one.")); return; }
+      key = entered.trim();
+      try { localStorage.setItem(KEY_LS, key); } catch(e){}
+    }
     busy = true;
     const loading = addMsg('coach', '<span class="nv-dots"><i></i><i></i><i></i></span>');
     try {
