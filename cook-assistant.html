@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<script src="lock.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050506">
+<title>Что готовим</title>
+<script src="topbar.js" defer></script>
+<style>
+:root {
+  --text-primary: #FAFAFA;
+  --text-secondary: #B8B6B0;
+  --text-tertiary: #76746E;
+  --accent: #E07658;
+  --accent-soup: #6BE3A4;
+  --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: #050506;
+  color: var(--text-secondary);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+body {
+  min-height: 100vh; position: relative; overflow-x: hidden;
+  padding-bottom: 60px;
+}
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background:
+    radial-gradient(circle at 82% 10%, rgba(224,118,88,0.16), transparent 45%),
+    radial-gradient(circle at 15% 85%, rgba(107,227,164,0.07), transparent 50%);
+  filter: blur(40px); pointer-events: none; z-index: -2;
+  animation: drift 36s ease-in-out infinite alternate;
+}
+body::after {
+  content: ''; position: fixed; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.014) 1px, transparent 1px);
+  background-size: 3px 3px; pointer-events: none; z-index: -1;
+}
+@keyframes drift { 0%{transform:translate3d(0,0,0)} 100%{transform:translate3d(-22px,14px,0)} }
+
+/* ===== Header ===== */
+header{
+  padding: max(28px, env(safe-area-inset-top)) 20px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+header h1{
+  margin: 0 0 8px;
+  font-size: 28px; font-weight: 700; letter-spacing: -0.025em;
+  background: linear-gradient(180deg, #FFFFFF 0%, #C7C4BC 120%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+@media (max-width: 480px) { header h1 { font-size: 22px; } }
+header .sub{
+  color: var(--text-tertiary);
+  font-size: 13px;
+  max-width: 680px;
+  line-height: 1.5;
+}
+.stamp{
+  display: inline-block;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  color: var(--accent);
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+/* ===== Planner section ===== */
+.planner{
+  max-width: 1200px;
+  margin: 0 auto 24px;
+  padding: 0 20px;
+}
+.planner-inner{ display: flex; flex-direction: column; gap: 18px; }
+
+.targets, .breakfast-builder, .combos{
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+  padding: 20px 22px;
+}
+
+.meal-title{
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  margin: 0 0 16px;
+}
+
+.target-row{ display: flex; gap: 20px; flex-wrap: wrap; }
+.targets label, .quick-add label{
+  display: flex; flex-direction: column; gap: 7px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.targets input, .quick-add input{
+  font-family: inherit; font-size: 14px;
+  padding: 11px 13px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 11px;
+  background: rgba(0,0,0,0.3);
+  color: var(--text-primary);
+  outline: none;
+  width: 140px;
+  transition: border-color 0.2s;
+}
+.targets input:focus, .quick-add input:focus{ border-color: rgba(255,255,255,0.28); }
+
+.quick-add{ display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 16px; }
+.breakfast-total{
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: inline-block;
+}
+.breakfast-total b{ color: var(--text-primary); }
+
+.remaining{
+  max-width: 1200px;
+  margin: 0 auto 18px;
+  padding: 16px 22px;
+  border-radius: 16px;
+  background: rgba(107,227,164,0.06);
+  border: 1px solid color-mix(in srgb, var(--accent-soup) 35%, transparent);
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+.remaining b{ color: var(--accent-soup); font-size: 16px; }
+
+.combo-card{
+  position: relative;
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 16px 18px;
+  margin-bottom: 12px;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.combo-card:hover{ transform: translateY(-2px); border-color: rgba(255,255,255,0.14); }
+.combo-card.best{
+  border-color: color-mix(in srgb, var(--accent-soup) 45%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-soup) 20%, transparent) inset;
+}
+.combo-card .combo-rank{
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--accent); margin-bottom: 6px;
+}
+.combo-card .combo-meals{ font-size: 15px; color: var(--text-secondary); margin-bottom: 8px; }
+.combo-card .combo-meals span{ color: var(--text-primary); font-weight: 600; }
+.combo-nutri{
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 8px;
+  font-size: 11px; text-align: center; margin-top: 10px;
+  background: rgba(0,0,0,0.25); border-radius: 10px; padding: 10px;
+}
+.combo-nutri div b{ display: block; font-size: 15px; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.combo-diff{ font-size: 11.5px; color: var(--text-tertiary); margin-top: 8px; }
+
+/* ===== Layout ===== */
+.layout{
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+@media(max-width:820px){ .layout{ grid-template-columns:1fr; } }
+
+.pantry{
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  padding: 22px 18px;
+  position: sticky; top: 20px; align-self: start;
+  max-height: calc(100vh - 40px); overflow-y: auto;
+}
+@media(max-width:820px){ .pantry{ position: static; max-height: none; } }
+.pantry h2{
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;
+  margin: 0 0 16px; color: var(--text-tertiary);
+}
+.group{ margin-bottom: 18px; }
+.group h3{
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em;
+  color: var(--text-tertiary); margin: 0 0 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;
+}
+label.chk{
+  display: flex; align-items: center; gap: 9px;
+  padding: 5px 2px; cursor: pointer; font-size: 13.5px; color: var(--text-secondary);
+  user-select: none; border-radius: 8px; transition: background 0.12s, color 0.12s;
+}
+label.chk:hover{ background: rgba(255,255,255,0.04); color: var(--text-primary); }
+label.chk input{
+  width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer;
+}
+.reset-btn{
+  margin-top: 10px; width: 100%; padding: 11px;
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 11px;
+  background: transparent; color: var(--text-secondary);
+  font-family: inherit; font-size: 11.5px; font-weight: 700;
+  letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.reset-btn:hover{ background: rgba(255,255,255,0.06); color: var(--text-primary); }
+
+.board{ padding: 0 0 24px; }
+.board-head{
+  display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.board-head h2{
+  margin: 0; font-size: 15px; font-weight: 700; letter-spacing: -0.01em; color: var(--text-primary);
+}
+.count{ color: var(--text-tertiary); font-size: 12px; font-family: var(--font-mono); }
+
+.grid{ display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 16px; }
+.meal-section{ margin-bottom: 30px; }
+.meal-section .meal-title{
+  font-size: 13px; letter-spacing: 0.12em; color: var(--accent);
+  border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; margin: 0 0 16px;
+}
+.empty-meal{ color: var(--text-tertiary); font-size: 13px; font-style: italic; padding: 8px 0; }
+
+.soup-badge{
+  display: inline-block;
+  background: rgba(107,227,164,0.14);
+  color: var(--accent-soup);
+  font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 999px;
+  margin-left: 8px; letter-spacing: 0.03em; vertical-align: middle;
+}
+
+.card{
+  position: relative;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  backdrop-filter: blur(20px) saturate(1.15);
+  -webkit-backdrop-filter: blur(20px) saturate(1.15);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  padding: 18px 18px 16px;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.card:hover{ transform: translateY(-3px); border-color: rgba(255,255,255,0.14); }
+.card.full-match{
+  border-color: color-mix(in srgb, var(--accent-soup) 45%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-soup) 20%, transparent) inset, 0 10px 30px rgba(0,0,0,0.35);
+}
+.card.dim{ opacity: 0.35; }
+
+.card .tag-match{
+  position: absolute; top: -10px; right: 14px;
+  background: var(--accent-soup); color: #06110b;
+  font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+
+.card h3{
+  margin: 4px 0 6px; font-size: 16px; font-weight: 700; letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+.meta{ display: flex; gap: 10px; font-size: 11px; color: var(--text-tertiary); margin-bottom: 12px; flex-wrap: wrap; }
+.meta span{ border: 1px solid rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 999px; }
+
+.card .ingredients{
+  font-size: 13px; margin: 0 0 12px; padding-left: 0; list-style: none;
+}
+.card .ingredients li{ padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-secondary); }
+.card .ingredients li.have{ color: var(--accent-soup); font-weight: 600; }
+.card .ingredients li.missing{ color: var(--text-tertiary); }
+
+.steps{ font-size: 13px; margin: 0 0 14px; padding-left: 20px; color: var(--text-secondary); }
+.steps li{ margin-bottom: 5px; }
+
+.nutri{
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 6px;
+  background: rgba(0,0,0,0.25); padding: 10px; border-radius: 10px;
+  font-size: 10.5px; text-align: center;
+}
+.nutri div b{ display: block; font-size: 15px; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+.vitamins{
+  font-size: 12px; color: var(--accent-soup); margin-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px;
+}
+.vitamins b{ color: var(--text-primary); }
+
+.note{ font-size: 11.5px; color: var(--text-tertiary); margin-top: 8px; font-style: italic; line-height: 1.4; }
+
+footer{
+  text-align: center; padding: 30px 20px; color: var(--text-tertiary); font-size: 11.5px;
+  border-top: 1px solid rgba(255,255,255,0.07); max-width: 1200px; margin: 0 auto;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="stamp">Личная книга рецептов</div>
+  <h1>Что готовим</h1>
+  <div class="sub">Введи, что было на завтрак — ниже покажу, какой обед и ужин закроют дневную норму по калориям и белку. Рецепты с 🍲 — супы: минимум 2 раза в неделю, для пищеварения.</div>
+</header>
+
+<section class="planner">
+  <div class="planner-inner">
+
+    <div class="targets">
+      <h2 class="meal-title">Дневная цель</h2>
+      <div class="target-row">
+        <label>Калории <input type="number" id="targetKcal" value="2450"></label>
+        <label>Белок, г <input type="number" id="targetProtein" value="175"></label>
+      </div>
+    </div>
+
+    <div class="breakfast-builder">
+      <h2 class="meal-title">Завтрак — что съел</h2>
+      <div class="quick-add">
+        <label>Яйца, шт <input type="number" min="0" id="qEggs" value="0"></label>
+        <label>Творог, г <input type="number" min="0" step="10" id="qCottage" value="0"></label>
+        <label>Овсянка, г <input type="number" min="0" step="10" id="qOats" value="0"></label>
+        <label>Банан, шт <input type="number" min="0" id="qBanana" value="0"></label>
+      </div>
+      <div class="breakfast-total" id="breakfastTotal"></div>
+    </div>
+
+    <div class="remaining" id="remainingBox"></div>
+
+    <div class="combos">
+      <h2 class="meal-title">Обед + ужин, чтобы закрыть день</h2>
+      <div id="comboList"></div>
+    </div>
+
+  </div>
+</section>
+
+<div class="layout">
+  <aside class="pantry">
+    <h2>Обзор рецептов — что есть</h2>
+
+    <div class="group">
+      <h3>Белок</h3>
+      <label class="chk"><input type="checkbox" value="eggs"> Яйца</label>
+      <label class="chk"><input type="checkbox" value="cottage_cheese"> Творог</label>
+      <label class="chk"><input type="checkbox" value="chicken_thigh"> Куриные бёдра</label>
+      <label class="chk"><input type="checkbox" value="chicken_breast"> Куриное филе</label>
+      <label class="chk"><input type="checkbox" value="beef"> Говядина</label>
+      <label class="chk"><input type="checkbox" value="turkey"> Индейка</label>
+      <label class="chk"><input type="checkbox" value="fish"> Рыба (скумбрия/тунец)</label>
+      <label class="chk"><input type="checkbox" value="yogurt"> Греческий йогурт</label>
+      <label class="chk"><input type="checkbox" value="kefir"> Кефир</label>
+      <label class="chk"><input type="checkbox" value="cheese"> Твёрдый сыр</label>
+    </div>
+
+    <div class="group">
+      <h3>Крупы и бобовые</h3>
+      <label class="chk"><input type="checkbox" value="bulgur"> Булгур</label>
+      <label class="chk"><input type="checkbox" value="oats"> Овсянка</label>
+      <label class="chk"><input type="checkbox" value="lentils"> Чечевица</label>
+      <label class="chk"><input type="checkbox" value="rice"> Рис</label>
+      <label class="chk"><input type="checkbox" value="buckwheat"> Гречка</label>
+      <label class="chk"><input type="checkbox" value="beans"> Фасоль</label>
+      <label class="chk"><input type="checkbox" value="pearl_barley"> Перловка</label>
+      <label class="chk"><input type="checkbox" value="pasta"> Макароны</label>
+    </div>
+
+    <div class="group">
+      <h3>Овощи и грибы</h3>
+      <label class="chk"><input type="checkbox" value="mushrooms"> Шампиньоны</label>
+      <label class="chk"><input type="checkbox" value="cabbage"> Капуста</label>
+      <label class="chk"><input type="checkbox" value="carrot"> Морковь</label>
+      <label class="chk"><input type="checkbox" value="onion"> Лук</label>
+      <label class="chk"><input type="checkbox" value="cucumber"> Огурцы</label>
+      <label class="chk"><input type="checkbox" value="tomato"> Помидоры</label>
+      <label class="chk"><input type="checkbox" value="potato"> Картофель</label>
+      <label class="chk"><input type="checkbox" value="garlic"> Чеснок</label>
+      <label class="chk"><input type="checkbox" value="bell_pepper"> Болгарский перец</label>
+      <label class="chk"><input type="checkbox" value="eggplant"> Баклажан</label>
+      <label class="chk"><input type="checkbox" value="spinach"> Шпинат</label>
+      <label class="chk"><input type="checkbox" value="beet"> Свёкла</label>
+      <label class="chk"><input type="checkbox" value="green_beans"> Стручковая фасоль</label>
+      <label class="chk"><input type="checkbox" value="radish"> Редис</label>
+    </div>
+
+    <div class="group">
+      <h3>Фрукты</h3>
+      <label class="chk"><input type="checkbox" value="banana"> Банан</label>
+      <label class="chk"><input type="checkbox" value="apple"> Яблоко</label>
+      <label class="chk"><input type="checkbox" value="orange"> Апельсин</label>
+      <label class="chk"><input type="checkbox" value="watermelon"> Арбуз</label>
+      <label class="chk"><input type="checkbox" value="pear"> Груша</label>
+      <label class="chk"><input type="checkbox" value="peach"> Персик</label>
+      <label class="chk"><input type="checkbox" value="apricot"> Абрикос</label>
+      <label class="chk"><input type="checkbox" value="kiwi"> Киви</label>
+      <label class="chk"><input type="checkbox" value="pomegranate"> Гранат</label>
+      <label class="chk"><input type="checkbox" value="grapes"> Виноград</label>
+      <label class="chk"><input type="checkbox" value="melon"> Дыня</label>
+      <label class="chk"><input type="checkbox" value="plum"> Слива</label>
+    </div>
+
+    <div class="group">
+      <h3>Орехи и семена</h3>
+      <label class="chk"><input type="checkbox" value="walnut"> Грецкий орех</label>
+    </div>
+
+    <div class="group">
+      <h3>Зелень и другое</h3>
+      <label class="chk"><input type="checkbox" value="parsley"> Петрушка</label>
+      <label class="chk"><input type="checkbox" value="dill"> Укроп</label>
+      <label class="chk"><input type="checkbox" value="lemon"> Лимон</label>
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">Сбросить всё</button>
+  </aside>
+
+  <main class="board">
+    <div class="board-head">
+      <h2>Рецепты</h2>
+      <div class="count" id="countLabel">18 рецептов</div>
+    </div>
+
+    <section class="meal-section">
+      <h2 class="meal-title">Завтрак</h2>
+      <div class="grid" id="grid-breakfast"></div>
+    </section>
+
+    <section class="meal-section">
+      <h2 class="meal-title">Обед</h2>
+      <div class="grid" id="grid-lunch"></div>
+    </section>
+
+    <section class="meal-section">
+      <h2 class="meal-title">Ужин</h2>
+      <div class="grid" id="grid-dinner"></div>
+    </section>
+  </main>
+</div>
+
+<footer>
+  18 рецептов · калории и белок посчитаны на реальные граммовки продуктов · 🍲 = суп, минимум 2 раза в неделю для пищеварения · перепроверяй порции под свою цель по калориям
+</footer>
+
+<script>
+// ---- BASE FOOD UNITS (for quick breakfast builder) ----
+const BASE = {
+  egg:      {kcal:70,  protein:6,   carbs:0.5, fat:5,   unit:"шт"},
+  cottage:  {kcal:1.2, protein:0.18,carbs:0.03,fat:0.04,unit:"г"}, // per gram (120kcal/100g etc)
+  oats:     {kcal:3.7, protein:0.13,carbs:0.60,fat:0.07,unit:"г"}, // per gram
+  banana:   {kcal:90,  protein:1,   carbs:23,  fat:0,   unit:"шт(~100г)"}
+};
+
+function computeBreakfast(){
+  const eggs = parseFloat(document.getElementById('qEggs').value) || 0;
+  const cottage = parseFloat(document.getElementById('qCottage').value) || 0;
+  const oats = parseFloat(document.getElementById('qOats').value) || 0;
+  const banana = parseFloat(document.getElementById('qBanana').value) || 0;
+
+  const kcal = eggs*BASE.egg.kcal + cottage*BASE.cottage.kcal + oats*BASE.oats.kcal + banana*BASE.banana.kcal;
+  const protein = eggs*BASE.egg.protein + cottage*BASE.cottage.protein + oats*BASE.oats.protein + banana*BASE.banana.protein;
+  const carbs = eggs*BASE.egg.carbs + cottage*BASE.cottage.carbs + oats*BASE.oats.carbs + banana*BASE.banana.carbs;
+  const fat = eggs*BASE.egg.fat + cottage*BASE.cottage.fat + oats*BASE.oats.fat + banana*BASE.banana.fat;
+
+  return {kcal:Math.round(kcal), protein:Math.round(protein), carbs:Math.round(carbs), fat:Math.round(fat)};
+}
+
+function renderPlanner(){
+  const targetKcal = parseFloat(document.getElementById('targetKcal').value) || 2450;
+  const targetProtein = parseFloat(document.getElementById('targetProtein').value) || 197;
+
+  const bf = computeBreakfast();
+  document.getElementById('breakfastTotal').innerHTML =
+    `Завтрак: <b>${bf.kcal} ккал</b> · <b>${bf.protein}г</b> белка · ${bf.carbs}г углеводов · ${bf.fat}г жира`;
+
+  const remKcal = Math.round(targetKcal - bf.kcal);
+  const remProtein = Math.round(targetProtein - bf.protein);
+
+  document.getElementById('remainingBox').innerHTML =
+    `Осталось на обед и ужин: <b>${remKcal} ккал</b> и <b>${remProtein}г белка</b>`;
+
+  // Build lunch/dinner combos
+  const lunchList = recipes.filter(r=>r.meal.includes('lunch'));
+  const dinnerList = recipes.filter(r=>r.meal.includes('dinner'));
+
+  let combos = [];
+  lunchList.forEach(l=>{
+    dinnerList.forEach(d=>{
+      if(l.title === d.title) return; // don't pair identical recipe with itself
+      const kcal = l.n.kcal + d.n.kcal;
+      const protein = l.n.protein + d.n.protein;
+      const carbs = l.n.carbs + d.n.carbs;
+      const fat = l.n.fat + d.n.fat;
+      const score = Math.abs(kcal - remKcal) + Math.abs(protein - remProtein) * 4; // protein weighted heavier
+      combos.push({l, d, kcal, protein, carbs, fat, score});
+    });
+  });
+
+  combos.sort((a,b)=>a.score-b.score);
+  const top = combos.slice(0,5);
+
+  const container = document.getElementById('comboList');
+  container.innerHTML = '';
+
+  top.forEach((c, i)=>{
+    const div = document.createElement('div');
+    div.className = 'combo-card' + (i===0 ? ' best' : '');
+    const kcalDiff = c.kcal - remKcal;
+    const proteinDiff = c.protein - remProtein;
+    const soupL = c.l.soup ? ' 🍲' : '';
+    const soupD = c.d.soup ? ' 🍲' : '';
+
+    div.innerHTML = `
+      <div class="combo-rank">${i===0 ? 'Лучшее совпадение' : '№'+(i+1)}</div>
+      <div class="combo-meals">Обед: <span>${c.l.title}${soupL}</span> &nbsp;+&nbsp; Ужин: <span>${c.d.title}${soupD}</span></div>
+      <div class="combo-nutri">
+        <div><b>${c.kcal}</b>ккал</div>
+        <div><b>${c.protein}г</b>белок</div>
+        <div><b>${c.carbs}г</b>углеводы</div>
+        <div><b>${c.fat}г</b>жир</div>
+      </div>
+      <div class="combo-diff">
+        Разница с целью: ${kcalDiff>=0?'+':''}${kcalDiff} ккал, ${proteinDiff>=0?'+':''}${proteinDiff}г белка
+        (день целиком: ${bf.kcal + c.kcal} ккал, ${bf.protein + c.protein}г белка)
+      </div>
+    `;
+    container.appendChild(div);
+  });
+
+  if(top.length === 0){
+    container.innerHTML = '<div class="empty-meal">Нет подходящих рецептов обеда/ужина в списке.</div>';
+  }
+}
+
+['qEggs','qCottage','qOats','qBanana','targetKcal','targetProtein'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', renderPlanner);
+});
+
+const NAMES = {
+  eggs:"Яйца", cottage_cheese:"Творог", chicken_thigh:"Куриные бёдра", chicken_breast:"Куриное филе",
+  beef:"Говядина", bulgur:"Булгур", oats:"Овсянка", lentils:"Чечевица", rice:"Рис", buckwheat:"Гречка",
+  mushrooms:"Шампиньоны", cabbage:"Капуста", carrot:"Морковь", onion:"Лук", cucumber:"Огурцы",
+  tomato:"Помидоры", banana:"Банан", oil:"Масло", garlic:"Чеснок", salt:"Соль/специи",
+  potato:"Картофель", bell_pepper:"Болгарский перец", apple:"Яблоко", orange:"Апельсин",
+  watermelon:"Арбуз",
+  turkey:"Индейка", fish:"Рыба (скумбрия/тунец)", yogurt:"Греческий йогурт", kefir:"Кефир", cheese:"Твёрдый сыр",
+  beans:"Фасоль", pearl_barley:"Перловка", pasta:"Макароны",
+  eggplant:"Баклажан", spinach:"Шпинат", beet:"Свёкла",
+  green_beans:"Стручковая фасоль", radish:"Редис",
+  pear:"Груша", peach:"Персик", apricot:"Абрикос", kiwi:"Киви", pomegranate:"Гранат",
+  grapes:"Виноград", melon:"Дыня", plum:"Слива",
+  walnut:"Грецкий орех",
+  parsley:"Петрушка", dill:"Укроп", lemon:"Лимон"
+};
+
+const recipes = [
+  {
+    title:"Яичница с творогом",
+    time:"5 мин", servings:"1 порция", meal:["breakfast"], soup:false,
+    need:["eggs","cottage_cheese"],
+    ingredients:[["eggs","4 шт"],["cottage_cheese","100 г"],["salt","соль, перец"]],
+    steps:[
+      "Разбей яйца в миску, посоли, взбей вилкой.",
+      "Добавь творог прямо в яйца, перемешай — не растирай в пюре, пусть будут кусочки.",
+      "Вылей на разогретую сковороду на среднем огне.",
+      "Мешай лопаткой каждые 20–30 секунд, пока не схватится, 3–4 минуты.",
+      "Сними с огня чуть раньше, чем кажется готовым — дойдёт от своего тепла."
+    ],
+    n:{kcal:400, protein:42, carbs:5, fat:24},
+    vitamins:"B12, витамин D, кальций, селен",
+    note:"Быстрый плотный завтрак. Масло можно не добавлять — творог сам не даёт прилипать."
+  },
+  {
+    title:"Творожно-яичная запеканка",
+    time:"35 мин", servings:"2 порции", meal:["breakfast"], soup:false,
+    need:["eggs","cottage_cheese"],
+    ingredients:[["eggs","6 шт"],["cottage_cheese","300 г"],["salt","соль"]],
+    steps:[
+      "Духовку разогреть до 190°C.",
+      "Смешай в миске яйца, творог и соль до однородности (можно венчиком или блендером).",
+      "Вылей в форму для запекания, смазанную маслом.",
+      "Запекай 25–30 минут, пока середина не станет плотной.",
+      "Дай остыть 5 минут перед тем как резать — так не развалится."
+    ],
+    n:{kcal:390, protein:45, carbs:6, fat:21},
+    vitamins:"B12, витамин D, кальций",
+    note:"Готовится один раз — ешь несколько дней. Хранится в холодильнике до 4 дней."
+  },
+  {
+    title:"Творожно-яичный салат",
+    time:"12 мин", servings:"1 порция", meal:["breakfast"], soup:false,
+    need:["eggs","cottage_cheese"],
+    ingredients:[["eggs","4 шт"],["cottage_cheese","100 г"],["salt","соль, зелень"]],
+    steps:[
+      "Свари яйца вкрутую — 8–10 минут в кипящей воде.",
+      "Остуди под холодной водой, почисти.",
+      "Разомни яйца вилкой в миске.",
+      "Добавь творог и зелень, перемешай.",
+      "Посоли и ешь — можно с хлебом или отдельно."
+    ],
+    n:{kcal:400, protein:42, carbs:5, fat:24},
+    vitamins:"B12, витамин D, кальций",
+    note:"Хорошо взять с собой — не течёт, ест удобно."
+  },
+  {
+    title:"Овсянка с бананом",
+    time:"10 мин", servings:"1 порция", meal:["breakfast"], soup:false,
+    need:["oats","banana"],
+    ingredients:[["oats","80 г"],["banana","1 шт"],["salt","щепотка соли"]],
+    steps:[
+      "Залей овсянку водой в пропорции 1 к 3.",
+      "Доведи до кипения на среднем огне, помешивая.",
+      "Убавь огонь до минимума, вари 5–7 минут.",
+      "Сними с огня, дай постоять под крышкой 3 минуты.",
+      "Нарежь банан сверху перед подачей."
+    ],
+    n:{kcal:404, protein:12, carbs:76, fat:5.5},
+    vitamins:"калий, магний, B6, клетчатка",
+    note:"Банан вместо сахара — сладко и без пустых калорий."
+  },
+  {
+    title:"Овсяноблин",
+    time:"10 мин", servings:"1 порция", meal:["breakfast"], soup:false,
+    need:["oats","eggs"],
+    ingredients:[["oats","50 г (измельчить в блендере)"],["eggs","2 шт"],["salt","щепотка соли"]],
+    steps:[
+      "Измельчи овсянку в блендере до состояния муки (или возьми овсяную муку).",
+      "Смешай овсяную муку с яйцами и солью до однородного теста.",
+      "Вылей на разогретую сковороду тонким слоем.",
+      "Жарь 2–3 минуты на среднем огне, переверни.",
+      "Жарь ещё 2 минуты с другой стороны."
+    ],
+    n:{kcal:325, protein:18.5, carbs:31, fat:13.5},
+    vitamins:"B12, B6, магний, клетчатка",
+    note:"Как блин, но много белка. Можно свернуть с творогом внутрь."
+  },
+  {
+    title:"Творог с бананом",
+    time:"2 мин", servings:"1 порция", meal:["breakfast","dinner"], soup:false,
+    need:["cottage_cheese","banana"],
+    ingredients:[["cottage_cheese","200 г"],["banana","1 шт"]],
+    steps:[
+      "Выложи творог в миску.",
+      "Нарежь банан сверху кружочками.",
+      "Готово — есть сразу."
+    ],
+    n:{kcal:348, protein:36, carbs:34, fat:8},
+    vitamins:"кальций, калий, B6",
+    note:"Быстрый перекус или ужин без готовки. Хорошо перед сном — казеин из творога усваивается медленно."
+  },
+  {
+    title:"Яйца варёные",
+    time:"10 мин", servings:"1 порция", meal:["breakfast"], soup:false,
+    need:["eggs"],
+    ingredients:[["eggs","4 шт"],["salt","соль"]],
+    steps:[
+      "Положи яйца в кастрюлю, залей холодной водой чтобы покрыло.",
+      "Доведи до кипения.",
+      "Вари 8–9 минут для сваренного вкрутую желтка.",
+      "Слей горячую воду, залей холодной — так легче чистить."
+    ],
+    n:{kcal:280, protein:24, carbs:2, fat:20},
+    vitamins:"B12, витамин D, холин",
+    note:"База для салатов, перекуса или добавки к любому приёму пищи."
+  },
+  {
+    title:"Куриные бёдра с булгуром (одна сковорода)",
+    time:"40 мин", servings:"1 порция", meal:["lunch"], soup:false,
+    need:["chicken_thigh","bulgur"],
+    ingredients:[["chicken_thigh","300 г"],["bulgur","100 г сухого"],["onion","1 шт"],["garlic","2 зубчика"],["oil","1 ст.л."],["salt","соль, паприка, перец"]],
+    steps:[
+      "Нарежь лук и чеснок мелко.",
+      "На сковороде разогрей масло, обжарь бёдра с двух сторон по 4–5 минут до золотистой корочки.",
+      "Убери курицу на тарелку.",
+      "В той же сковороде обжарь лук и чеснок 2 минуты.",
+      "Добавь булгур, перемешай 1 минуту.",
+      "Верни курицу сверху, залей водой чтобы покрыло булгур на 1 см.",
+      "Накрой крышкой, убавь огонь, готовь 15–20 минут пока вода не впитается."
+    ],
+    n:{kcal:972, protein:72, carbs:76, fat:41},
+    vitamins:"железо, цинк, магний, B-группа",
+    note:"Полноценный основной приём пищи — по граммовкам как твой обычный обед."
+  },
+  {
+    title:"Куриное филе с грибами",
+    time:"25 мин", servings:"1 порция", meal:["lunch","dinner"], soup:false,
+    need:["chicken_breast","mushrooms"],
+    ingredients:[["chicken_breast","250 г"],["mushrooms","200 г"],["garlic","2 зубчика"],["oil","0.5 ст.л."],["salt","соль, перец"]],
+    steps:[
+      "Нарежь филе на плоские куски примерно 1.5 см толщиной.",
+      "Обжарь филе на среднем огне по 4–5 минут с каждой стороны до готовности, убери на тарелку.",
+      "На той же сковороде обжарь нарезанные грибы 5–7 минут без крышки, пока не выпарится вода и не подрумянятся.",
+      "Добавь чеснок, готовь ещё 1 минуту.",
+      "Верни филе в сковороду, прогрей вместе 2 минуты."
+    ],
+    n:{kcal:501, protein:84, carbs:6, fat:15},
+    vitamins:"витамин D, селен, калий, B-группа",
+    note:"Много белка, мало углеводов — хорошо на сушке. Подавай с булгуром или гречкой отдельно."
+  },
+  {
+    title:"Булгур с грибами",
+    time:"30 мин", servings:"1 порция (гарнир)", meal:["lunch"], soup:false,
+    need:["bulgur","mushrooms"],
+    ingredients:[["bulgur","80 г сухого"],["mushrooms","150 г"],["onion","0.5 шт"],["oil","1 ст.л."],["salt","соль, перец"]],
+    steps:[
+      "Разогрей масло в кастрюле, обжарь лук 3 минуты.",
+      "Добавь нарезанные грибы, готовь 5–7 минут пока не подрумянятся.",
+      "Всыпь булгур, перемешай 1 минуту.",
+      "Залей водой (в 2 раза больше объёма булгура), посоли.",
+      "Накрой крышкой, готовь на слабом огне 15 минут пока вода не впитается."
+    ],
+    n:{kcal:417, protein:14, carbs:68, fat:11},
+    vitamins:"витамин D, магний, клетчатка",
+    note:"Гарнир к любому мясу. Можно есть и отдельно как самостоятельное блюдо."
+  },
+  {
+    title:"Гречка с курицей",
+    time:"35 мин", servings:"1 порция", meal:["lunch","dinner"], soup:false,
+    need:["buckwheat","chicken_thigh"],
+    ingredients:[["buckwheat","80 г сухой"],["chicken_thigh","250 г"],["onion","0.5 шт"],["carrot","0.5 шт"],["oil","1 ст.л."]],
+    steps:[
+      "Обжарь бёдра на масле по 4–5 минут с каждой стороны, убери на тарелку.",
+      "В той же сковороде обжарь лук и морковь 3 минуты.",
+      "Добавь гречку, перемешай 1 минуту.",
+      "Залей водой (в 2 раза больше объёма гречки), посоли.",
+      "Верни курицу сверху, накрой крышкой, готовь 15 минут на слабом огне."
+    ],
+    n:{kcal:784, protein:60, carbs:65, fat:27},
+    vitamins:"железо, магний, витамин A, B-группа",
+    note:"Классика — просто и сытно, ничего лишнего."
+  },
+  {
+    title:"Рис с курицей и овощами",
+    time:"35 мин", servings:"1 порция", meal:["lunch","dinner"], soup:false,
+    need:["rice","chicken_thigh"],
+    ingredients:[["rice","80 г сухого"],["chicken_thigh","250 г"],["onion","0.5 шт"],["carrot","0.5 шт"],["oil","1 ст.л."]],
+    steps:[
+      "Обжарь бёдра на масле по 4–5 минут с каждой стороны, убери на тарелку.",
+      "В той же сковороде обжарь лук и морковь 3 минуты.",
+      "Добавь рис, перемешай 1 минуту.",
+      "Залей водой (в 1.5–2 раза больше объёма риса), посоли.",
+      "Верни курицу сверху, накрой крышкой, готовь 15–18 минут на слабом огне."
+    ],
+    n:{kcal:888, protein:56, carbs:66, fat:36},
+    vitamins:"витамин A, B-группа",
+    note:"Похоже на плов, но проще. Рис впитывает сок от курицы — вкуснее, чем варить отдельно."
+  },
+  {
+    title:"Чечевичный суп с морковью",
+    time:"35 мин", servings:"2 порции", meal:["lunch","dinner"], soup:true,
+    need:["lentils","carrot"],
+    ingredients:[["lentils","100 г сухой красной чечевицы"],["carrot","100 г"],["onion","50 г"],["oil","1 ст.л."],["salt","соль, куркума, паприка"]],
+    steps:[
+      "Мелко нарежь лук и морковь.",
+      "Обжарь их в кастрюле на масле 5 минут до мягкости.",
+      "Добавь специи, помешай 30 секунд.",
+      "Всыпь чечевицу, залей водой (примерно 700 мл).",
+      "Доведи до кипения, убавь огонь, вари 15–18 минут пока чечевица не станет мягкой.",
+      "Посоли по вкусу в конце."
+    ],
+    n:{kcal:250, protein:13, carbs:36, fat:5.5},
+    vitamins:"железо, фолиевая кислота, витамин A, клетчатка",
+    note:"Указано на порцию (суп делится на 2). Чечевица не требует замачивания — варится быстро. Один из твоих 2 супов в неделю."
+  },
+  {
+    title:"Грибной суп с гречкой",
+    time:"30 мин", servings:"2 порции", meal:["lunch","dinner"], soup:true,
+    need:["mushrooms","buckwheat"],
+    ingredients:[["mushrooms","200 г"],["buckwheat","50 г сухой"],["onion","0.5 шт"],["carrot","0.5 шт"],["salt","соль, лавровый лист"]],
+    steps:[
+      "Нарежь грибы, лук и морковь.",
+      "Обжарь лук и морковь в кастрюле 3 минуты.",
+      "Добавь грибы, готовь ещё 5 минут пока не выпарится вода.",
+      "Залей водой (примерно 700 мл), доведи до кипения.",
+      "Добавь гречку, посоли, вари 15 минут на слабом огне."
+    ],
+    n:{kcal:275, protein:13, carbs:46, fat:3},
+    vitamins:"витамин D, магний, B-группа",
+    note:"Указано на порцию (суп делится на 2). Лёгкий, но сытный за счёт гречки. Один из твоих 2 супов в неделю."
+  },
+  {
+    title:"Куриный суп с рисом и овощами",
+    time:"45 мин", servings:"2–3 порции", meal:["lunch","dinner"], soup:true,
+    need:["chicken_thigh","rice","carrot"],
+    ingredients:[["chicken_thigh","300 г"],["rice","60 г сухого"],["carrot","1 шт"],["onion","1 шт"],["salt","соль, лавровый лист, перец"]],
+    steps:[
+      "Положи бёдра в кастрюлю, залей холодной водой (примерно 1.5 л), доведи до кипения.",
+      "Сними пену, убавь огонь, вари 20 минут.",
+      "Добавь нарезанные морковь и лук, вари 10 минут.",
+      "Добавь рис, посоли, вари ещё 12–15 минут пока рис не станет мягким.",
+      "Дай настояться под крышкой 5 минут перед подачей."
+    ],
+    n:{kcal:826, protein:66, carbs:50, fat:32},
+    vitamins:"витамин A, B-группа",
+    note:"Указано на весь объём (делится на 2–3 порции). Хорошо стоит в холодильнике 3–4 дня. Один из твоих 2 супов в неделю."
+  },
+  {
+    title:"Куриные бёдра тушёные с капустой",
+    time:"40 мин", servings:"1 порция", meal:["dinner"], soup:false,
+    need:["chicken_thigh","cabbage"],
+    ingredients:[["chicken_thigh","300 г"],["cabbage","300 г"],["onion","0.5 шт"],["oil","1 ст.л."],["salt","соль, перец, лавровый лист"]],
+    steps:[
+      "Обжарь бёдра на масле по 4 минуты с каждой стороны до корочки.",
+      "Добавь нарезанный лук, обжарь 2 минуты.",
+      "Добавь нашинкованную капусту, перемешай.",
+      "Влей полстакана воды, накрой крышкой.",
+      "Туши на слабом огне 20–25 минут, изредка помешивая."
+    ],
+    n:{kcal:725, protein:61, carbs:20, fat:40},
+    vitamins:"витамин C, витамин K, B-группа",
+    note:"Капуста почти не добавляет калорий, но даёт объём — насыщает сильнее."
+  },
+  {
+    title:"Говядина тушёная с луком и морковью",
+    time:"50 мин", servings:"1 порция", meal:["dinner"], soup:false,
+    need:["beef","onion","carrot"],
+    ingredients:[["beef","300 г, кусками"],["onion","1 шт"],["carrot","1 шт"],["oil","1 ст.л."],["salt","соль, перец, лавровый лист"]],
+    steps:[
+      "Нарежь говядину кусками среднего размера.",
+      "Обжарь на сильном огне до корочки со всех сторон, 5–7 минут.",
+      "Добавь нарезанные лук и морковь, обжарь 3 минуты.",
+      "Залей водой чтобы почти покрыло мясо.",
+      "Накрой крышкой, туши на слабом огне 35–40 минут пока мясо не станет мягким."
+    ],
+    n:{kcal:831, protein:78, carbs:20, fat:46},
+    vitamins:"железо, цинк, B12, витамин A",
+    note:"Если мясо жёсткое после часа тушения — добавь ещё воды и туши дольше, оно смягчится."
+  },
+  {
+    title:"Салат из огурцов и помидоров",
+    time:"7 мин", servings:"1 порция", meal:["lunch","dinner"], soup:false,
+    need:["cucumber","tomato"],
+    ingredients:[["cucumber","150 г"],["tomato","150 г"],["onion","немного, по желанию"],["oil","чуть-чуть"],["salt","соль"]],
+    steps:[
+      "Нарежь огурцы и помидоры кубиками или дольками.",
+      "Добавь тонко нарезанный лук, если хочешь остроты.",
+      "Посоли, сбрызни маслом.",
+      "Перемешай и сразу подавай — не даёт сока при хранении."
+    ],
+    n:{kcal:60, protein:2, carbs:10, fat:2},
+    vitamins:"витамин C, калий",
+    note:"Лёгкий гарнир к любому мясу или крупе. Почти не влияет на калорийность дня."
+  },
+  {
+    title:"Скумбрия со шпинатом на пару",
+    time:"20 мин", servings:"1 порция", meal:["lunch","dinner"], soup:false,
+    need:["fish","spinach"],
+    ingredients:[["fish","250 г скумбрии"],["spinach","200 г"],["lemon","половина"],["oil","0.5 ст.л."],["salt","соль, перец"]],
+    steps:[
+      "Посоли и поперчи рыбу, сбрызни лимонным соком.",
+      "Готовь на пару или в сковороде под крышкой на слабом огне 10–12 минут до готовности.",
+      "На отдельной сковороде обжарь шпинат на масле 2–3 минуты, пока не осядет.",
+      "Посоли шпинат, подавай вместе с рыбой."
+    ],
+    n:{kcal:603, protein:51, carbs:5, fat:40},
+    vitamins:"омега-3, витамин D, железо, фолиевая кислота",
+    note:"Единственный источник омега-3 в твоём рационе — старайся ставить это блюдо в план хотя бы раз в неделю."
+  },
+  {
+    title:"Свекольный салат с грецким орехом",
+    time:"15 мин (плюс варка свёклы)", servings:"1 порция", meal:["lunch","dinner"], soup:false,
+    need:["beet","walnut"],
+    ingredients:[["beet","200 г отварной"],["walnut","20 г"],["garlic","1 зубчик"],["oil","0.5 ст.л."],["salt","соль"]],
+    steps:[
+      "Свари свёклу заранее (40–50 минут) или используй уже отварную.",
+      "Натри свёклу на крупной тёрке или нарежь кубиками.",
+      "Раздави чеснок, добавь к свёкле.",
+      "Посыпь измельчённым грецким орехом.",
+      "Посоли, сбрызни маслом, перемешай."
+    ],
+    n:{kcal:262, protein:4, carbs:20, fat:18},
+    vitamins:"фолиевая кислота, марганец, витамин K, омега-3",
+    note:"Хороший гарнир для разнообразия — свёкла редко присутствует в обычном рационе."
+  },
+  {
+    title:"Йогурт с орехами и яблоком",
+    time:"3 мин", servings:"1 порция", meal:["breakfast"], soup:false,
+    need:["yogurt","walnut","apple"],
+    ingredients:[["yogurt","200 г греческого"],["walnut","20 г"],["apple","1 шт"]],
+    steps:[
+      "Нарежь яблоко небольшими кубиками.",
+      "Выложи йогурт в миску.",
+      "Добавь яблоко и измельчённый грецкий орех сверху.",
+      "Перемешай и ешь сразу."
+    ],
+    n:{kcal:331, protein:10, carbs:30, fat:19},
+    vitamins:"кальций, витамин E, омега-3, витамин C",
+    note:"Быстрый завтрак без готовки — хорош для смены рутины от яиц и творога."
+  },
+  {
+    title:"Гречка с грибами и шпинатом",
+    time:"30 мин", servings:"1 порция (гарнир)", meal:["lunch"], soup:false,
+    need:["buckwheat","mushrooms","spinach"],
+    ingredients:[["buckwheat","80 г сухой"],["mushrooms","150 г"],["spinach","100 г"],["onion","0.5 шт"],["oil","1 ст.л."],["salt","соль, перец"]],
+    steps:[
+      "Обжарь лук на масле 2 минуты.",
+      "Добавь нарезанные грибы, готовь 5–7 минут пока не подрумянятся.",
+      "Всыпь гречку, перемешай 1 минуту, залей водой (в 2 раза больше объёма гречки).",
+      "Накрой крышкой, вари 15 минут на слабом огне.",
+      "За 2 минуты до готовности добавь шпинат, перемешай."
+    ],
+    n:{kcal:350, protein:18, carbs:62, fat:2},
+    vitamins:"витамин D, железо, магний, витамин K",
+    note:"Вегетарианский гарнир, но с приличным белком за счёт грибов и гречки вместе."
+  }
+];
+
+const grids = {
+  breakfast: document.getElementById('grid-breakfast'),
+  lunch: document.getElementById('grid-lunch'),
+  dinner: document.getElementById('grid-dinner')
+};
+const countLabel = document.getElementById('countLabel');
+
+function buildCard(r, checked, showAll){
+  const matches = r.need.filter(n=>checked.includes(n)).length;
+  const full = matches === r.need.length && r.need.length>0;
+
+  const card = document.createElement('div');
+  card.className = 'card' + (full && !showAll ? ' full-match' : '') + (!showAll && matches===0 ? ' dim' : '');
+
+  let badge = '';
+  if(!showAll && full) badge = '<div class="tag-match">Есть всё</div>';
+  else if(!showAll && matches>0) badge = '<div class="tag-match" style="background:#a8552e;">Частично</div>';
+
+  const ingHtml = r.ingredients.map(([key,amount])=>{
+    const have = checked.includes(key);
+    const cls = showAll ? '' : (have ? 'have' : (r.need.includes(key) ? 'missing' : ''));
+    return `<li class="${cls}">${NAMES[key] || key} — ${amount}</li>`;
+  }).join('');
+
+  const stepsHtml = r.steps.map(s=>`<li>${s}</li>`).join('');
+  const soupTag = r.soup ? '<span class="soup-badge">🍲 суп</span>' : '';
+
+  card.innerHTML = `
+    ${badge}
+    <h3>${r.title}${soupTag}</h3>
+    <div class="meta"><span>${r.time}</span><span>${r.servings}</span></div>
+    <ul class="ingredients">${ingHtml}</ul>
+    <ol class="steps">${stepsHtml}</ol>
+    <div class="nutri">
+      <div><b>${r.n.kcal}</b>ккал</div>
+      <div><b>${r.n.protein}г</b>белок</div>
+      <div><b>${r.n.carbs}г</b>углеводы</div>
+      <div><b>${r.n.fat}г</b>жир</div>
+    </div>
+    <div class="vitamins"><b>Витамины/минералы:</b> ${r.vitamins}</div>
+    <div class="note">${r.note}</div>
+  `;
+  return {card, matches};
+}
+
+function render(){
+  const checked = Array.from(document.querySelectorAll('.pantry input:checked')).map(c=>c.value);
+  const showAll = checked.length === 0;
+  let totalShown = 0;
+
+  ['breakfast','lunch','dinner'].forEach(mealKey=>{
+    const container = grids[mealKey];
+    container.innerHTML = '';
+
+    const inMeal = recipes.filter(r=>r.meal.includes(mealKey));
+    const scored = inMeal.map(r=>{
+      const matches = r.need.filter(n=>checked.includes(n)).length;
+      return {r, matches};
+    }).sort((a,b)=>b.matches-a.matches);
+
+    let shownInSection = 0;
+    scored.forEach(({r, matches})=>{
+      const relevant = showAll || matches > 0;
+      if(!relevant) return;
+      const {card} = buildCard(r, checked, showAll);
+      container.appendChild(card);
+      shownInSection++;
+      totalShown++;
+    });
+
+    if(shownInSection === 0){
+      const empty = document.createElement('div');
+      empty.className = 'empty-meal';
+      empty.textContent = 'Ничего не подходит из отмеченного — попробуй отметить больше продуктов.';
+      container.appendChild(empty);
+    }
+  });
+
+  countLabel.textContent = totalShown + (totalShown===1?' рецепт':' рецептов');
+}
+
+document.querySelectorAll('.pantry input').forEach(el=>{
+  el.addEventListener('change', render);
+});
+
+function resetAll(){
+  document.querySelectorAll('.pantry input').forEach(el=>el.checked=false);
+  render();
+}
+
+render();
+renderPlanner();
+</script>
+</body>
+</html>

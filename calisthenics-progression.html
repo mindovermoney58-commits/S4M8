@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="lock.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0b">
+<title>Calisthenics Progression Coach</title>
+<script src="topbar.js" defer></script>
+
+<!-- =============================================================
+     EDIT THIS BLOCK TO MAKE THE APP YOURS.
+     Skills, groups, targets, and the weekly program all live here.
+     Everything else (logs, records, mastered checkmarks) is saved
+     to this browser's local storage.
+     ============================================================= -->
+<script>
+const CONFIG = {
+  appTitle: "Calisthenics Progression Coach",
+
+  // Skill groups, in display order.
+  groups: [
+    { id: "push",    name: "Vertical Push" },
+    { id: "flpull",  name: "Horizontal Pull (Front Lever)" },
+    { id: "vpull",   name: "Vertical Pull" },
+    { id: "core",    name: "Core / Spine" },
+    { id: "lateral", name: "Lateral Strength" },
+    { id: "dips",    name: "Push / Dips" },
+    { id: "hswalk",  name: "Handstand Walking \u2192 OAHS" }
+  ],
+
+  // Each skill:
+  //   name    — display name
+  //   group   — one of the group ids above
+  //   type    — "reps" | "hold" | "steps" | "milestone" (no numeric log, just done/not)
+  //   target  — the number that counts as "mastered" for this skill (ignored for milestone)
+  //   unit    — label shown next to numbers ("reps", "sec", "steps")
+  //   mastered — starting state (true = already achieved before using the app)
+  //   current  — starting record, if any progress already exists
+  skills: [
+    // Vertical Push
+    { id:"pushup",     name:"Push-up",                    group:"push", type:"milestone", mastered:true },
+    { id:"pike",       name:"Pike push-up",                group:"push", type:"milestone", mastered:true },
+    { id:"elevpike",   name:"Elevated pike push-up",       group:"push", type:"milestone", mastered:true },
+    { id:"wallhspu",   name:"Wall HSPU",                   group:"push", type:"milestone", mastered:true },
+    { id:"fshspu",     name:"Freestanding HSPU",           group:"push", type:"reps", unit:"reps", target:15, current:12, mastered:false },
+    { id:"presshs",    name:"Press to handstand",          group:"push", type:"milestone", mastered:true },
+    { id:"barhspu",    name:"Parallel bar HSPU",            group:"push", type:"reps", unit:"reps", target:10, current:2, mastered:false },
+    { id:"whspu",      name:"Weighted HSPU",                group:"push", type:"reps", unit:"reps", target:10, current:0, mastered:false },
+    { id:"oahandstand",name:"One arm handstand",           group:"push", type:"hold", unit:"sec", target:10, current:0, mastered:false },
+    { id:"tuckplanche",name:"Tuck planche",                group:"push", type:"hold", unit:"sec", target:15, current:0, mastered:false },
+    { id:"advtuckplanche", name:"Advanced tuck planche",   group:"push", type:"hold", unit:"sec", target:15, current:0, mastered:false },
+    { id:"straddleplanche", name:"Straddle planche",       group:"push", type:"hold", unit:"sec", target:10, current:0, mastered:false },
+    { id:"fullplanche",name:"Full planche",                group:"push", type:"hold", unit:"sec", target:10, current:0, mastered:false },
+    { id:"plancheup",  name:"Planche push-up",             group:"push", type:"reps", unit:"reps", target:5, current:0, mastered:false },
+    { id:"maltese",    name:"Maltese",                     group:"push", type:"hold", unit:"sec", target:5, current:0, mastered:false },
+
+    // Horizontal Pull / Front Lever
+    { id:"tuckfl",     name:"Tuck front lever",            group:"flpull", type:"milestone", mastered:true },
+    { id:"advtuckfl",  name:"Advanced tuck front lever",   group:"flpull", type:"milestone", mastered:true },
+    { id:"slfl",       name:"Single leg front lever",      group:"flpull", type:"milestone", mastered:true },
+    { id:"straddlefl", name:"Straddle front lever",        group:"flpull", type:"hold", unit:"sec", target:12, current:8, mastered:true },
+    { id:"fullfl",     name:"Full front lever",            group:"flpull", type:"hold", unit:"sec", target:10, current:0, mastered:false },
+    { id:"flraises",   name:"Front lever raises",          group:"flpull", type:"reps", unit:"reps", target:8, current:0, mastered:false },
+    { id:"flpullups",  name:"Front lever pull-ups",        group:"flpull", type:"reps", unit:"reps", target:5, current:0, mastered:false },
+    { id:"wflpullups", name:"Weighted front lever pull-ups", group:"flpull", type:"reps", unit:"reps", target:5, current:0, mastered:false },
+
+    // Vertical Pull
+    { id:"pullup",     name:"Pull-up",                     group:"vpull", type:"milestone", mastered:true },
+    { id:"chinup",     name:"Chin-up",                      group:"vpull", type:"milestone", mastered:true },
+    { id:"archer",     name:"Archer pull-up",              group:"vpull", type:"milestone", mastered:true },
+    { id:"typewriter", name:"Typewriter pull-up",           group:"vpull", type:"milestone", mastered:true },
+    { id:"wpullup",    name:"Weighted pull-up",             group:"vpull", type:"milestone", mastered:true },
+    { id:"muscleup",   name:"Muscle-up",                    group:"vpull", type:"milestone", mastered:true },
+    { id:"wmuscleup",  name:"Weighted muscle-up (10kg)",    group:"vpull", type:"milestone", mastered:true },
+    { id:"oap",        name:"One arm pull-up",              group:"vpull", type:"reps", unit:"reps", target:1, current:0, mastered:false, locked:true, lockNote:"Unlocks after Full Front Lever" },
+    { id:"oamuscleup", name:"One arm muscle-up",            group:"vpull", type:"reps", unit:"reps", target:1, current:0, mastered:false },
+
+    // Core / Spine
+    { id:"hollow",     name:"Hollow body hold",             group:"core", type:"milestone", mastered:true },
+    { id:"backlever",  name:"Back lever",                   group:"core", type:"milestone", mastered:true },
+    { id:"dragonflag", name:"Dragon flag (reps)",           group:"core", type:"reps", unit:"reps", target:10, current:4, mastered:false },
+    { id:"wdragonflag",name:"Weighted dragon flag",         group:"core", type:"reps", unit:"reps", target:5, current:0, mastered:false },
+    { id:"360dragonflag", name:"360 dragon flag",           group:"core", type:"reps", unit:"reps", target:3, current:0, mastered:false },
+
+    // Lateral Strength
+    { id:"tuckhf",     name:"Tuck human flag",              group:"lateral", type:"hold", unit:"sec", target:10, current:0, mastered:false },
+    { id:"verthf",     name:"Vertical human flag",          group:"lateral", type:"hold", unit:"sec", target:8, current:0, mastered:false },
+    { id:"fullhf",     name:"Full human flag",              group:"lateral", type:"hold", unit:"sec", target:5, current:0, mastered:false },
+
+    // Push / Dips
+    { id:"dip",        name:"Dip",                          group:"dips", type:"milestone", mastered:true },
+    { id:"koreandip",  name:"Korean dip",                   group:"dips", type:"milestone", mastered:true },
+    { id:"wdip",       name:"Weighted dip",                 group:"dips", type:"milestone", mastered:true },
+    { id:"ringdip",    name:"Ring dip",                     group:"dips", type:"milestone", mastered:true },
+    { id:"ringmuscleup", name:"Ring muscle-up",             group:"dips", type:"milestone", mastered:true },
+    { id:"wringmuscleup", name:"Weighted ring muscle-up",   group:"dips", type:"reps", unit:"reps", target:1, current:0, mastered:false },
+    { id:"ringhspu",   name:"Ring HSPU",                    group:"dips", type:"reps", unit:"reps", target:5, current:0, mastered:false },
+
+    // Handstand Walking -> OAHS
+    { id:"fshold",     name:"Freestanding handstand hold",  group:"hswalk", type:"milestone", mastered:true },
+    { id:"shouldertap",name:"Wall handstand shoulder tap",  group:"hswalk", type:"milestone", mastered:true },
+    { id:"hswalk",     name:"Handstand walking",            group:"hswalk", type:"steps", unit:"steps", target:15, current:5, mastered:false },
+    { id:"oahnegative",name:"One arm handstand negative",   group:"hswalk", type:"reps", unit:"reps", target:5, current:0, mastered:false },
+    { id:"oahhold",    name:"One arm handstand hold (OAHS)",group:"hswalk", type:"hold", unit:"sec", target:5, current:0, mastered:false }
+  ],
+
+  // Weekly program — read-only display, matches the actual training plan.
+  week: [
+    { day:"Monday", tag:"Home", time:"~1h20", blocks:[
+      "Handstand walk prep: wall shoulder tap 3\u00d75/side, walking 4\u00d7max steps",
+      "HSPU + Neck superset: FS hold 4\u00d7max, FS HSPU 5\u00d77, wall negative 3\u00d73, elevated pike 3\u00d710",
+      "Legs: pistol+Nordic, Bulgarian split+RDL, hip thrust+calf raise (supersets)",
+      "Biceps & Triceps: curl+CG pushup, negative curl+OH extension, supination+band ext (supersets)",
+      "Abs: dragon flag 5\u00d73, follow-along video"
+    ]},
+    { day:"Tuesday", tag:"Street", time:"~45-50m", blocks:[
+      "Parallel bar handstand hold 5\u00d7max, parallel bar HSPU 5\u00d72",
+      "Straddle FL hold + Korean dips 4\u00d7max, FL rows 4\u00d75, FL negative 3\u00d73",
+      "Archer pull-ups 4\u00d75/side, face pulls 2\u00d720"
+    ]},
+    { day:"Wednesday", tag:"Home", time:"~1h15", blocks:[
+      "Handstand walk prep: wall shoulder tap 3\u00d75/side, walking 4\u00d7max steps",
+      "HSPU + Neck superset: FS hold 4\u00d7max, FS HSPU 4\u00d74, EMOM 8min, elevated pike 3\u00d712",
+      "Biceps & Triceps: same as Monday",
+      "Abs: dragon flag 5\u00d73, follow-along video",
+      "100 push-ups with band: 50 wide + 50 close grip"
+    ]},
+    { day:"Thursday", tag:"Street", time:"~45-50m", blocks:[
+      "Parallel bar handstand hold 5\u00d7max, parallel bar HSPU 5\u00d72",
+      "Straddle FL hold + Korean dips 4\u00d7max, FL rows 4\u00d75",
+      "Typewriter pull-ups 3\u00d74/side, slow negative pull-ups 3\u00d74, face pulls 2\u00d720"
+    ]},
+    { day:"Friday", tag:"Home", time:"~1h20", blocks:[
+      "Handstand walk prep: wall shoulder tap 3\u00d75/side, walking 4\u00d7max steps",
+      "HSPU + Neck superset: FS hold 5\u00d7max, FS negative 4\u00d73, max set 1\u00d7max, FS HSPU 4\u00d710",
+      "Legs: same as Monday",
+      "Abs: dragon flag 5\u00d73, follow-along video"
+    ]},
+    { day:"Saturday", tag:"Street", time:"~45-50m", blocks:[
+      "Parallel bar handstand hold 5\u00d7max, parallel bar HSPU 5\u00d72",
+      "Straddle FL hold + Korean dips 4\u00d7max, FL negative 3\u00d73",
+      "Archer pull-ups 4\u00d75/side, hanging leg raises 4\u00d710, face pulls 2\u00d720"
+    ]},
+    { day:"Sunday", tag:"Rest", time:"", blocks:[
+      "Active recovery only — walk, stretch, mobility. No training."
+    ]}
+  ]
+};
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #08080a;
+  --bg-card: #131316;
+  --bg-card-2: #1a1a1f;
+  --text-1: #ffffff;
+  --text-2: rgba(255,255,255,0.62);
+  --text-3: rgba(255,255,255,0.40);
+  --text-4: rgba(255,255,255,0.22);
+  --border: rgba(255,255,255,0.07);
+  --border-strong: rgba(255,255,255,0.14);
+  --accent: #ffffff;
+  --good: #5eead4;
+  --good-glow: rgba(94,234,212,0.15);
+  --warn: #fbbf24;
+  --bad: #ff8a8a;
+  --red: #ff3b30;
+  --red-dim: #c4271f;
+  --orange: #ff8a3d;
+  --purple: #a78bfa;
+  --blue: #60a5fa;
+  --font: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SF Mono, Menlo, Consolas, monospace;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 15% 0%, rgba(255,59,48,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 45% at 100% 15%, rgba(96,165,250,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 70% at 50% 0%, #16161a 0%, #08080a 65%);
+  color: var(--text-1);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+.shell { width:100%; max-width:min(720px,100vw); margin:0 auto; padding:26px 16px 60px; }
+.shell *, .tabbar * { min-width:0; }
+
+/* ---------- header ---------- */
+header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:22px; }
+header .brand-row { display:flex; align-items:center; gap:10px; }
+header .brand-icon {
+  width:34px; height:34px; border-radius:10px; flex-shrink:0;
+  background: linear-gradient(145deg, var(--red) 0%, var(--red-dim) 100%);
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; box-shadow: 0 4px 14px rgba(255,59,48,0.35);
+}
+header h1 { font-size:18px; font-weight:700; margin:0; letter-spacing:-0.02em; }
+header .sub { font-size:10.5px; color:var(--text-3); font-family:var(--font-mono); text-transform:uppercase; letter-spacing:0.1em; margin-top:3px; }
+
+/* ---------- tabbar ---------- */
+.tabbar {
+  display:flex; gap:3px; background:var(--bg-card); border:1px solid var(--border);
+  border-radius:14px; padding:4px; margin-bottom:20px;
+}
+.tabbtn {
+  flex:1; text-align:center; padding:10px 6px; border-radius:11px; font-size:12.5px; font-weight:600;
+  color:var(--text-3); cursor:pointer; border:none; background:none; font-family:var(--font);
+  transition: all .18s ease; letter-spacing:0.01em;
+}
+.tabbtn.active { background:linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05)); color:var(--text-1); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08); }
+.tabpanel { display:none; animation: fadeIn .25s ease; }
+.tabpanel.active { display:block; }
+@keyframes fadeIn { from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+
+/* ---------- overview cards ---------- */
+.stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-bottom:20px; }
+.stat-card {
+  background: linear-gradient(160deg, var(--bg-card-2) 0%, var(--bg-card) 100%);
+  border:1px solid var(--border); border-radius:14px; padding:14px 12px;
+  position:relative; overflow:hidden;
+}
+.stat-card::after { content:''; position:absolute; top:-20px; right:-20px; width:60px; height:60px; border-radius:50%;
+  background:radial-gradient(circle, var(--dot-color,rgba(255,255,255,0.06)) 0%, transparent 70%); }
+.stat-num { font-family:var(--font-mono); font-size:22px; font-weight:700; line-height:1; letter-spacing:-0.02em; }
+.stat-label { font-size:9.5px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.07em; margin-top:6px; font-weight:500; }
+
+/* ---------- group section ---------- */
+.group { margin-bottom:24px; }
+.group-head { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+.group-icon { font-size:14px; opacity:0.85; }
+.group-title { font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-2); white-space:nowrap; }
+.group-count { font-family:var(--font-mono); font-size:10.5px; color:var(--text-4); background:rgba(255,255,255,0.04); padding:2px 8px; border-radius:20px; white-space:nowrap; }
+.group-line { flex:1; height:1px; background:linear-gradient(90deg, var(--border), transparent); }
+
+.skill {
+  background: var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:13px 15px; margin-bottom:8px;
+  transition: border-color .2s ease, transform .15s ease; position:relative; overflow:hidden;
+}
+.skill::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:transparent; }
+.skill.mastered { border-color: rgba(94,234,212,0.22); background: linear-gradient(160deg, rgba(94,234,212,0.05), var(--bg-card) 60%); }
+.skill.mastered::before { background: var(--good); }
+.skill.in-progress::before { background: var(--red); opacity:0.7; }
+.skill.locked { opacity:0.4; }
+.skill-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.skill-name { font-size:13.5px; font-weight:600; letter-spacing:-0.01em; }
+.skill-name .lock-note { display:block; font-size:10px; font-weight:400; color:var(--text-4); margin-top:3px; font-family:var(--font-mono); }
+.skill-badge { font-family:var(--font-mono); font-size:10px; font-weight:600; padding:4px 9px; border-radius:20px; white-space:nowrap; letter-spacing:0.03em; }
+.badge-mastered { background:var(--good-glow); color:var(--good); }
+.badge-progress { background:rgba(255,59,48,0.12); color:#ff8b84; }
+.badge-locked { background:rgba(255,255,255,0.04); color:var(--text-4); }
+
+.skill-bar-row { display:flex; align-items:center; gap:10px; margin-top:11px; }
+.skill-bar { flex:1; height:6px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }
+.skill-bar-fill { height:100%; border-radius:4px; background:linear-gradient(90deg, var(--red-dim), var(--red)); transition:width .5s cubic-bezier(.4,0,.2,1); }
+.skill-bar-fill.done { background:linear-gradient(90deg, #34d3b8, var(--good)); }
+.skill-nums { font-family:var(--font-mono); font-size:11px; color:var(--text-2); white-space:nowrap; font-weight:500; }
+
+.skill-actions { display:flex; gap:7px; margin-top:11px; }
+.btn {
+  border:1px solid var(--border-strong); background:rgba(255,255,255,0.03); color:var(--text-1);
+  font-size:11.5px; font-weight:600; padding:8px 12px; border-radius:9px; cursor:pointer; font-family:var(--font);
+  transition: all .15s ease;
+}
+.btn:active { transform:scale(0.96); }
+.btn:hover { background:rgba(255,255,255,0.07); }
+.btn-primary { background:linear-gradient(145deg, var(--red), var(--red-dim)); border-color:var(--red); color:#fff; box-shadow:0 3px 10px rgba(255,59,48,0.25); }
+.btn-primary:hover { filter:brightness(1.08); }
+.btn-ghost { background:none; color:var(--text-3); border-color:var(--border); }
+.btn-mastered { background:var(--good-glow); border-color:rgba(94,234,212,0.3); color:var(--good); }
+
+/* ---------- today / week view ---------- */
+.day-card {
+  background: linear-gradient(160deg, var(--bg-card-2), var(--bg-card));
+  border:1px solid var(--border); border-radius:16px; padding:16px 18px; margin-bottom:11px;
+}
+.day-card.today { border-color: rgba(255,59,48,0.5); box-shadow: 0 0 0 1px rgba(255,59,48,0.15), 0 8px 24px rgba(255,59,48,0.08); }
+.day-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.day-name { font-size:14.5px; font-weight:700; letter-spacing:-0.01em; }
+.day-name .pin { color:var(--red); font-size:11px; font-weight:700; margin-right:6px; font-family:var(--font-mono); }
+.day-meta { font-family:var(--font-mono); font-size:10.5px; color:var(--text-3); }
+.day-tag { font-family:var(--font-mono); font-size:10px; font-weight:600; padding:3px 10px; border-radius:20px; background:rgba(255,255,255,0.06); color:var(--text-2); letter-spacing:0.03em; }
+.day-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px; }
+.day-list li { font-size:12.5px; color:var(--text-2); line-height:1.55; padding-left:15px; position:relative; }
+.day-list li::before { content:"\2192"; position:absolute; left:0; color:var(--text-4); font-size:11px; top:1px; }
+
+/* ---------- log modal ---------- */
+.overlay { position:fixed; inset:0; background:rgba(0,0,0,0.65); backdrop-filter: blur(4px); display:none; align-items:flex-end; justify-content:center; z-index:100; }
+.overlay.open { display:flex; animation: fadeIn .2s ease; }
+.modal { width:100%; max-width:420px; background:#161619; border:1px solid var(--border-strong);
+  border-radius:20px 20px 0 0; padding:22px; box-shadow: 0 -20px 60px rgba(0,0,0,0.5); }
+.modal h3 { margin:0 0 5px; font-size:16px; font-weight:700; letter-spacing:-0.01em; }
+.modal .modal-sub { font-size:11.5px; color:var(--text-3); margin-bottom:16px; line-height:1.5; }
+.modal input { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border-strong);
+  border-radius:12px; padding:14px 16px; color:var(--text-1); font-size:18px; font-family:var(--font-mono); outline:none; margin-bottom:14px; font-weight:600; }
+.modal input:focus { border-color: var(--red); }
+.modal-actions { display:flex; gap:9px; }
+.modal-actions .btn { flex:1; text-align:center; padding:13px; font-size:13px; }
+
+/* ---------- history timeline ---------- */
+.hist-empty { text-align:center; padding:50px 20px; color:var(--text-3); font-size:12.5px; }
+.hist-day { margin-bottom:18px; }
+.hist-date { font-family:var(--font-mono); font-size:10.5px; color:var(--text-3); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px; padding-left:2px; }
+.hist-line { position:relative; padding-left:20px; }
+.hist-line::before { content:''; position:absolute; left:5px; top:6px; bottom:6px; width:1px; background:var(--border); }
+.hist-entry {
+  position:relative; background:var(--bg-card); border:1px solid var(--border); border-radius:12px;
+  padding:11px 14px; margin-bottom:8px;
+}
+.hist-entry::before {
+  content:''; position:absolute; left:-19px; top:16px; width:9px; height:9px; border-radius:50%;
+  background:var(--red); border:2px solid var(--bg); box-shadow:0 0 0 1px var(--red);
+}
+.hist-entry.pr::before { background:var(--good); box-shadow:0 0 0 1px var(--good); }
+.hist-top-row { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.hist-skill { font-size:12.5px; font-weight:600; }
+.hist-group-tag { font-family:var(--font-mono); font-size:9px; color:var(--text-4); text-transform:uppercase; letter-spacing:0.05em; margin-top:2px; }
+.hist-val { font-family:var(--font-mono); font-size:15px; font-weight:700; color:var(--text-1); white-space:nowrap; }
+.hist-val .unit { font-size:10px; color:var(--text-3); font-weight:500; margin-left:3px; }
+.hist-pr-tag { font-family:var(--font-mono); font-size:9px; color:var(--good); font-weight:700; letter-spacing:0.04em; margin-top:3px; }
+
+footer { text-align:center; color:var(--text-4); font-size:10.5px; margin-top:26px; font-family:var(--font-mono); letter-spacing:0.02em; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header>
+    <div class="brand-row">
+      <div class="brand-icon">🤸</div>
+      <div>
+        <h1 id="appTitle"></h1>
+        <div class="sub" id="todayLabel"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="stat-grid" id="statGrid"></div>
+
+  <div class="tabbar">
+    <button class="tabbtn active" data-tab="today">Today</button>
+    <button class="tabbtn" data-tab="progress">Progression</button>
+    <button class="tabbtn" data-tab="history">History</button>
+    <button class="tabbtn" data-tab="week">Full Week</button>
+  </div>
+
+  <div class="tabpanel active" id="tab-today"></div>
+  <div class="tabpanel" id="tab-progress"></div>
+  <div class="tabpanel" id="tab-history"></div>
+  <div class="tabpanel" id="tab-week"></div>
+
+  <footer>Saved locally in this browser — clearing site data resets progress</footer>
+</div>
+
+<div class="overlay" id="logOverlay">
+  <div class="modal">
+    <h3 id="logTitle">Log entry</h3>
+    <div class="modal-sub" id="logSub"></div>
+    <input type="number" id="logInput" placeholder="0" inputmode="numeric">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="logCancel">Cancel</button>
+      <button class="btn btn-primary" id="logSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  const LS_KEY = 'calisthenics_progression_v1';
+
+  function loadState(){
+    try {
+      const saved = JSON.parse(localStorage.getItem(LS_KEY));
+      if (saved && saved.skills) return saved;
+    } catch(e){}
+    // Seed from CONFIG
+    const skills = {};
+    CONFIG.skills.forEach(s=>{
+      skills[s.id] = {
+        current: s.current || 0,
+        mastered: !!s.mastered,
+        log: []
+      };
+    });
+    // Seed real documented history so the timeline isn't empty on first load
+    const seedLogs = {
+      fshspu: [
+        { date:'2026-06-01', value:6 },
+        { date:'2026-06-22', value:8 },
+        { date:'2026-07-15', value:12 }
+      ],
+      barhspu: [
+        { date:'2026-07-19', value:2 }
+      ],
+      hswalk: [
+        { date:'2026-07-18', value:3 },
+        { date:'2026-07-21', value:5 }
+      ],
+      dragonflag: [
+        { date:'2026-06-05', value:2 },
+        { date:'2026-06-28', value:4 }
+      ],
+      straddlefl: [
+        { date:'2026-07-19', value:8 }
+      ]
+    };
+    Object.keys(seedLogs).forEach(id=>{
+      if (skills[id]) skills[id].log = seedLogs[id];
+    });
+    return { skills, createdAt: Date.now() };
+  }
+
+  let state = loadState();
+  function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){} }
+
+  function skillDef(id){ return CONFIG.skills.find(s=>s.id===id); }
+  function groupDef(id){ return CONFIG.groups.find(g=>g.id===id); }
+  const GROUP_ICON = { push:'🔼', flpull:'🔽', vpull:'🔼', core:'🧱', lateral:'↔️', dips:'💪', hswalk:'🤸' };
+
+  function pct(skill, def){
+    if (def.type === 'milestone') return skill.mastered ? 100 : 0;
+    if (!def.target) return 0;
+    return Math.min(100, Math.round((skill.current / def.target) * 100));
+  }
+
+  // ---------- header ----------
+  document.getElementById('appTitle').textContent = CONFIG.appTitle;
+  const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  const now = new Date();
+  document.getElementById('todayLabel').textContent = days[now.getDay()] + ' \u00b7 ' + now.toLocaleDateString();
+
+  // ---------- overview stats ----------
+  function renderStats(){
+    const all = CONFIG.skills;
+    const mastered = all.filter(d => state.skills[d.id].mastered).length;
+    const inProgress = all.filter(d => !state.skills[d.id].mastered && d.type!=='milestone').length;
+    const total = all.length;
+    document.getElementById('statGrid').innerHTML = `
+      <div class="stat-card" style="--dot-color:var(--good-glow)"><div class="stat-num" style="color:var(--good)">${mastered}</div><div class="stat-label">Mastered</div></div>
+      <div class="stat-card" style="--dot-color:rgba(255,59,48,0.14)"><div class="stat-num" style="color:var(--red)">${inProgress}</div><div class="stat-label">In Progress</div></div>
+      <div class="stat-card" style="--dot-color:rgba(96,165,250,0.12)"><div class="stat-num" style="color:var(--blue)">${total}</div><div class="stat-label">Total Skills</div></div>
+    `;
+  }
+
+  // ---------- progression tab ----------
+  function renderProgress(){
+    const el = document.getElementById('tab-progress');
+    let html = '';
+    CONFIG.groups.forEach(g=>{
+      const skills = CONFIG.skills.filter(s=>s.group===g.id);
+      const masteredCount = skills.filter(s=>state.skills[s.id].mastered).length;
+      html += `<div class="group">
+        <div class="group-head">
+          <span class="group-icon">${GROUP_ICON[g.id]||'\u25CF'}</span>
+          <div class="group-title">${g.name}</div>
+          <div class="group-line"></div>
+          <div class="group-count">${masteredCount}/${skills.length}</div>
+        </div>`;
+      skills.forEach(s=>{
+        const st = state.skills[s.id];
+        const p = pct(st, s);
+        const isMilestone = s.type === 'milestone';
+        const locked = s.locked && !st.mastered;
+        const cls = st.mastered ? 'mastered' : (locked ? 'locked' : 'in-progress');
+        html += `<div class="skill ${cls}">
+          <div class="skill-top">
+            <div class="skill-name">${s.name}${s.lockNote && locked ? `<span class="lock-note">${s.lockNote}</span>` : ''}</div>
+            <div class="skill-badge ${st.mastered?'badge-mastered':(locked?'badge-locked':'badge-progress')}">
+              ${st.mastered ? '\u2713 MASTERED' : (locked ? '\u{1F512} LOCKED' : (isMilestone ? 'NOT YET' : st.current + ' ' + (s.unit||'')))}
+            </div>
+          </div>`;
+        if (!isMilestone && !st.mastered && !locked){
+          html += `<div class="skill-bar-row">
+            <div class="skill-bar"><div class="skill-bar-fill ${p>=100?'done':''}" style="width:${p}%"></div></div>
+            <div class="skill-nums">${st.current}/${s.target} ${s.unit||''}</div>
+          </div>
+          <div class="skill-actions">
+            <button class="btn" onclick="window.__openLog('${s.id}')">Log ${s.type==='hold'?'hold':(s.type==='steps'?'steps':'reps')}</button>
+            <button class="btn btn-ghost" onclick="window.__markMastered('${s.id}')">Mark mastered</button>
+          </div>`;
+        } else if (!isMilestone && !st.mastered && locked){
+          // locked, no actions
+        } else if (isMilestone && !st.mastered){
+          html += `<div class="skill-actions">
+            <button class="btn btn-mastered" onclick="window.__markMastered('${s.id}')">Mark mastered</button>
+          </div>`;
+        } else if (st.mastered && !isMilestone){
+          html += `<div class="skill-bar-row">
+            <div class="skill-bar"><div class="skill-bar-fill done" style="width:100%"></div></div>
+            <div class="skill-nums">Record: ${st.current} ${s.unit||''}</div>
+          </div>`;
+        }
+        html += `</div>`;
+      });
+      html += `</div>`;
+    });
+    el.innerHTML = html;
+  }
+
+  // ---------- today tab ----------
+  function renderToday(){
+    const el = document.getElementById('tab-today');
+    const jsDay = now.getDay(); // 0 Sun .. 6 Sat
+    // CONFIG.week is Mon..Sun order; map jsDay to index
+    const order = [6,0,1,2,3,4,5]; // Sun->index6, Mon->0, Tue->1 ...
+    const idx = order[jsDay];
+    const d = CONFIG.week[idx];
+    let html = `<div class="day-card today">
+      <div class="day-head">
+        <div class="day-name"><span class="pin">\u25CF LIVE</span>${d.day}</div>
+        <div class="day-tag">${d.tag}${d.time ? ' \u00b7 ' + d.time : ''}</div>
+      </div>
+      <ul class="day-list">${d.blocks.map(b=>`<li>${b}</li>`).join('')}</ul>
+    </div>`;
+    el.innerHTML = html;
+  }
+
+  // ---------- week tab ----------
+  function renderWeek(){
+    const el = document.getElementById('tab-week');
+    let html = '';
+    CONFIG.week.forEach(d=>{
+      html += `<div class="day-card">
+        <div class="day-head">
+          <div class="day-name">${d.day}</div>
+          <div class="day-tag">${d.tag}${d.time ? ' \u00b7 ' + d.time : ''}</div>
+        </div>
+        <ul class="day-list">${d.blocks.map(b=>`<li>${b}</li>`).join('')}</ul>
+      </div>`;
+    });
+    el.innerHTML = html;
+  }
+
+  // ---------- history tab ----------
+  function renderHistory(){
+    const el = document.getElementById('tab-history');
+    // Collect all log entries across all skills
+    let entries = [];
+    CONFIG.skills.forEach(def=>{
+      const st = state.skills[def.id];
+      if (!st.log || !st.log.length) return;
+      let runningMax = -Infinity;
+      st.log.forEach(entry=>{
+        const isPR = entry.value > runningMax;
+        if (isPR) runningMax = entry.value;
+        entries.push({
+          date: entry.date, value: entry.value, isPR,
+          skillName: def.name, groupName: (groupDef(def.group)||{}).name || '', unit: def.unit || ''
+        });
+      });
+    });
+    if (!entries.length){
+      el.innerHTML = `<div class="hist-empty">No history yet.<br>Log an attempt on the Progression tab and it'll show up here.</div>`;
+      return;
+    }
+    // Sort newest first
+    entries.sort((a,b)=> b.date.localeCompare(a.date));
+    // Group by date
+    const byDate = {};
+    entries.forEach(e=>{ (byDate[e.date] = byDate[e.date] || []).push(e); });
+    const dates = Object.keys(byDate).sort((a,b)=> b.localeCompare(a));
+    let html = '';
+    dates.forEach(date=>{
+      const d = new Date(date + 'T00:00:00');
+      const label = d.toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric' });
+      html += `<div class="hist-day">
+        <div class="hist-date">${label}</div>
+        <div class="hist-line">`;
+      byDate[date].forEach(e=>{
+        html += `<div class="hist-entry ${e.isPR?'pr':''}">
+          <div class="hist-top-row">
+            <div>
+              <div class="hist-skill">${e.skillName}</div>
+              <div class="hist-group-tag">${e.groupName}</div>
+            </div>
+            <div style="text-align:right">
+              <div class="hist-val">${e.value}<span class="unit">${e.unit}</span></div>
+              ${e.isPR ? `<div class="hist-pr-tag">\u2605 NEW RECORD</div>` : ''}
+            </div>
+          </div>
+        </div>`;
+      });
+      html += `</div></div>`;
+    });
+    el.innerHTML = html;
+  }
+
+  function renderAll(){
+    renderStats();
+    renderToday();
+    renderProgress();
+    renderHistory();
+    renderWeek();
+  }
+
+  // ---------- tabs ----------
+  document.querySelectorAll('.tabbtn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tabbtn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ---------- log modal ----------
+  const overlay = document.getElementById('logOverlay');
+  const logInput = document.getElementById('logInput');
+  const logTitle = document.getElementById('logTitle');
+  const logSub = document.getElementById('logSub');
+  let activeSkillId = null;
+
+  window.__openLog = function(id){
+    activeSkillId = id;
+    const def = skillDef(id);
+    const st = state.skills[id];
+    logTitle.textContent = 'Log \u2014 ' + def.name;
+    logSub.textContent = 'Current record: ' + st.current + ' ' + (def.unit||'') + '. Enter today\'s best attempt.';
+    logInput.value = '';
+    overlay.classList.add('open');
+    setTimeout(()=>logInput.focus(), 50);
+  };
+  document.getElementById('logCancel').addEventListener('click', ()=> overlay.classList.remove('open'));
+  overlay.addEventListener('click', (e)=>{ if(e.target===overlay) overlay.classList.remove('open'); });
+
+  document.getElementById('logSave').addEventListener('click', ()=>{
+    const val = parseFloat(logInput.value);
+    if (isNaN(val) || !activeSkillId) { overlay.classList.remove('open'); return; }
+    const def = skillDef(activeSkillId);
+    const st = state.skills[activeSkillId];
+    st.log.push({ date: new Date().toISOString().slice(0,10), value: val });
+    if (val > st.current) st.current = val;
+    if (def.target && st.current >= def.target) st.mastered = true;
+    save();
+    overlay.classList.remove('open');
+    renderAll();
+  });
+
+  window.__markMastered = function(id){
+    state.skills[id].mastered = true;
+    save();
+    renderAll();
+  };
+
+  renderAll();
+})();
+</script>
+</body>
+</html>

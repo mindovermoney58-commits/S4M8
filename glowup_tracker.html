@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="lock.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050506">
+<title>Glow Up Tracker</title>
+<script src="topbar.js" defer></script>
+<style>
+:root {
+  --text-primary: #FAFAFA;
+  --text-secondary: #B8B6B0;
+  --text-tertiary: #76746E;
+  --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --green: #6BE3A4;
+  --blue: #4A9EFF;
+  --orange: #E07658;
+  --yellow: #E8FF47;
+  --purple: #B06EFF;
+  --red: #FF5C5C;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: #050506;
+  color: var(--text-secondary);
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  min-height: 100vh;
+  padding: max(28px, env(safe-area-inset-top)) 20px 80px;
+  overflow-x: hidden;
+}
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background:
+    radial-gradient(circle at 82% 14%, rgba(224,118,88,0.14), transparent 45%),
+    radial-gradient(circle at 18% 90%, rgba(107,227,164,0.06), transparent 50%);
+  filter: blur(40px); pointer-events: none; z-index: -2;
+  animation: drift 36s ease-in-out infinite alternate;
+}
+body::after {
+  content: ''; position: fixed; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.014) 1px, transparent 1px);
+  background-size: 3px 3px; pointer-events: none; z-index: -1;
+}
+@keyframes drift { 0%{transform:translate3d(0,0,0)} 100%{transform:translate3d(-22px,14px,0)} }
+
+.page { max-width: 680px; margin: 0 auto; }
+
+/* ── HEADER ── */
+.header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 28px; gap: 12px;
+}
+.header-left {}
+.page-title {
+  font-size: 28px; font-weight: 700; letter-spacing: -0.025em;
+  background: linear-gradient(180deg, #FFFFFF 0%, #C7C4BC 120%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0 0 4px;
+}
+.page-date {
+  font-size: 12px; color: var(--text-tertiary);
+  font-family: var(--font-mono); letter-spacing: 0.05em;
+}
+
+/* ── PROGRESS RING ── */
+.progress-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0;
+}
+.progress-ring { position: relative; width: 64px; height: 64px; }
+.progress-ring svg { transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: rgba(255,255,255,0.06); stroke-width: 4; }
+.ring-fill {
+  fill: none; stroke: var(--green); stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 163; stroke-dashoffset: 163;
+  transition: stroke-dashoffset 0.5s ease;
+}
+.ring-label {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: var(--text-primary);
+  font-family: var(--font-mono);
+}
+.progress-sub { font-size: 10px; color: var(--text-tertiary); letter-spacing: 0.05em; text-transform: uppercase; }
+
+/* ── CATEGORY SECTION ── */
+.cat-section { margin-bottom: 20px; }
+.cat-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-tertiary); margin-bottom: 8px; padding-left: 4px;
+}
+
+/* ── HABIT CARD ── */
+.habit-card {
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.habit-card:active { transform: scale(0.98); }
+.habit-card.done {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+.habit-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; border-radius: 14px 0 0 14px;
+  background: var(--cat-color, rgba(255,255,255,0.2));
+  opacity: 0.6; transition: opacity 0.2s;
+}
+.habit-card.done::before { opacity: 1; }
+
+.habit-check {
+  width: 22px; height: 22px; flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  background: transparent;
+}
+.habit-card.done .habit-check {
+  background: var(--cat-color, var(--green));
+  border-color: var(--cat-color, var(--green));
+}
+.check-icon {
+  opacity: 0; transform: scale(0.5);
+  transition: all 0.2s; color: #050506;
+  font-size: 12px; font-weight: 800; line-height: 1;
+}
+.habit-card.done .check-icon { opacity: 1; transform: scale(1); }
+
+.habit-info { flex: 1; min-width: 0; }
+.habit-name {
+  font-size: 14px; font-weight: 600; color: var(--text-primary);
+  letter-spacing: -0.01em; margin-bottom: 2px;
+}
+.habit-card.done .habit-name { color: var(--text-secondary); }
+.habit-detail {
+  font-size: 11px; color: var(--text-tertiary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.habit-right { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+.habit-freq {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.05em;
+  text-transform: uppercase; color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+.habit-streak {
+  font-size: 10px; color: var(--orange);
+  font-family: var(--font-mono); font-weight: 600;
+}
+.habit-streak.empty { color: var(--text-tertiary); }
+
+/* Skipped indicator */
+.skip-btn {
+  font-size: 10px; color: var(--text-tertiary); padding: 2px 6px;
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 6px;
+  background: transparent; cursor: pointer; letter-spacing: 0.05em;
+  transition: color 0.15s, border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.skip-btn:hover { color: var(--text-secondary); border-color: rgba(255,255,255,0.15); }
+
+/* ── WEEKLY DOT ROW ── */
+.week-dots {
+  display: flex; gap: 4px; margin-top: 4px;
+}
+.wdot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+.wdot.done { background: var(--cat-color, var(--green)); }
+.wdot.today { background: rgba(255,255,255,0.25); outline: 1.5px solid var(--cat-color, var(--green)); outline-offset: 1px; }
+.wdot.today.done { background: var(--cat-color, var(--green)); }
+
+/* ── RESET BUTTON ── */
+.reset-wrap { text-align: center; margin-top: 32px; }
+.reset-btn {
+  font-size: 11px; color: var(--text-tertiary); background: transparent;
+  border: 1px solid rgba(255,255,255,0.07); border-radius: 10px;
+  padding: 8px 18px; cursor: pointer; letter-spacing: 0.06em;
+  font-family: var(--font); transition: color 0.15s, border-color 0.15s;
+}
+.reset-btn:hover { color: var(--text-secondary); border-color: rgba(255,255,255,0.15); }
+
+/* ── VIEW TOGGLE ── */
+.view-toggle {
+  display: flex; gap: 6px; margin-bottom: 20px;
+  background: rgba(255,255,255,0.03); border-radius: 12px; padding: 4px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.toggle-btn {
+  flex: 1; padding: 9px 12px; border-radius: 9px; border: none;
+  background: transparent; color: var(--text-tertiary);
+  font-family: var(--font); font-size: 12px; font-weight: 600;
+  letter-spacing: 0.03em; cursor: pointer; transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.toggle-btn.active {
+  background: rgba(255,255,255,0.08); color: var(--text-primary);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+/* ── HISTORY SUMMARY CARDS ── */
+.hist-summary {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+}
+.hist-stat-card {
+  padding: 16px 14px; border-radius: 14px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(24px) saturate(1.2);
+  text-align: center;
+}
+.hist-stat-num {
+  font-size: 24px; font-weight: 700; color: var(--text-primary);
+  font-family: var(--font-mono); margin-bottom: 4px;
+}
+.hist-stat-label {
+  font-size: 9px; color: var(--text-tertiary); letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── HEATMAP ── */
+.heatmap {
+  display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px;
+  margin-top: 4px;
+}
+.heat-cell {
+  aspect-ratio: 1; border-radius: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.04);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: var(--text-tertiary); font-family: var(--font-mono);
+  position: relative; cursor: default;
+}
+.heat-cell.future { opacity: 0.25; }
+.heat-cell.today { border-color: rgba(255,255,255,0.3); }
+
+/* ── HABIT STATS LIST ── */
+.stat-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; border-radius: 12px;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+  margin-bottom: 6px;
+}
+.stat-name {
+  flex: 1; font-size: 12px; color: var(--text-secondary); font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.stat-bar-track {
+  width: 90px; height: 5px; border-radius: 3px;
+  background: rgba(255,255,255,0.06); overflow: hidden; flex-shrink: 0;
+}
+.stat-bar-fill { height: 100%; border-radius: 3px; }
+.stat-pct {
+  font-size: 11px; font-family: var(--font-mono); color: var(--text-tertiary);
+  width: 36px; text-align: right; flex-shrink: 0;
+}
+
+/* ── MOTIVATIONAL FOOTER ── */
+.moto {
+  margin-top: 40px; padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  text-align: center; font-size: 11px; color: var(--text-tertiary);
+  letter-spacing: 0.05em; line-height: 1.8;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-left">
+      <h1 class="page-title">Glow Up</h1>
+      <div class="page-date" id="dateLabel">—</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-ring" onclick="toggleHistory()" style="cursor:pointer;">
+        <svg width="64" height="64" viewBox="0 0 64 64">
+          <circle class="ring-bg" cx="32" cy="32" r="26"/>
+          <circle class="ring-fill" id="ringFill" cx="32" cy="32" r="26"/>
+        </svg>
+        <div class="ring-label" id="ringLabel">0%</div>
+      </div>
+      <div class="progress-sub" id="progressSub">0 / 0</div>
+    </div>
+  </div>
+
+  <div class="view-toggle">
+    <button class="toggle-btn active" id="btnToday" onclick="showView('today')">Today</button>
+    <button class="toggle-btn" id="btnHistory" onclick="showView('history')">History</button>
+  </div>
+
+  <div id="todayView">
+    <div id="habitList"></div>
+
+    <div class="reset-wrap">
+      <button class="reset-btn" onclick="resetToday()">Reset today</button>
+    </div>
+  </div>
+
+  <div id="historyView" style="display:none;">
+    <div class="hist-summary" id="histSummary"></div>
+    <div class="cat-label" style="margin-top:20px;">Last 30 Days</div>
+    <div class="heatmap" id="heatmap"></div>
+    <div class="cat-label" style="margin-top:24px;">Per-Habit Consistency</div>
+    <div id="habitStats"></div>
+  </div>
+
+  <div class="moto">
+    Soft tissue first. Hard tissue second.<br>Start now. Converge at 19–20.
+  </div>
+
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+
+const CATEGORIES = [
+  {
+    id: 'nonneg',
+    label: 'Non-Negotiables',
+    color: 'var(--yellow)',
+    habits: [
+      { id: 'cold_shower',  name: 'Cold Shower',       detail: 'Every morning — no exceptions',           freq: 'daily' },
+      { id: 'sleep',        name: '7.5h Sleep',         detail: 'Mon–Thu + Sat. 9h on Fri & Sun',          freq: 'daily' },
+    ]
+  },
+  {
+    id: 'structure',
+    label: 'Posture & Structure',
+    color: 'var(--green)',
+    habits: [
+      { id: 'mewing',       name: 'Mewing',             detail: 'Full tongue on palate, lips sealed, nose breathing', freq: '24/7' },
+      { id: 'gum',          name: 'Mastic / Falim Gum', detail: '20–30 min — both sides equally',          freq: 'daily' },
+      { id: 'chin_tucks',   name: 'Chin Tucks',         detail: '3×10 — chin straight back, not down',     freq: 'daily' },
+      { id: 'ppt',          name: 'Posterior Pelvic Tilt', detail: 'Passive correction — walking, sitting, standing', freq: '24/7' },
+      { id: 'apt_am',       name: 'APT Strengthening',  detail: '3PM — 3A→3B→4A→4B + dead bug',           freq: 'daily' },
+      { id: 'apt_pm',       name: 'APT Stretching',     detail: '11PM — Kneeling reach + knee to chest',   freq: 'daily' },
+      { id: 'valgus',       name: 'Valgus Protocol',    detail: 'Clamshells 3×15 + band walks + single leg bridge', freq: 'daily' },
+      { id: 'feet',         name: 'Foot Position',      detail: 'Toes forward — walking, standing, training', freq: '24/7' },
+      { id: 'neck',         name: 'Neck Training',      detail: '4 supersets — back/front/left/right',     freq: '3×/wk', days: [1,3,5] },
+    ]
+  },
+  {
+    id: 'skin',
+    label: 'Skin & Scalp',
+    color: 'var(--blue)',
+    habits: [
+      { id: 'nizoral',      name: 'Nizoral Shampoo',    detail: 'Leave 3 min on scalp — part into sections', freq: 'every 2d', altDays: true },
+      { id: 'shower_time',  name: 'Post-Workout Shower', detail: 'Within 20 min of finishing — no delay', freq: 'post-workout' },
+      { id: 'pillow',       name: 'Pillowcase Change',  detail: 'Every 3–4 days',                          freq: 'weekly', days: [0] },
+    ]
+  },
+  {
+    id: 'nutrition',
+    label: 'Nutrition — Zinc',
+    color: 'var(--orange)',
+    habits: [
+      { id: 'eggs',         name: '8 Eggs',             detail: '~8mg zinc — foundation of the protocol',  freq: 'daily' },
+      { id: 'seeds',        name: '100g Pumpkin Seeds', detail: '~7–8mg zinc — 550–600 kcal, factor in',   freq: 'daily' },
+      { id: 'beef',         name: 'Beef 150–200g',      detail: '~8–10mg zinc — daily ideally',            freq: 'daily' },
+    ]
+  },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+
+const STORAGE_KEY = 'glowup_tracker_v2';
+
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+}
+
+function saveState(s) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+}
+
+function getStreaks(state) {
+  const streaks = {};
+  const allHabits = CATEGORIES.flatMap(c => c.habits);
+  allHabits.forEach(h => {
+    let streak = 0;
+    let d = new Date();
+    d.setDate(d.getDate() - 1);
+    while (true) {
+      const ds = d.toISOString().slice(0,10);
+      if (state[ds] && state[ds][h.id]) { streak++; d.setDate(d.getDate()-1); }
+      else break;
+      if (streak > 365) break;
+    }
+    // check today too
+    const ts = todayStr();
+    if (state[ts] && state[ts][h.id]) streak++;
+    streaks[h.id] = streak;
+  });
+  return streaks;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+
+function getDayOfWeek() { return new Date().getDay(); } // 0=Sun
+
+function isNizoralDay() {
+  // Alternate days starting from a reference
+  const ref = new Date('2026-01-01');
+  const now = new Date();
+  const diff = Math.floor((now - ref) / 86400000);
+  return diff % 2 === 0;
+}
+
+function getWeekDots(habit, state) {
+  const today = new Date();
+  const todayDow = today.getDay();
+  const dots = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const ds = d.toISOString().slice(0,10);
+    const isToday = i === 0;
+    const done = state[ds] && state[ds][habit.id];
+    dots.push({ isToday, done, dow: d.getDay() });
+  }
+  return dots;
+}
+
+function render() {
+  const state = loadState();
+  const today = todayStr();
+  const todayState = state[today] || {};
+  const streaks = getStreaks(state);
+
+  // Date label
+  const d = new Date();
+  document.getElementById('dateLabel').textContent =
+    d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' }).toUpperCase();
+
+  // Count
+  const allHabits = CATEGORIES.flatMap(c => c.habits);
+  const dailyHabits = allHabits.filter(h => h.freq !== '24/7');
+  const doneCount = dailyHabits.filter(h => todayState[h.id]).length;
+  const total = dailyHabits.length;
+  const pct = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+
+  // Ring
+  const circumference = 163;
+  const offset = circumference - (circumference * pct / 100);
+  document.getElementById('ringFill').style.strokeDashoffset = offset;
+  document.getElementById('ringLabel').textContent = pct + '%';
+  document.getElementById('progressSub').textContent = doneCount + ' / ' + total;
+
+  // Ring color based on pct
+  const ringEl = document.getElementById('ringFill');
+  if (pct === 100) ringEl.style.stroke = 'var(--green)';
+  else if (pct >= 60) ringEl.style.stroke = 'var(--yellow)';
+  else if (pct >= 30) ringEl.style.stroke = 'var(--orange)';
+  else ringEl.style.stroke = 'var(--red)';
+
+  // Render habits
+  const container = document.getElementById('habitList');
+  container.innerHTML = '';
+
+  CATEGORIES.forEach(cat => {
+    const sec = document.createElement('div');
+    sec.className = 'cat-section';
+    sec.innerHTML = `<div class="cat-label">${cat.label}</div>`;
+
+    cat.habits.forEach(habit => {
+      const done = !!todayState[habit.id];
+      const streak = streaks[habit.id] || 0;
+      const isPassive = habit.freq === '24/7';
+      const dots = getWeekDots(habit, state);
+
+      const card = document.createElement('div');
+      card.className = 'habit-card' + (done ? ' done' : '');
+      card.style.setProperty('--cat-color', cat.color);
+
+      const freqLabel = habit.freq;
+
+      card.innerHTML = `
+        <div class="habit-check">
+          <span class="check-icon">✓</span>
+        </div>
+        <div class="habit-info">
+          <div class="habit-name">${habit.name}</div>
+          <div class="habit-detail">${habit.detail}</div>
+          ${!isPassive ? `
+          <div class="week-dots" style="--cat-color:${cat.color}">
+            ${dots.map(dot => `<div class="wdot ${dot.isToday ? 'today' : ''} ${dot.done ? 'done' : ''}"></div>`).join('')}
+          </div>` : ''}
+        </div>
+        <div class="habit-right">
+          <span class="habit-freq">${freqLabel}</span>
+          <span class="habit-streak ${streak === 0 ? 'empty' : ''}">
+            ${streak > 0 ? '🔥 ' + streak : '—'}
+          </span>
+        </div>
+      `;
+
+      if (!isPassive) {
+        card.addEventListener('click', () => toggle(habit.id));
+      } else {
+        // Passive habits still trackable
+        card.addEventListener('click', () => toggle(habit.id));
+      }
+
+      sec.appendChild(card);
+    });
+
+    container.appendChild(sec);
+  });
+}
+
+// ── HISTORY VIEW ──────────────────────────────────────────────────────────────
+
+let currentView = 'today';
+
+function toggleHistory() {
+  showView(currentView === 'today' ? 'history' : 'today');
+}
+
+function showView(view) {
+  currentView = view;
+  document.getElementById('todayView').style.display = view === 'today' ? '' : 'none';
+  document.getElementById('historyView').style.display = view === 'history' ? '' : 'none';
+  document.getElementById('btnToday').classList.toggle('active', view === 'today');
+  document.getElementById('btnHistory').classList.toggle('active', view === 'history');
+  if (view === 'history') renderHistory();
+}
+
+function renderHistory() {
+  const state = loadState();
+  const allHabits = CATEGORIES.flatMap(c => c.habits);
+  const dailyHabits = allHabits.filter(h => h.freq !== '24/7');
+
+  // Build last 30 days completion %
+  const today = new Date();
+  const dayPercents = [];
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const ds = d.toISOString().slice(0,10);
+    const dayState = state[ds] || {};
+    const done = dailyHabits.filter(h => dayState[h.id]).length;
+    const pct = dailyHabits.length > 0 ? Math.round((done / dailyHabits.length) * 100) : 0;
+    dayPercents.push({ date: d, ds, pct, isToday: i === 0 });
+  }
+
+  // Summary stats
+  const daysWithData = dayPercents.filter(d => d.pct > 0).length;
+  const perfectDays = dayPercents.filter(d => d.pct === 100).length;
+  const avgPct = dayPercents.length > 0
+    ? Math.round(dayPercents.reduce((s,d) => s + d.pct, 0) / dayPercents.length)
+    : 0;
+
+  document.getElementById('histSummary').innerHTML = `
+    <div class="hist-stat-card">
+      <div class="hist-stat-num" style="color:var(--green);">${perfectDays}</div>
+      <div class="hist-stat-label">Perfect Days</div>
+    </div>
+    <div class="hist-stat-card">
+      <div class="hist-stat-num" style="color:var(--yellow);">${avgPct}%</div>
+      <div class="hist-stat-label">Avg / 30 Days</div>
+    </div>
+    <div class="hist-stat-card">
+      <div class="hist-stat-num" style="color:var(--orange);">${daysWithData}</div>
+      <div class="hist-stat-label">Active Days</div>
+    </div>
+  `;
+
+  // Heatmap
+  const heatmap = document.getElementById('heatmap');
+  heatmap.innerHTML = dayPercents.map(d => {
+    let bg = 'rgba(255,255,255,0.04)';
+    if (d.pct === 100) bg = 'var(--green)';
+    else if (d.pct >= 70) bg = 'rgba(107,227,164,0.65)';
+    else if (d.pct >= 40) bg = 'rgba(232,255,71,0.5)';
+    else if (d.pct > 0) bg = 'rgba(224,118,88,0.5)';
+    const dayNum = d.date.getDate();
+    return `<div class="heat-cell ${d.isToday ? 'today' : ''}" style="background:${bg};" title="${d.ds} — ${d.pct}%">${dayNum}</div>`;
+  }).join('');
+
+  // Per-habit consistency (last 30 days)
+  const statsContainer = document.getElementById('habitStats');
+  const habitStats = dailyHabits.map(h => {
+    let doneCount = 0;
+    let totalCount = 0;
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const ds = d.toISOString().slice(0,10);
+      totalCount++;
+      if (state[ds] && state[ds][h.id]) doneCount++;
+    }
+    const pct = totalCount > 0 ? Math.round((doneCount/totalCount)*100) : 0;
+    const cat = CATEGORIES.find(c => c.habits.includes(h));
+    return { name: h.name, pct, color: cat.color };
+  }).sort((a,b) => b.pct - a.pct);
+
+  statsContainer.innerHTML = habitStats.map(s => `
+    <div class="stat-row">
+      <span class="stat-name">${s.name}</span>
+      <div class="stat-bar-track">
+        <div class="stat-bar-fill" style="width:${s.pct}%; background:${s.color};"></div>
+      </div>
+      <span class="stat-pct">${s.pct}%</span>
+    </div>
+  `).join('');
+}
+
+function toggle(habitId) {
+  const state = loadState();
+  const today = todayStr();
+  if (!state[today]) state[today] = {};
+  state[today][habitId] = !state[today][habitId];
+  saveState(state);
+  render();
+  if (currentView === 'history') renderHistory();
+}
+
+function resetToday() {
+  if (!confirm('Reset all habits for today?')) return;
+  const state = loadState();
+  const today = todayStr();
+  state[today] = {};
+  saveState(state);
+  render();
+  if (currentView === 'history') renderHistory();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+render();
+
+// Auto-refresh at midnight
+const now = new Date();
+const msUntilMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate()+1) - now;
+setTimeout(() => { render(); setInterval(render, 86400000); }, msUntilMidnight);
+</script>
+</body>
+</html>

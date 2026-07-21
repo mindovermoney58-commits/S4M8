@@ -73,7 +73,6 @@ Redeploy. The app reads these automatically via `/api/config`.
 Replace the old URL/key in these files:
 - [`sync.js`](sync.js)
 - [`topbar.js`](topbar.js)
-- [`gym.html`](gym.html)
 
 > ⚠️ Only the **anon** key (public) is used here. **Never** put the `service_role` key in code
 > or in these env vars.
@@ -99,17 +98,9 @@ Replace the old URL/key in these files:
 
 ---
 
-## 4. Nova (AI mentor / gym coach) — optional
-
-No setup or key in the repo. Each user **pastes their own Anthropic API key** when the
-gym coach first asks for it; it's stored only in their browser and sent straight to Anthropic.
-Get a key at console.anthropic.com.
-
----
-
 ## TL;DR
 1. Fork → import to Vercel → deploy.
 2. New Supabase → run the **SQL** above → paste your **URL + anon key** into `sync.js`,
-   `topbar.js`, `gym.html`.
+   `topbar.js`.
 3. (Optional) WHOOP: Client ID in `index.html` + the two env vars in Vercel.
 4. Set your own password hash in `lock.js`. Done.

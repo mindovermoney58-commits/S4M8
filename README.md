@@ -17,7 +17,9 @@ Open any `.html` file directly in your browser — no build step, no install.
 | [index.html](index.html) | Goals tracker (Day Ring, Goal Ticker, To Do list) — the home page |
 | [po-water.html](po-water.html) | Water intake tracker |
 | [finance.html](finance.html) | Finances |
-| [gym.html](gym.html) | Progressive overload gym tracker |
+| [calisthenics-progression.html](calisthenics-progression.html) | Calisthenics progression coach |
+| [cook-assistant.html](cook-assistant.html) | Cooking assistant (what to cook) |
+| [glowup_tracker.html](glowup_tracker.html) | Glow up progress tracker |
 | [topbar.js](topbar.js) | Shared top bar — auto-injected into pages that `<script src="topbar.js">` |
 
 Each app stores its own state in browser `localStorage`. No accounts, no server.
