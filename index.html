@@ -210,7 +210,9 @@ body::after {
 <div class="page">
 
   <div class="hub-head">
-    <h1 class="dash-title">Emil's Dashboard</h1>
+    <h1 class="dash-title" data-i18n="dashTitle">Emil's Dashboard</h1>
+    <button class="gear-btn" id="langToggle" type="button" aria-label="Language"
+            style="width:auto;padding:0 12px;font-family:inherit;font-size:12px;font-weight:700;letter-spacing:0.06em;margin-left:auto">RU</button>
     <button class="gear-btn" id="settingsOpen" type="button" aria-label="Settings">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="3"/>
@@ -228,9 +230,9 @@ body::after {
         <span class="tile-emoji">🏠</span>
       </div>
       <div class="tile-spacer"></div>
-      <h2 class="tile-title">Main</h2>
+      <h2 class="tile-title" data-i18n="tileMain">Main</h2>
       <div class="tile-foot">
-        <span class="tile-sub">Goals & daily plan</span>
+        <span class="tile-sub" data-i18n="tileMainSub">Goals & daily plan</span>
         <span class="tile-arrow">→</span>
       </div>
     </a>
@@ -242,9 +244,9 @@ body::after {
         <span class="tile-emoji">💪</span>
       </div>
       <div class="tile-spacer"></div>
-      <h2 class="tile-title">Calisthenics</h2>
+      <h2 class="tile-title" data-i18n="tileCali">Calisthenics</h2>
       <div class="tile-foot">
-        <span class="tile-sub">Skills, progressions, program</span>
+        <span class="tile-sub" data-i18n="tileCaliSub">Skills, progressions, program</span>
         <span class="tile-arrow">→</span>
       </div>
     </a>
@@ -252,13 +254,13 @@ body::after {
     <!-- Small tile -->
     <a class="tile" href="po-water.html" style="--accent:#60A5FA">
       <div class="tile-top">
-        <span class="tile-num">·04</span>
+        <span class="tile-num">·03</span>
         <span class="tile-emoji">💧</span>
       </div>
       <div class="tile-spacer"></div>
-      <h2 class="tile-title">Water</h2>
+      <h2 class="tile-title" data-i18n="tileWater">Water</h2>
       <div class="tile-foot">
-        <span class="tile-sub">Hydration</span>
+        <span class="tile-sub" data-i18n="tileWaterSub">Hydration</span>
         <span class="tile-arrow">→</span>
       </div>
     </a>
@@ -266,13 +268,13 @@ body::after {
     <!-- Wide tile -->
     <a class="tile wide" href="finance.html" style="--accent:#F2C063">
       <div class="tile-top">
-        <span class="tile-num">·05</span>
+        <span class="tile-num">·04</span>
         <span class="tile-emoji">📊</span>
       </div>
       <div class="tile-spacer"></div>
-      <h2 class="tile-title">Finance</h2>
+      <h2 class="tile-title" data-i18n="tileFinance">Finance</h2>
       <div class="tile-foot">
-        <span class="tile-sub">Net worth & spending</span>
+        <span class="tile-sub" data-i18n="tileFinanceSub">Net worth & spending</span>
         <span class="tile-arrow">→</span>
       </div>
     </a>
@@ -280,13 +282,13 @@ body::after {
     <!-- Small tile -->
     <a class="tile" href="caffeine.html" style="--accent:#C9A36B">
       <div class="tile-top">
-        <span class="tile-num">·06</span>
+        <span class="tile-num">·05</span>
         <span class="tile-emoji">☕</span>
       </div>
       <div class="tile-spacer"></div>
-      <h2 class="tile-title">Caffeine</h2>
+      <h2 class="tile-title" data-i18n="tileCaffeine">Caffeine</h2>
       <div class="tile-foot">
-        <span class="tile-sub">Intake & timing</span>
+        <span class="tile-sub" data-i18n="tileCaffeineSub">Intake & timing</span>
         <span class="tile-arrow">→</span>
       </div>
     </a>
@@ -294,13 +296,13 @@ body::after {
     <!-- Small tile -->
     <a class="tile" href="cook-assistant.html" style="--accent:#E07658">
       <div class="tile-top">
-        <span class="tile-num">·08</span>
+        <span class="tile-num">·06</span>
         <span class="tile-emoji">🍳</span>
       </div>
       <div class="tile-spacer"></div>
-      <h2 class="tile-title">Cook Assistant</h2>
+      <h2 class="tile-title" data-i18n="tileCook">Cook Assistant</h2>
       <div class="tile-foot">
-        <span class="tile-sub">What to cook</span>
+        <span class="tile-sub" data-i18n="tileCookSub">What to cook</span>
         <span class="tile-arrow">→</span>
       </div>
     </a>
@@ -308,13 +310,13 @@ body::after {
     <!-- Small tile -->
     <a class="tile" href="glowup_tracker.html" style="--accent:#B06EFF">
       <div class="tile-top">
-        <span class="tile-num">·09</span>
+        <span class="tile-num">·07</span>
         <span class="tile-emoji">✨</span>
       </div>
       <div class="tile-spacer"></div>
-      <h2 class="tile-title">Glow Up</h2>
+      <h2 class="tile-title" data-i18n="tileGlow">Glow Up</h2>
       <div class="tile-foot">
-        <span class="tile-sub">Progress tracker</span>
+        <span class="tile-sub" data-i18n="tileGlowSub">Progress tracker</span>
         <span class="tile-arrow">→</span>
       </div>
     </a>
@@ -326,12 +328,12 @@ body::after {
 <div class="modal-bg" id="settingsBg">
   <div class="modal" role="dialog" aria-label="Your data">
     <div class="modal-head">
-      <span class="modal-title">Your Data</span>
+      <span class="modal-title" data-i18n="yourData">Your Data</span>
       <button class="modal-close" id="settingsClose" type="button" aria-label="Close">×</button>
     </div>
 
     <div class="field">
-      <label class="field-label">Height</label>
+      <label class="field-label" data-i18n="height">Height</label>
       <div class="field-row">
         <input class="set-input" id="heightA" type="number" min="0" inputmode="decimal" placeholder="cm">
         <input class="set-input" id="heightB" type="number" min="0" inputmode="decimal" placeholder="in" style="display:none">
@@ -343,9 +345,9 @@ body::after {
     </div>
 
     <div class="field">
-      <label class="field-label">Weight</label>
+      <label class="field-label" data-i18n="weight">Weight</label>
       <div class="field-row">
-        <input class="set-input" id="weight" type="number" min="0" inputmode="decimal" placeholder="weight">
+        <input class="set-input" id="weight" type="number" min="0" inputmode="decimal" placeholder="weight" data-i18n-ph="phWeight">
         <div class="seg" id="weightUnitSeg">
           <button type="button" data-u="kg" class="on">kg</button>
           <button type="button" data-u="lb">lb</button>
@@ -354,24 +356,24 @@ body::after {
     </div>
 
     <div class="field">
-      <label class="field-label">Age</label>
-      <input class="set-input" id="age" type="number" min="0" inputmode="numeric" placeholder="years">
+      <label class="field-label" data-i18n="age">Age</label>
+      <input class="set-input" id="age" type="number" min="0" inputmode="numeric" placeholder="years" data-i18n-ph="phYears">
     </div>
 
     <div class="field">
-      <label class="field-label">Sex</label>
+      <label class="field-label" data-i18n="sex">Sex</label>
       <div class="seg" id="sexSeg" style="width:100%;display:flex">
-        <button type="button" data-s="m" style="flex:1">Male</button>
-        <button type="button" data-s="f" style="flex:1">Female</button>
+        <button type="button" data-s="m" style="flex:1" data-i18n="male">Male</button>
+        <button type="button" data-s="f" style="flex:1" data-i18n="female">Female</button>
       </div>
     </div>
 
     <div class="field">
-      <label class="field-label">Active hours / week</label>
-      <input class="set-input" id="activity" type="number" min="0" inputmode="decimal" placeholder="e.g. 5">
+      <label class="field-label" data-i18n="activeHours">Active hours / week</label>
+      <input class="set-input" id="activity" type="number" min="0" inputmode="decimal" placeholder="e.g. 5" data-i18n-ph="phEg5">
     </div>
 
-    <button class="set-save" id="settingsSave" type="button">Save</button>
+    <button class="set-save" id="settingsSave" type="button" data-i18n="save">Save</button>
     <div class="set-status" id="settingsStatus"></div>
 
     <div class="section-divider"></div>
@@ -383,14 +385,102 @@ body::after {
         <span class="whoop-sync" id="whSync"></span>
       </div>
       <div class="whoop-stats" id="whStats" style="display:none">
-        <div class="whoop-stat"><div class="v" id="whRec">—</div><div class="l">Recovery</div></div>
-        <div class="whoop-stat"><div class="v" id="whSleep">—</div><div class="l">Sleep</div></div>
-        <div class="whoop-stat"><div class="v" id="whRhr">—</div><div class="l">Rest HR</div></div>
+        <div class="whoop-stat"><div class="v" id="whRec">—</div><div class="l" data-i18n="whRecovery">Recovery</div></div>
+        <div class="whoop-stat"><div class="v" id="whSleep">—</div><div class="l" data-i18n="whSleep">Sleep</div></div>
+        <div class="whoop-stat"><div class="v" id="whRhr">—</div><div class="l" data-i18n="whRestHr">Rest HR</div></div>
       </div>
       <button class="whoop-btn" id="whAction" type="button">Sync now</button>
     </div>
   </div>
 </div>
+
+<script>
+/* ===== i18n (EN / RU) =====
+   Static text is tagged with data-i18n / data-i18n-ph; dynamic strings
+   in the scripts below go through window.__t(). Language persists in
+   localStorage ('dash_lang') and applies on every load. */
+(function () {
+  'use strict';
+  const DICT = {
+    en: {
+      dashTitle: "Emil's Dashboard",
+      tileMain: 'Main',            tileMainSub: 'Goals & daily plan',
+      tileCali: 'Calisthenics',    tileCaliSub: 'Skills, progressions, program',
+      tileWater: 'Water',          tileWaterSub: 'Hydration',
+      tileFinance: 'Finance',      tileFinanceSub: 'Net worth & spending',
+      tileCaffeine: 'Caffeine',    tileCaffeineSub: 'Intake & timing',
+      tileCook: 'Cook Assistant',  tileCookSub: 'What to cook',
+      tileGlow: 'Glow Up',         tileGlowSub: 'Progress tracker',
+      yourData: 'Your Data',
+      height: 'Height', weight: 'Weight', age: 'Age', sex: 'Sex',
+      male: 'Male', female: 'Female',
+      activeHours: 'Active hours / week',
+      save: 'Save', saved: 'Saved ✓',
+      phYears: 'years', phEg5: 'e.g. 5', phWeight: 'weight',
+      whRecovery: 'Recovery', whSleep: 'Sleep', whRestHr: 'Rest HR',
+      whNotConnected: 'Not connected',
+      whConnect: 'Connect WHOOP',
+      whConnected: 'Connected',
+      whConnectedFail: 'Connected (sync failed)',
+      whLastSynced: 'Last synced',
+      whSyncNow: 'Sync now',
+      whSyncing: 'Syncing…',
+      relNever: 'never', relJustNow: 'just now',
+      relMin: 'min ago', relH: 'h ago', relD: 'd ago'
+    },
+    ru: {
+      dashTitle: 'Дашборд Эмиля',
+      tileMain: 'Главная', tileMainSub: 'Цели и план дня',
+      tileCali: 'Калистеника', tileCaliSub: 'Навыки, прогрессии, программа',
+      tileWater: 'Вода', tileWaterSub: 'Гидратация',
+      tileFinance: 'Финансы', tileFinanceSub: 'Капитал и расходы',
+      tileCaffeine: 'Кофеин', tileCaffeineSub: 'Приём и время',
+      tileCook: 'Что готовим', tileCookSub: 'Кухонный помощник',
+      tileGlow: 'Глоу ап', tileGlowSub: 'Трекер прогресса',
+      yourData: 'Ваши данные',
+      height: 'Рост', weight: 'Вес', age: 'Возраст', sex: 'Пол',
+      male: 'Муж', female: 'Жен',
+      activeHours: 'Активных часов / нед',
+      save: 'Сохранить', saved: 'Сохранено ✓',
+      phYears: 'лет', phEg5: 'напр. 5', phWeight: 'вес',
+      whRecovery: 'Восстановление', whSleep: 'Сон', whRestHr: 'Пульс покоя',
+      whNotConnected: 'Не подключено',
+      whConnect: 'Подключить WHOOP',
+      whConnected: 'Подключено',
+      whConnectedFail: 'Подключено (ошибка синхронизации)',
+      whLastSynced: 'Синхронизация',
+      whSyncNow: 'Синхронизировать',
+      whSyncing: 'Синхронизация…',
+      relNever: 'никогда', relJustNow: 'только что',
+      relMin: 'мин назад', relH: 'ч назад', relD: 'дн назад'
+    }
+  };
+  let lang = localStorage.getItem('dash_lang');
+  if (lang !== 'en' && lang !== 'ru') lang = 'en';
+  window.__t = function (k) {
+    return (DICT[lang] && DICT[lang][k]) || DICT.en[k] || k;
+  };
+  window.__lang = function () { return lang; };
+  function apply() {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      el.textContent = window.__t(el.getAttribute('data-i18n'));
+    });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+      el.placeholder = window.__t(el.getAttribute('data-i18n-ph'));
+    });
+    const btn = document.getElementById('langToggle');
+    if (btn) btn.textContent = lang === 'en' ? 'RU' : 'EN';
+    window.dispatchEvent(new CustomEvent('lang-changed'));
+  }
+  document.getElementById('langToggle').addEventListener('click', () => {
+    lang = lang === 'en' ? 'ru' : 'en';
+    localStorage.setItem('dash_lang', lang);
+    apply();
+  });
+  apply();
+})();
+</script>
 
 <script>
 (function () {
@@ -481,13 +571,14 @@ body::after {
     w.profile.sex = sex;
     const act = parseFloat($('activity').value); if (act >= 0 && !isNaN(act)) w.profile.activityHrsPerWeek = act;
     saveJSON(WATER_KEY, w);
-    const s = $('settingsStatus'); s.textContent = 'Saved ✓';
+    const s = $('settingsStatus'); s.textContent = window.__t('saved');
     setTimeout(() => { s.textContent = ''; }, 1800);
   }
 
   /* ---------- open / close ---------- */
   function open() { populate(); renderWhoop(); $('settingsBg').classList.add('show'); syncWhoop(); }
   function close() { $('settingsBg').classList.remove('show'); }
+  window.addEventListener('lang-changed', () => renderWhoop());
   $('settingsOpen').addEventListener('click', open);
   $('settingsClose').addEventListener('click', close);
   $('settingsBg').addEventListener('click', (e) => { if (e.target === $('settingsBg')) close(); });
@@ -507,26 +598,26 @@ body::after {
   /* ---------- WHOOP ---------- */
   let whStats = null;
   function relTime(ts) {
-    if (!ts) return 'never';
+    if (!ts) return window.__t('relNever');
     const s = Math.floor((Date.now() - ts) / 1000);
-    if (s < 60) return 'just now';
-    if (s < 3600) return Math.floor(s/60) + ' min ago';
-    if (s < 86400) return Math.floor(s/3600) + ' h ago';
-    return Math.floor(s/86400) + ' d ago';
+    if (s < 60) return window.__t('relJustNow');
+    if (s < 3600) return Math.floor(s/60) + ' ' + window.__t('relMin');
+    if (s < 86400) return Math.floor(s/3600) + ' ' + window.__t('relH');
+    return Math.floor(s/86400) + ' ' + window.__t('relD');
   }
   function renderWhoop(err) {
     const t = loadJSON(WHOOP_KEY, null);
     const statusEl = $('whStatus'), txt = $('whStatusText'), syncEl = $('whSync'), action = $('whAction');
     if (!t || !t.access) {
-      statusEl.classList.remove('on'); txt.textContent = 'Not connected';
+      statusEl.classList.remove('on'); txt.textContent = window.__t('whNotConnected');
       syncEl.textContent = ''; $('whStats').style.display = 'none';
-      action.textContent = 'Connect WHOOP';
+      action.textContent = window.__t('whConnect');
       return;
     }
-    statusEl.classList.add('on'); txt.textContent = err ? 'Connected (sync failed)' : 'Connected';
+    statusEl.classList.add('on'); txt.textContent = err ? window.__t('whConnectedFail') : window.__t('whConnected');
     const last = Number(localStorage.getItem(SYNC_KEY)) || 0;
-    syncEl.textContent = 'Last synced ' + relTime(last);
-    action.textContent = 'Sync now';
+    syncEl.textContent = window.__t('whLastSynced') + ' ' + relTime(last);
+    action.textContent = window.__t('whSyncNow');
     if (whStats) {
       $('whStats').style.display = '';
       $('whRec').textContent   = whStats.rec   != null ? whStats.rec + '%'  : '—';
@@ -582,7 +673,7 @@ body::after {
         + '&state='        + Math.random().toString(36).slice(2);
       return;
     }
-    $('whAction').textContent = 'Syncing…'; syncWhoop();
+    $('whAction').textContent = window.__t('whSyncing'); syncWhoop();
   });
 })();
 </script>
