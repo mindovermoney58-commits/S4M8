@@ -12,6 +12,86 @@
 <script src="sync.js" defer></script>
 <script src="topbar.js" defer></script>
 
+<script>
+window.I18N_DICT = {
+  en: {
+    title: 'Caffeine',
+    secYourDay: 'Your Day', secSmartTiming: 'Smart Timing', secToday: 'Today',
+    secLogDrink: 'Log a Drink', secLoggedToday: 'Logged Today',
+    energyWord: 'Energy', rightNow: 'Right now', atTime: 'at',
+    hoverHint: 'Hover / drag the curve',
+    energyDesc: "Your predicted energy, hour by hour — built from your caffeine, your body clock, and how long you've been awake.",
+    peakFocus: 'Peak focus', predCrash: 'Predicted crash', lastCoffeeBy: 'Last coffee by',
+    mostProductive: 'Most productive', youllCrash: "You'll crash", coffeeCutoff: 'Coffee cutoff',
+    phSearch: 'Search a drink… (coffee, monster, matcha…)',
+    phCustomName: 'Custom drink name', phMg: 'mg', add: 'Add',
+    statePeak: 'Peak', stateHigh: 'High', stateSteady: 'Steady', stateDip: 'Dip', stateLow: 'Low',
+    noCrash: 'No crash', noneSoon: 'none soon',
+    peakSubEmpty: 'Log a drink to see your curve.',
+    peakSub: 'Energy ~{v}/100 · window {a}–{b}',
+    crashSub: 'Drops toward ~{v}/100 — plan lighter work then.',
+    noCrashSub: 'No steep drop predicted in the next several hours.',
+    cutoffSub: 'Last coffee to keep <30 mg by your {t} bedtime.',
+    tipFrontload: 'Front-load it. Caffeine works best 30–90 min after waking — aim your first cup near {t}.',
+    tipPastCutoff: "It's past your coffee cutoff ({t}). More caffeine now will likely cost you sleep tonight.",
+    tipBeforeCutoff: 'You can still have coffee until ~{t} without wrecking your {b} bedtime.',
+    tipAtBed: '~{n} mg will still be active at bedtime — that’s enough to delay deep sleep. Ease off.',
+    tipDip: 'Beat the {t} dip with 10 min of daylight + water instead of another coffee — you’ll avoid stacking a late crash.',
+    tipWater: 'Drink a glass of water per caffeinated drink — dehydration mimics and worsens the crash.',
+    tipRecovery: 'WHOOP recovery is {r}% — low. Caffeine masks fatigue but won’t repay sleep debt; keep today under {l} mg.',
+    msgNone: "You haven't logged anything today.",
+    msgOver: "⚠️ That's over your limit for today — ease off the caffeine.",
+    msgWarn: 'Getting up there. {n} mg until your ceiling.',
+    msgGood: "You're in a good range — {n} mg under your target.",
+    activeNow: '{n} mg active now',
+    noteTarget: 'Target ~{t} mg (3 mg/kg for {kg} kg). Ceiling {l} mg.',
+    noteNoWeight: 'Using the 400 mg/day ceiling — add your weight in Settings for a personalized target.',
+    noteRec: 'WHOOP recovery {r}%', noteRecLow: ' — limit pulled back to {l} mg.',
+    metaPeaks: 'Peaks', metaHalf: 'Half gone', metaCleared: 'Cleared',
+    emptyLog: 'No drinks logged today — search one above to start tracking.',
+    noMatch: 'No match — add it as a custom drink below.'
+  },
+  ru: {
+    title: 'Кофеин',
+    secYourDay: 'Ваш день', secSmartTiming: 'Умный тайминг', secToday: 'Сегодня',
+    secLogDrink: 'Записать напиток', secLoggedToday: 'Записано сегодня',
+    energyWord: 'Энергия', rightNow: 'Сейчас', atTime: 'в',
+    hoverHint: 'Наведи / тяни по графику',
+    energyDesc: 'Прогноз энергии по часам — на основе кофеина, биоритмов и времени с момента пробуждения.',
+    peakFocus: 'Пик фокуса', predCrash: 'Ожидаемый спад', lastCoffeeBy: 'Последний кофе до',
+    mostProductive: 'Пик продуктивности', youllCrash: 'Спад энергии', coffeeCutoff: 'Кофе-дедлайн',
+    phSearch: 'Найти напиток… (кофе, monster, матча…)',
+    phCustomName: 'Свой напиток', phMg: 'мг', add: 'Добавить',
+    statePeak: 'Пик', stateHigh: 'Высокая', stateSteady: 'Ровно', stateDip: 'Спад', stateLow: 'Низкая',
+    noCrash: 'Без спада', noneSoon: 'не скоро',
+    peakSubEmpty: 'Запиши напиток, чтобы увидеть свою кривую.',
+    peakSub: 'Энергия ~{v}/100 · окно {a}–{b}',
+    crashSub: 'Снижение до ~{v}/100 — планируй лёгкие задачи.',
+    noCrashSub: 'Резкого спада в ближайшие часы не ожидается.',
+    cutoffSub: 'Последний кофе, чтобы к отбою в {t} осталось <30 мг.',
+    tipFrontload: 'Пей раньше: кофеин работает лучше через 30–90 мин после пробуждения — первая чашка около {t}.',
+    tipPastCutoff: 'Кофе-дедлайн ({t}) уже прошёл. Кофеин сейчас, скорее всего, испортит сон.',
+    tipBeforeCutoff: 'Кофе можно пить до ~{t} — сон к {b} не пострадает.',
+    tipAtBed: 'К отбою останется ~{n} мг — этого хватит, чтобы отсрочить глубокий сон. Сбавь.',
+    tipDip: 'Спад в {t} лучше перебить 10 минутами дневного света и водой, а не ещё одним кофе.',
+    tipWater: 'Стакан воды на каждый кофеиновый напиток — обезвоживание усиливает спад.',
+    tipRecovery: 'Восстановление WHOOP {r}% — низкое. Кофеин маскирует усталость, но не заменит сон; сегодня держись ниже {l} мг.',
+    msgNone: 'Сегодня ещё ничего не записано.',
+    msgOver: '⚠️ Это выше твоего лимита на сегодня — сбавь кофеин.',
+    msgWarn: 'Уже прилично. До потолка {n} мг.',
+    msgGood: 'Ты в хорошей зоне — до цели ещё {n} мг.',
+    activeNow: '{n} мг активно сейчас',
+    noteTarget: 'Цель ~{t} мг (3 мг/кг при {kg} кг). Потолок {l} мг.',
+    noteNoWeight: 'Используется потолок 400 мг/день — добавь вес в настройках для персональной цели.',
+    noteRec: 'Восстановление WHOOP {r}%', noteRecLow: ' — лимит снижен до {l} мг.',
+    metaPeaks: 'Пик', metaHalf: 'Половина', metaCleared: 'Выведен',
+    emptyLog: 'Сегодня напитков нет — найди в поиске выше, чтобы начать.',
+    noMatch: 'Не найдено — добавь как свой напиток ниже.'
+  }
+};
+</script>
+<script src="i18n.js"></script>
+
 <style>
 :root {
   --text-primary: #FAFAFA;
@@ -185,11 +265,11 @@ body::after {
 <body>
 <div class="page">
 
-  <h1 class="dash-title">Caffeine</h1>
+  <h1 class="dash-title" data-i18n="title">Caffeine</h1>
 
   <!-- ENERGY CURVE -->
   <div class="section">
-    <div class="section-title">Your Day</div>
+    <div class="section-title" data-i18n="secYourDay">Your Day</div>
     <div class="gm-card">
       <div class="energy-head">
         <div class="ring">
@@ -202,9 +282,9 @@ body::after {
         <div class="energy-label">
           <span class="energy-state" id="energyState">Energy</span>
           <span class="energy-when" id="energyWhen">Right now</span>
-          <span class="energy-hint"><span class="dot"></span>Hover / drag the curve</span>
+          <span class="energy-hint"><span class="dot"></span><span data-i18n="hoverHint">Hover / drag the curve</span></span>
         </div>
-        <div class="energy-desc">Your predicted energy, hour by hour — built from your caffeine, your body clock, and how long you've been awake.</div>
+        <div class="energy-desc" data-i18n="energyDesc">Your predicted energy, hour by hour.</div>
         <div class="seg-toggle" id="modeToggle">
           <button data-m="line" class="on">LINE</button>
           <button data-m="bars">BARS</button>
@@ -220,21 +300,21 @@ body::after {
       </div>
 
       <div class="plan-band" id="planBand">
-        <div class="plan-item"><span class="k">Peak focus</span><span class="v green" id="peakVal">—</span></div>
-        <div class="plan-item"><span class="k">Predicted crash</span><span class="v amber" id="crashVal">—</span></div>
-        <div class="plan-item"><span class="k">Last coffee by</span><span class="v" id="cutoffVal" style="color:#7DD3FC">—</span></div>
+        <div class="plan-item"><span class="k" data-i18n="peakFocus">Peak focus</span><span class="v green" id="peakVal">—</span></div>
+        <div class="plan-item"><span class="k" data-i18n="predCrash">Predicted crash</span><span class="v amber" id="crashVal">—</span></div>
+        <div class="plan-item"><span class="k" data-i18n="lastCoffeeBy">Last coffee by</span><span class="v" id="cutoffVal" style="color:#7DD3FC">—</span></div>
       </div>
     </div>
   </div>
 
   <!-- SMART TIMING + TIPS -->
   <div class="section">
-    <div class="section-title">Smart Timing</div>
+    <div class="section-title" data-i18n="secSmartTiming">Smart Timing</div>
     <div class="gm-card">
       <div class="tile-grid">
-        <div class="mini peak"><div class="k">Most productive</div><div class="v" id="mPeak">—</div><div class="s" id="mPeakSub"></div></div>
-        <div class="mini crash"><div class="k">You'll crash</div><div class="v" id="mCrash">—</div><div class="s" id="mCrashSub"></div></div>
-        <div class="mini cutoff"><div class="k">Coffee cutoff</div><div class="v" id="mCutoff">—</div><div class="s" id="mCutoffSub"></div></div>
+        <div class="mini peak"><div class="k" data-i18n="mostProductive">Most productive</div><div class="v" id="mPeak">—</div><div class="s" id="mPeakSub"></div></div>
+        <div class="mini crash"><div class="k" data-i18n="youllCrash">You'll crash</div><div class="v" id="mCrash">—</div><div class="s" id="mCrashSub"></div></div>
+        <div class="mini cutoff"><div class="k" data-i18n="coffeeCutoff">Coffee cutoff</div><div class="v" id="mCutoff">—</div><div class="s" id="mCutoffSub"></div></div>
       </div>
       <ul class="tips" id="tips"></ul>
     </div>
@@ -242,7 +322,7 @@ body::after {
 
   <!-- DAILY INTAKE BAR -->
   <div class="section">
-    <div class="section-title">Today</div>
+    <div class="section-title" data-i18n="secToday">Today</div>
     <div class="gm-card">
       <div class="daily-top">
         <span class="daily-num" id="dailyNum">0</span>
@@ -258,21 +338,21 @@ body::after {
 
   <!-- LOG A DRINK -->
   <div class="section">
-    <div class="section-title">Log a Drink</div>
+    <div class="section-title" data-i18n="secLogDrink">Log a Drink</div>
     <div class="gm-card">
-      <input class="gm-input" id="search" type="text" placeholder="Search a drink… (coffee, monster, matcha…)" autocomplete="off">
+      <input class="gm-input" id="search" type="text" placeholder="Search a drink…" data-i18n-ph="phSearch" autocomplete="off">
       <ul class="results" id="results"></ul>
       <div class="custom-row">
-        <input class="gm-input" id="customName" type="text" placeholder="Custom drink name" autocomplete="off">
-        <input class="gm-input mg-input" id="customMg" type="number" min="0" placeholder="mg" autocomplete="off">
-        <button class="gm-add" id="customAdd" type="button">Add</button>
+        <input class="gm-input" id="customName" type="text" placeholder="Custom drink name" data-i18n-ph="phCustomName" autocomplete="off">
+        <input class="gm-input mg-input" id="customMg" type="number" min="0" placeholder="mg" data-i18n-ph="phMg" autocomplete="off">
+        <button class="gm-add" id="customAdd" type="button" data-i18n="add">Add</button>
       </div>
     </div>
   </div>
 
   <!-- TODAY'S LOG -->
   <div class="section">
-    <div class="section-title">Logged Today</div>
+    <div class="section-title" data-i18n="secLoggedToday">Logged Today</div>
     <div class="gm-card">
       <ul class="log-list" id="logList"></ul>
     </div>
@@ -295,7 +375,7 @@ body::after {
     {n:'Brewed coffee (8 oz)',mg:95,c:'Coffee',e:'☕'},{n:'Brewed coffee (12 oz)',mg:140,c:'Coffee',e:'☕'},
     {n:'Brewed coffee (16 oz)',mg:190,c:'Coffee',e:'☕'},{n:'Large drip coffee (20 oz)',mg:240,c:'Coffee',e:'☕'},
     {n:'Cold brew (16 oz)',mg:205,c:'Coffee',e:'🧊'},{n:'Nitro cold brew (16 oz)',mg:280,c:'Coffee',e:'🧊'},
-    {n:'Instant coffee (8 oz)',mg:62,c:'Coffee',e:'☕'},{n:'Decaf coffee (8 oz)',mg:3,c:'Coffee',e:'☕'},
+    {n:'Instant coffee (8 oz)',mg:62,c:'Coffee',e:'☕'},{n:'3-in-1 instant coffee (1 sachet)',mg:45,c:'Coffee',e:'☕'},{n:'Decaf coffee (8 oz)',mg:3,c:'Coffee',e:'☕'},
     {n:'Espresso (1 shot)',mg:64,c:'Espresso',e:'☕'},{n:'Double espresso (2 shots)',mg:128,c:'Espresso',e:'☕'},
     {n:'Latte (1 shot)',mg:64,c:'Espresso',e:'☕'},{n:'Latte, large (2 shots)',mg:128,c:'Espresso',e:'☕'},
     {n:'Cappuccino (1 shot)',mg:64,c:'Espresso',e:'☕'},{n:'Americano (2 shots)',mg:128,c:'Espresso',e:'☕'},
@@ -384,7 +464,7 @@ body::after {
     if (withCaf !== false) e += caffeineBoostAt(t);
     return clamp(e, 0, 100);
   }
-  function stateWord(v){ if(v>=80)return'Peak'; if(v>=62)return'High'; if(v>=44)return'Steady'; if(v>=28)return'Dip'; return'Low'; }
+  function stateWord(v){ if(v>=80)return __t('statePeak'); if(v>=62)return __t('stateHigh'); if(v>=44)return __t('stateSteady'); if(v>=28)return __t('stateDip'); return __t('stateLow'); }
   function energyColor(v){ if(v>=62)return'#6BE3A4'; if(v>=40)return'#F2C063'; return '#FF8A8A'; }
 
   /* ============ WHOOP (optional) ============ */
@@ -456,7 +536,7 @@ body::after {
     $('ringNum').textContent = v;
     $('energyState').textContent = stateWord(v);
     $('energyState').style.color = energyColor(v);
-    $('energyWhen').textContent = scrubT!=null ? ('at ' + fmtClock(t)) : 'Right now';
+    $('energyWhen').textContent = scrubT!=null ? (__t('atTime') + ' ' + fmtClock(t)) : __t('rightNow');
   }
 
   function renderChart(){
@@ -522,27 +602,27 @@ body::after {
     const a=analysis();
     // band
     $('peakVal').textContent = a.peakT!=null ? (fmtClock(a.pStart)+'–'+fmtClock(a.pEnd)) : '—';
-    $('crashVal').textContent = a.crashSignificant ? ('~'+fmtClock(a.crashT)) : 'none soon';
+    $('crashVal').textContent = a.crashSignificant ? ('~'+fmtClock(a.crashT)) : __t('noneSoon');
     $('cutoffVal').textContent = fmtClock(a.cutoff);
     // tiles
     $('mPeak').textContent = a.peakT!=null ? fmtClock(a.peakT) : '—';
-    $('mPeakSub').textContent = a.peakT!=null ? ('Energy ~'+a.peakV+'/100 · window '+fmtClock(a.pStart)+'–'+fmtClock(a.pEnd)) : 'Log a drink to see your curve.';
-    if(a.crashSignificant){ $('mCrash').textContent = fmtClock(a.crashT); $('mCrashSub').textContent = 'Drops toward ~'+a.crashTo+'/100 — plan lighter work then.'; }
-    else { $('mCrash').textContent = 'No crash'; $('mCrashSub').textContent = 'No steep drop predicted in the next several hours.'; }
+    $('mPeakSub').textContent = a.peakT!=null ? __t('peakSub').replace('{v}',a.peakV).replace('{a}',fmtClock(a.pStart)).replace('{b}',fmtClock(a.pEnd)) : __t('peakSubEmpty');
+    if(a.crashSignificant){ $('mCrash').textContent = fmtClock(a.crashT); $('mCrashSub').textContent = __t('crashSub').replace('{v}',a.crashTo); }
+    else { $('mCrash').textContent = __t('noCrash'); $('mCrashSub').textContent = __t('noCrashSub'); }
     $('mCutoff').textContent = fmtClock(a.cutoff);
-    $('mCutoffSub').textContent = 'Last coffee to keep <30 mg by your '+fmtClock(bedHour)+' bedtime.';
+    $('mCutoffSub').textContent = __t('cutoffSub').replace('{t}',fmtClock(bedHour));
 
     // tips
     const tips=[];
-    tips.push(['☀️','Front-load it. Caffeine works best 30–90 min after waking — aim your first cup near '+fmtClock(wakeHour+0.5)+'.']);
+    tips.push(['☀️',__t('tipFrontload').replace('{t}',fmtClock(wakeHour+0.5))]);
     const bedTs=hToTs(bedHour < nowHour() ? bedHour+24 : bedHour);
     const atBed=Math.round(totalActiveAt(bedTs));
-    if(a.cutoff < a.now) tips.push(['🌙','It\'s past your coffee cutoff ('+fmtClock(a.cutoff)+'). More caffeine now will likely cost you sleep tonight.']);
-    else tips.push(['🌙','You can still have coffee until ~'+fmtClock(a.cutoff)+' without wrecking your '+fmtClock(bedHour)+' bedtime.']);
-    if(atBed>=50) tips.push(['⚠️','~'+atBed+' mg will still be active at bedtime — that\'s enough to delay deep sleep. Ease off.']);
-    if(a.crashSignificant) tips.push(['🚶','Beat the '+fmtClock(a.crashT)+' dip with 10 min of daylight + water instead of another coffee — you\'ll avoid stacking a late crash.']);
-    tips.push(['💧','Drink a glass of water per caffeinated drink — dehydration mimics and worsens the crash.']);
-    if(recovery!=null && recovery<34) tips.push(['🔋','WHOOP recovery is '+recovery+'% — low. Caffeine masks fatigue but won\'t repay sleep debt; keep today under '+dailyLimit()+' mg.']);
+    if(a.cutoff < a.now) tips.push(['🌙',__t('tipPastCutoff').replace('{t}',fmtClock(a.cutoff))]);
+    else tips.push(['🌙',__t('tipBeforeCutoff').replace('{t}',fmtClock(a.cutoff)).replace('{b}',fmtClock(bedHour))]);
+    if(atBed>=50) tips.push(['⚠️',__t('tipAtBed').replace('{n}',atBed)]);
+    if(a.crashSignificant) tips.push(['🚶',__t('tipDip').replace('{t}',fmtClock(a.crashT))]);
+    tips.push(['💧',__t('tipWater')]);
+    if(recovery!=null && recovery<34) tips.push(['🔋',__t('tipRecovery').replace('{r}',recovery).replace('{l}',dailyLimit())]);
     const ul=$('tips'); ul.innerHTML='';
     tips.forEach(([ic,txt])=>{ const li=document.createElement('li'); li.className='tip'; li.innerHTML='<span class="ic">'+ic+'</span><span>'+txt+'</span>'; ul.appendChild(li); });
   }
@@ -551,31 +631,31 @@ body::after {
     const total=dailyTotal(), limit=dailyLimit(), target=moderateTarget();
     $('dailyNum').textContent=total; $('dailyLimit').textContent=limit;
     const activeNow=Math.round(totalActiveAt(Date.now()));
-    $('dailyActive').textContent = activeNow>0 ? (activeNow+' mg active now') : '';
+    $('dailyActive').textContent = activeNow>0 ? __t('activeNow').replace('{n}',activeNow) : '';
     const pct=Math.min(100,(total/limit)*100); const fill=$('dailyFill'); fill.style.width=pct+'%';
     let color='linear-gradient(90deg,#6BE3A4,#A7F3D0)';
     if(total>=limit) color='linear-gradient(90deg,#FF6B6B,#F2807A)'; else if(total>=target) color='linear-gradient(90deg,#F2C063,#F2A65A)';
     fill.style.background=color;
     const msg=$('dailyMsg'); msg.className='daily-msg';
-    if(total===0){ msg.classList.add('good'); msg.textContent="You haven't logged anything today."; }
-    else if(total>=limit){ msg.classList.add('bad'); msg.textContent="⚠️ That's over your limit for today — ease off the caffeine."; }
-    else if(total>=target){ msg.classList.add('warn'); msg.textContent="Getting up there. "+(limit-total)+" mg until your ceiling."; }
-    else { msg.classList.add('good'); msg.textContent="You're in a good range — "+(target-total)+" mg under your target."; }
+    if(total===0){ msg.classList.add('good'); msg.textContent=__t('msgNone'); }
+    else if(total>=limit){ msg.classList.add('bad'); msg.textContent=__t('msgOver'); }
+    else if(total>=target){ msg.classList.add('warn'); msg.textContent=__t('msgWarn').replace('{n}',limit-total); }
+    else { msg.classList.add('good'); msg.textContent=__t('msgGood').replace('{n}',target-total); }
     const parts=[];
-    if(bodyKg) parts.push('Target ~'+target+' mg (3 mg/kg for '+Math.round(bodyKg)+' kg). Ceiling '+limit+' mg.');
-    else parts.push('Using the 400 mg/day ceiling — add your weight in Settings for a personalized target.');
-    if(recovery!=null) parts.push('WHOOP recovery '+recovery+'%'+(recovery<34?' — limit pulled back to '+limit+' mg.':'.'));
+    if(bodyKg) parts.push(__t('noteTarget').replace('{t}',target).replace('{kg}',Math.round(bodyKg)).replace('{l}',limit));
+    else parts.push(__t('noteNoWeight'));
+    if(recovery!=null) parts.push(__t('noteRec').replace('{r}',recovery)+(recovery<34?__t('noteRecLow').replace('{l}',limit):'.'));
     $('dailyNote').innerHTML=parts.join('<br>');
   }
 
   function escapeHtml(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   function renderLog(){
     const list=$('logList'); const tl=todaysLogs().slice().sort((a,b)=>b.ts-a.ts); list.innerHTML='';
-    if(tl.length===0){ const li=document.createElement('li'); li.className='empty-state'; li.textContent='No drinks logged today — search one above to start tracking.'; list.appendChild(li); return; }
+    if(tl.length===0){ const li=document.createElement('li'); li.className='empty-state'; li.textContent=__t('emptyLog'); list.appendChild(li); return; }
     tl.forEach(l=>{
       const m=milestones(l); const li=document.createElement('li'); li.className='log-row';
       li.innerHTML='<span class="log-emoji">'+(l.e||'☕')+'</span><div class="log-main"><div class="log-name">'+escapeHtml(l.n)+'<b>'+l.mg+' mg</b></div>'
-        +'<div class="log-meta">Peaks '+fmtTime(m.peak)+'<span class="sep">•</span>Half gone '+fmtTime(m.half)+'<span class="sep">•</span>Cleared '+fmtTime(m.cleared)+'</div></div>'
+        +'<div class="log-meta">'+__t('metaPeaks')+' '+fmtTime(m.peak)+'<span class="sep">•</span>'+__t('metaHalf')+' '+fmtTime(m.half)+'<span class="sep">•</span>'+__t('metaCleared')+' '+fmtTime(m.cleared)+'</div></div>'
         +'<span class="log-time">'+fmtTime(l.ts)+'</span><button class="log-del" type="button" aria-label="Delete">×</button>';
       li.querySelector('.log-del').addEventListener('click',()=>{ logs=logs.filter(x=>x.id!==l.id); saveJSON(LOGS_KEY,logs); renderAll(); });
       list.appendChild(li);
@@ -591,7 +671,7 @@ body::after {
     const el=$('results'); const query=(q||'').trim().toLowerCase(); let items=allDrinks();
     if(query) items=items.filter(d=>d.n.toLowerCase().includes(query)||d.c.toLowerCase().includes(query));
     items=items.slice(0, query?40:12); el.innerHTML='';
-    if(items.length===0){ const li=document.createElement('li'); li.className='results-empty'; li.textContent='No match — add it as a custom drink below.'; el.appendChild(li); return; }
+    if(items.length===0){ const li=document.createElement('li'); li.className='results-empty'; li.textContent=__t('noMatch'); el.appendChild(li); return; }
     items.forEach(d=>{ const li=document.createElement('li'); li.className='result';
       li.innerHTML='<span class="result-emoji">'+(d.e||'☕')+'</span><span class="result-name">'+escapeHtml(d.n)+' <span class="result-cat">· '+d.c+'</span></span><span class="result-mg">'+d.mg+'<small> mg</small></span>';
       li.addEventListener('click',()=>{ logDrink(d); $('search').value=''; renderResults(''); }); el.appendChild(li); });
@@ -628,6 +708,7 @@ body::after {
   renderResults('');
   renderAll();
   loadWhoop();
+  window.addEventListener('lang-changed', renderAll);
   setInterval(()=>{ if(scrubT==null) renderAll(); }, 60000);
 
   /* ============ Cloud sync ============ */

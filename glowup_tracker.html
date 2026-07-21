@@ -6,6 +6,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050506">
 <title>Glow Up Tracker</title>
+<script>
+window.I18N_DICT = {
+  en: {
+    pageTitle: 'Glow Up',
+    today: 'Today', history: 'History', resetToday: 'Reset today',
+    last30: 'Last 30 Days', perHabit: 'Per-Habit Consistency',
+    perfectDays: 'Perfect Days', avg30: 'Avg / 30 Days', activeDays: 'Active Days',
+    confirmReset: 'Reset all habits for today?',
+    moto1: 'Soft tissue first. Hard tissue second.',
+    moto2: 'Start now. Converge at 19–20.'
+  },
+  ru: {
+    pageTitle: 'Глов Ап',
+    today: 'Сегодня', history: 'История', resetToday: 'Сбросить сегодня',
+    last30: 'Последние 30 дней', perHabit: 'Стабильность по привычкам',
+    perfectDays: 'Идеальные дни', avg30: 'Среднее / 30 дней', activeDays: 'Активные дни',
+    confirmReset: 'Сбросить все привычки за сегодня?',
+    moto1: 'Сначала мягкие ткани. Потом твёрдые.',
+    moto2: 'Начни сейчас. Сойдётся к 19–20.'
+  }
+};
+</script>
+<script src="i18n.js"></script>
+
 <script src="topbar.js" defer></script>
 <style>
 :root {
@@ -290,7 +314,7 @@ body::after {
 
   <div class="header">
     <div class="header-left">
-      <h1 class="page-title">Glow Up</h1>
+      <h1 class="page-title" data-i18n="pageTitle">Glow Up</h1>
       <div class="page-date" id="dateLabel">—</div>
     </div>
     <div class="progress-wrap">
@@ -306,28 +330,28 @@ body::after {
   </div>
 
   <div class="view-toggle">
-    <button class="toggle-btn active" id="btnToday" onclick="showView('today')">Today</button>
-    <button class="toggle-btn" id="btnHistory" onclick="showView('history')">History</button>
+    <button class="toggle-btn active" id="btnToday" onclick="showView('today')" data-i18n="today">Today</button>
+    <button class="toggle-btn" id="btnHistory" onclick="showView('history')" data-i18n="history">History</button>
   </div>
 
   <div id="todayView">
     <div id="habitList"></div>
 
     <div class="reset-wrap">
-      <button class="reset-btn" onclick="resetToday()">Reset today</button>
+      <button class="reset-btn" onclick="resetToday()" data-i18n="resetToday">Reset today</button>
     </div>
   </div>
 
   <div id="historyView" style="display:none;">
     <div class="hist-summary" id="histSummary"></div>
-    <div class="cat-label" style="margin-top:20px;">Last 30 Days</div>
+    <div class="cat-label" style="margin-top:20px;" data-i18n="last30">Last 30 Days</div>
     <div class="heatmap" id="heatmap"></div>
-    <div class="cat-label" style="margin-top:24px;">Per-Habit Consistency</div>
+    <div class="cat-label" style="margin-top:24px;" data-i18n="perHabit">Per-Habit Consistency</div>
     <div id="habitStats"></div>
   </div>
 
   <div class="moto">
-    Soft tissue first. Hard tissue second.<br>Start now. Converge at 19–20.
+    <span data-i18n="moto1">Soft tissue first. Hard tissue second.</span><br><span data-i18n="moto2">Start now. Converge at 19–20.</span>
   </div>
 
 </div>
@@ -382,6 +406,37 @@ const CATEGORIES = [
     ]
   },
 ];
+
+
+// Russian variants for habit data (used when the shared toggle is on RU).
+const RU = {
+  cats: { nonneg:'Обязательно', structure:'Осанка и структура', skin:'Кожа и скальп', nutrition:'Питание — цинк' },
+  habits: {
+    cold_shower: ['Холодный душ','Каждое утро — без исключений'],
+    sleep: ['Сон 7.5ч','Пн–Чт + Сб. 9ч в Пт и Вс'],
+    mewing: ['Мьюинг','Язык на нёбе, губы сомкнуты, дыхание носом'],
+    gum: ['Жвачка мастика / Falim','20–30 мин — обе стороны поровну'],
+    chin_tucks: ['Chin tucks','3×10 — подбородок прямо назад, не вниз'],
+    ppt: ['Задний наклон таза','Пассивная коррекция — ходьба, сидя, стоя'],
+    apt_am: ['Укрепление против APT','15:00 — 3A→3B→4A→4B + dead bug'],
+    apt_pm: ['Растяжка против APT','23:00 — Kneeling reach + колено к груди'],
+    valgus: ['Протокол вальгуса','Clamshells 3×15 + band walks + мост на одной ноге'],
+    feet: ['Положение стоп','Носки вперёд — ходьба, стоя, тренировка'],
+    neck: ['Тренировка шеи','4 суперсета — зад/перед/лево/право'],
+    nizoral: ['Шампунь Низорал','3 мин на коже головы — по секциям'],
+    shower_time: ['Душ после тренировки','В течение 20 минут — не тянуть'],
+    pillow: ['Смена наволочки','Каждые 3–4 дня'],
+    eggs: ['8 яиц','~8мг цинка — база протокола'],
+    seeds: ['100г тыквенных семечек','~7–8мг цинка — 550–600 ккал, учитывай'],
+    beef: ['Говядина 150–200г','~8–10мг цинка — в идеале ежедневно']
+  },
+  freq: { 'daily':'ежедн.', '24/7':'24/7', '3×/wk':'3×/нед', 'every 2d':'раз в 2 дня', 'post-workout':'после трен.', 'weekly':'еженед.' }
+};
+function isRu() { return window.__lang && __lang() === 'ru'; }
+function catLabel(cat) { return isRu() && RU.cats[cat.id] ? RU.cats[cat.id] : cat.label; }
+function habitName(h) { return isRu() && RU.habits[h.id] ? RU.habits[h.id][0] : h.name; }
+function habitDetail(h) { return isRu() && RU.habits[h.id] ? RU.habits[h.id][1] : h.detail; }
+function freqName(f) { return isRu() && RU.freq[f] ? RU.freq[f] : f; }
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
 
@@ -456,7 +511,7 @@ function render() {
   // Date label
   const d = new Date();
   document.getElementById('dateLabel').textContent =
-    d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' }).toUpperCase();
+    d.toLocaleDateString(isRu() ? 'ru-RU' : 'en-US', { weekday:'long', month:'long', day:'numeric' }).toUpperCase();
 
   // Count
   const allHabits = CATEGORIES.flatMap(c => c.habits);
@@ -486,7 +541,7 @@ function render() {
   CATEGORIES.forEach(cat => {
     const sec = document.createElement('div');
     sec.className = 'cat-section';
-    sec.innerHTML = `<div class="cat-label">${cat.label}</div>`;
+    sec.innerHTML = `<div class="cat-label">${catLabel(cat)}</div>`;
 
     cat.habits.forEach(habit => {
       const done = !!todayState[habit.id];
@@ -498,15 +553,15 @@ function render() {
       card.className = 'habit-card' + (done ? ' done' : '');
       card.style.setProperty('--cat-color', cat.color);
 
-      const freqLabel = habit.freq;
+      const freqLabel = freqName(habit.freq);
 
       card.innerHTML = `
         <div class="habit-check">
           <span class="check-icon">✓</span>
         </div>
         <div class="habit-info">
-          <div class="habit-name">${habit.name}</div>
-          <div class="habit-detail">${habit.detail}</div>
+          <div class="habit-name">${habitName(habit)}</div>
+          <div class="habit-detail">${habitDetail(habit)}</div>
           ${!isPassive ? `
           <div class="week-dots" style="--cat-color:${cat.color}">
             ${dots.map(dot => `<div class="wdot ${dot.isToday ? 'today' : ''} ${dot.done ? 'done' : ''}"></div>`).join('')}
@@ -579,15 +634,15 @@ function renderHistory() {
   document.getElementById('histSummary').innerHTML = `
     <div class="hist-stat-card">
       <div class="hist-stat-num" style="color:var(--green);">${perfectDays}</div>
-      <div class="hist-stat-label">Perfect Days</div>
+      <div class="hist-stat-label">${__t('perfectDays')}</div>
     </div>
     <div class="hist-stat-card">
       <div class="hist-stat-num" style="color:var(--yellow);">${avgPct}%</div>
-      <div class="hist-stat-label">Avg / 30 Days</div>
+      <div class="hist-stat-label">${__t('avg30')}</div>
     </div>
     <div class="hist-stat-card">
       <div class="hist-stat-num" style="color:var(--orange);">${daysWithData}</div>
-      <div class="hist-stat-label">Active Days</div>
+      <div class="hist-stat-label">${__t('activeDays')}</div>
     </div>
   `;
 
@@ -617,7 +672,7 @@ function renderHistory() {
     }
     const pct = totalCount > 0 ? Math.round((doneCount/totalCount)*100) : 0;
     const cat = CATEGORIES.find(c => c.habits.includes(h));
-    return { name: h.name, pct, color: cat.color };
+    return { name: habitName(h), pct, color: cat.color };
   }).sort((a,b) => b.pct - a.pct);
 
   statsContainer.innerHTML = habitStats.map(s => `
@@ -642,7 +697,7 @@ function toggle(habitId) {
 }
 
 function resetToday() {
-  if (!confirm('Reset all habits for today?')) return;
+  if (!confirm(__t('confirmReset'))) return;
   const state = loadState();
   const today = todayStr();
   state[today] = {};
@@ -653,6 +708,7 @@ function resetToday() {
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 render();
+window.addEventListener('lang-changed', () => { render(); if (currentView === 'history') renderHistory(); });
 
 // Auto-refresh at midnight
 const now = new Date();

@@ -6,6 +6,64 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#050506">
 <title>Что готовим</title>
+<script>
+window.I18N_DICT = {
+  ru: {
+    stamp: 'Личная книга рецептов',
+    title: 'Что готовим',
+    subtitle: 'Введи, что было на завтрак — ниже покажу, какой обед и ужин закроют дневную норму по калориям и белку. Рецепты с 🍲 — супы: минимум 2 раза в неделю, для пищеварения.',
+    dailyGoal: 'Дневная цель', kcalL: 'Калории', proteinL: 'Белок, г',
+    breakfastAte: 'Завтрак — что съел',
+    eggsL: 'Яйца, шт', cottageL: 'Творог, г', oatsL: 'Овсянка, г', bananaL: 'Банан, шт',
+    comboHead: 'Обед + ужин, чтобы закрыть день',
+    pantryHead: 'Обзор рецептов — что есть',
+    gProtein: 'Белок', gGrains: 'Крупы и бобовые', gVeg: 'Овощи и грибы',
+    gFruit: 'Фрукты', gNuts: 'Орехи и семена', gGreens: 'Зелень и другое',
+    resetAll: 'Сбросить всё', recipesH: 'Рецепты',
+    breakfastH: 'Завтрак', lunchH: 'Обед', dinnerH: 'Ужин',
+    footerNote: '🍲 = суп, минимум 2 раза в неделю для пищеварения · калории и белок посчитаны на реальные граммовки · перепроверяй порции под свою цель',
+    bfTotal: 'Завтрак: <b>{k} ккал</b> · <b>{p}г</b> белка · {c}г углеводов · {f}г жира',
+    remaining: 'Осталось на обед и ужин: <b>{k} ккал</b> и <b>{p}г белка</b>',
+    bestMatch: 'Лучшее совпадение', num: '№',
+    comboMeals: 'Обед: <span>{l}</span> &nbsp;+&nbsp; Ужин: <span>{d}</span>',
+    kcalU: 'ккал', proteinU: 'белок', carbsU: 'углеводы', fatU: 'жир',
+    comboDiff: 'Разница с целью: {dk} ккал, {dp}г белка (день целиком: {tk} ккал, {tp}г белка)',
+    emptyCombo: 'Нет подходящих рецептов обеда/ужина в списке.',
+    tagAll: 'Есть всё', tagPartial: 'Частично', soupBadge: '🍲 суп',
+    vitaminsL: 'Витамины/минералы:',
+    emptyMeal: 'Ничего не подходит из отмеченного — попробуй отметить больше продуктов.',
+    recipeOne: ' рецепт', recipeMany: ' рецептов'
+  },
+  en: {
+    stamp: 'Personal recipe book',
+    title: 'What to Cook',
+    subtitle: 'Enter what you had for breakfast — below I will show which lunch and dinner close your daily calorie and protein targets. Recipes with 🍲 are soups: at least twice a week, for digestion.',
+    dailyGoal: 'Daily target', kcalL: 'Calories', proteinL: 'Protein, g',
+    breakfastAte: 'Breakfast — what you ate',
+    eggsL: 'Eggs, pcs', cottageL: 'Cottage cheese, g', oatsL: 'Oats, g', bananaL: 'Banana, pcs',
+    comboHead: 'Lunch + dinner to close the day',
+    pantryHead: 'Recipe browser — what you have',
+    gProtein: 'Protein', gGrains: 'Grains & legumes', gVeg: 'Vegetables & mushrooms',
+    gFruit: 'Fruit', gNuts: 'Nuts & seeds', gGreens: 'Herbs & other',
+    resetAll: 'Reset all', recipesH: 'Recipes',
+    breakfastH: 'Breakfast', lunchH: 'Lunch', dinnerH: 'Dinner',
+    footerNote: '🍲 = soup, at least twice a week for digestion · calories and protein use real gram weights · double-check portions against your calorie target',
+    bfTotal: 'Breakfast: <b>{k} kcal</b> · <b>{p}g</b> protein · {c}g carbs · {f}g fat',
+    remaining: 'Left for lunch and dinner: <b>{k} kcal</b> and <b>{p}g protein</b>',
+    bestMatch: 'Best match', num: '#',
+    comboMeals: 'Lunch: <span>{l}</span> &nbsp;+&nbsp; Dinner: <span>{d}</span>',
+    kcalU: 'kcal', proteinU: 'protein', carbsU: 'carbs', fatU: 'fat',
+    comboDiff: 'Difference vs target: {dk} kcal, {dp}g protein (whole day: {tk} kcal, {tp}g protein)',
+    emptyCombo: 'No matching lunch/dinner recipes in the list.',
+    tagAll: 'Have everything', tagPartial: 'Partial', soupBadge: '🍲 soup',
+    vitaminsL: 'Vitamins/minerals:',
+    emptyMeal: 'Nothing matches what you checked — try checking more products.',
+    recipeOne: ' recipe', recipeMany: ' recipes'
+  }
+};
+</script>
+<script src="i18n.js"></script>
+
 <script src="topbar.js" defer></script>
 <style>
 :root {
@@ -320,29 +378,29 @@ footer{
 <body>
 
 <header>
-  <div class="stamp">Личная книга рецептов</div>
-  <h1>Что готовим</h1>
-  <div class="sub">Введи, что было на завтрак — ниже покажу, какой обед и ужин закроют дневную норму по калориям и белку. Рецепты с 🍲 — супы: минимум 2 раза в неделю, для пищеварения.</div>
+  <div class="stamp" data-i18n="stamp">Личная книга рецептов</div>
+  <h1 data-i18n="title">Что готовим</h1>
+  <div class="sub" data-i18n="subtitle">Введи, что было на завтрак — ниже покажу, какой обед и ужин закроют дневную норму по калориям и белку.</div>
 </header>
 
 <section class="planner">
   <div class="planner-inner">
 
     <div class="targets">
-      <h2 class="meal-title">Дневная цель</h2>
+      <h2 class="meal-title" data-i18n="dailyGoal">Дневная цель</h2>
       <div class="target-row">
-        <label>Калории <input type="number" id="targetKcal" value="2450"></label>
-        <label>Белок, г <input type="number" id="targetProtein" value="175"></label>
+        <label><span data-i18n="kcalL">Калории</span> <input type="number" id="targetKcal" value="2450"></label>
+        <label><span data-i18n="proteinL">Белок, г</span> <input type="number" id="targetProtein" value="175"></label>
       </div>
     </div>
 
     <div class="breakfast-builder">
-      <h2 class="meal-title">Завтрак — что съел</h2>
+      <h2 class="meal-title" data-i18n="breakfastAte">Завтрак — что съел</h2>
       <div class="quick-add">
-        <label>Яйца, шт <input type="number" min="0" id="qEggs" value="0"></label>
-        <label>Творог, г <input type="number" min="0" step="10" id="qCottage" value="0"></label>
-        <label>Овсянка, г <input type="number" min="0" step="10" id="qOats" value="0"></label>
-        <label>Банан, шт <input type="number" min="0" id="qBanana" value="0"></label>
+        <label><span data-i18n="eggsL">Яйца, шт</span> <input type="number" min="0" id="qEggs" value="0"></label>
+        <label><span data-i18n="cottageL">Творог, г</span> <input type="number" min="0" step="10" id="qCottage" value="0"></label>
+        <label><span data-i18n="oatsL">Овсянка, г</span> <input type="number" min="0" step="10" id="qOats" value="0"></label>
+        <label><span data-i18n="bananaL">Банан, шт</span> <input type="number" min="0" id="qBanana" value="0"></label>
       </div>
       <div class="breakfast-total" id="breakfastTotal"></div>
     </div>
@@ -350,7 +408,7 @@ footer{
     <div class="remaining" id="remainingBox"></div>
 
     <div class="combos">
-      <h2 class="meal-title">Обед + ужин, чтобы закрыть день</h2>
+      <h2 class="meal-title" data-i18n="comboHead">Обед + ужин, чтобы закрыть день</h2>
       <div id="comboList"></div>
     </div>
 
@@ -359,10 +417,10 @@ footer{
 
 <div class="layout">
   <aside class="pantry">
-    <h2>Обзор рецептов — что есть</h2>
+    <h2 data-i18n="pantryHead">Обзор рецептов — что есть</h2>
 
     <div class="group">
-      <h3>Белок</h3>
+      <h3 data-i18n="gProtein">Белок</h3>
       <label class="chk"><input type="checkbox" value="eggs"> Яйца</label>
       <label class="chk"><input type="checkbox" value="cottage_cheese"> Творог</label>
       <label class="chk"><input type="checkbox" value="chicken_thigh"> Куриные бёдра</label>
@@ -376,7 +434,7 @@ footer{
     </div>
 
     <div class="group">
-      <h3>Крупы и бобовые</h3>
+      <h3 data-i18n="gGrains">Крупы и бобовые</h3>
       <label class="chk"><input type="checkbox" value="bulgur"> Булгур</label>
       <label class="chk"><input type="checkbox" value="oats"> Овсянка</label>
       <label class="chk"><input type="checkbox" value="lentils"> Чечевица</label>
@@ -388,7 +446,7 @@ footer{
     </div>
 
     <div class="group">
-      <h3>Овощи и грибы</h3>
+      <h3 data-i18n="gVeg">Овощи и грибы</h3>
       <label class="chk"><input type="checkbox" value="mushrooms"> Шампиньоны</label>
       <label class="chk"><input type="checkbox" value="cabbage"> Капуста</label>
       <label class="chk"><input type="checkbox" value="carrot"> Морковь</label>
@@ -406,7 +464,7 @@ footer{
     </div>
 
     <div class="group">
-      <h3>Фрукты</h3>
+      <h3 data-i18n="gFruit">Фрукты</h3>
       <label class="chk"><input type="checkbox" value="banana"> Банан</label>
       <label class="chk"><input type="checkbox" value="apple"> Яблоко</label>
       <label class="chk"><input type="checkbox" value="orange"> Апельсин</label>
@@ -422,46 +480,44 @@ footer{
     </div>
 
     <div class="group">
-      <h3>Орехи и семена</h3>
+      <h3 data-i18n="gNuts">Орехи и семена</h3>
       <label class="chk"><input type="checkbox" value="walnut"> Грецкий орех</label>
     </div>
 
     <div class="group">
-      <h3>Зелень и другое</h3>
+      <h3 data-i18n="gGreens">Зелень и другое</h3>
       <label class="chk"><input type="checkbox" value="parsley"> Петрушка</label>
       <label class="chk"><input type="checkbox" value="dill"> Укроп</label>
       <label class="chk"><input type="checkbox" value="lemon"> Лимон</label>
     </div>
 
-    <button class="reset-btn" onclick="resetAll()">Сбросить всё</button>
+    <button class="reset-btn" onclick="resetAll()" data-i18n="resetAll">Сбросить всё</button>
   </aside>
 
   <main class="board">
     <div class="board-head">
-      <h2>Рецепты</h2>
+      <h2 data-i18n="recipesH">Рецепты</h2>
       <div class="count" id="countLabel">18 рецептов</div>
     </div>
 
     <section class="meal-section">
-      <h2 class="meal-title">Завтрак</h2>
+      <h2 class="meal-title" data-i18n="breakfastH">Завтрак</h2>
       <div class="grid" id="grid-breakfast"></div>
     </section>
 
     <section class="meal-section">
-      <h2 class="meal-title">Обед</h2>
+      <h2 class="meal-title" data-i18n="lunchH">Обед</h2>
       <div class="grid" id="grid-lunch"></div>
     </section>
 
     <section class="meal-section">
-      <h2 class="meal-title">Ужин</h2>
+      <h2 class="meal-title" data-i18n="dinnerH">Ужин</h2>
       <div class="grid" id="grid-dinner"></div>
     </section>
   </main>
 </div>
 
-<footer>
-  18 рецептов · калории и белок посчитаны на реальные граммовки продуктов · 🍲 = суп, минимум 2 раза в неделю для пищеварения · перепроверяй порции под свою цель по калориям
-</footer>
+<footer data-i18n="footerNote">🍲 = суп, минимум 2 раза в неделю для пищеварения</footer>
 
 <script>
 // ---- BASE FOOD UNITS (for quick breakfast builder) ----
@@ -492,13 +548,13 @@ function renderPlanner(){
 
   const bf = computeBreakfast();
   document.getElementById('breakfastTotal').innerHTML =
-    `Завтрак: <b>${bf.kcal} ккал</b> · <b>${bf.protein}г</b> белка · ${bf.carbs}г углеводов · ${bf.fat}г жира`;
+    __t('bfTotal').replace('{k}',bf.kcal).replace('{p}',bf.protein).replace('{c}',bf.carbs).replace('{f}',bf.fat);
 
   const remKcal = Math.round(targetKcal - bf.kcal);
   const remProtein = Math.round(targetProtein - bf.protein);
 
   document.getElementById('remainingBox').innerHTML =
-    `Осталось на обед и ужин: <b>${remKcal} ккал</b> и <b>${remProtein}г белка</b>`;
+    __t('remaining').replace('{k}',remKcal).replace('{p}',remProtein);
 
   // Build lunch/dinner combos
   const lunchList = recipes.filter(r=>r.meal.includes('lunch'));
@@ -532,24 +588,23 @@ function renderPlanner(){
     const soupD = c.d.soup ? ' 🍲' : '';
 
     div.innerHTML = `
-      <div class="combo-rank">${i===0 ? 'Лучшее совпадение' : '№'+(i+1)}</div>
-      <div class="combo-meals">Обед: <span>${c.l.title}${soupL}</span> &nbsp;+&nbsp; Ужин: <span>${c.d.title}${soupD}</span></div>
+      <div class="combo-rank">${i===0 ? __t('bestMatch') : __t('num')+(i+1)}</div>
+      <div class="combo-meals">${__t('comboMeals').replace('{l}', c.l.title+soupL).replace('{d}', c.d.title+soupD)}</div>
       <div class="combo-nutri">
-        <div><b>${c.kcal}</b>ккал</div>
-        <div><b>${c.protein}г</b>белок</div>
-        <div><b>${c.carbs}г</b>углеводы</div>
-        <div><b>${c.fat}г</b>жир</div>
+        <div><b>${c.kcal}</b>${__t('kcalU')}</div>
+        <div><b>${c.protein}г</b>${__t('proteinU')}</div>
+        <div><b>${c.carbs}г</b>${__t('carbsU')}</div>
+        <div><b>${c.fat}г</b>${__t('fatU')}</div>
       </div>
       <div class="combo-diff">
-        Разница с целью: ${kcalDiff>=0?'+':''}${kcalDiff} ккал, ${proteinDiff>=0?'+':''}${proteinDiff}г белка
-        (день целиком: ${bf.kcal + c.kcal} ккал, ${bf.protein + c.protein}г белка)
+        ${__t('comboDiff').replace('{dk}',(kcalDiff>=0?'+':'')+kcalDiff).replace('{dp}',(proteinDiff>=0?'+':'')+proteinDiff).replace('{tk}',bf.kcal+c.kcal).replace('{tp}',bf.protein+c.protein)}
       </div>
     `;
     container.appendChild(div);
   });
 
   if(top.length === 0){
-    container.innerHTML = '<div class="empty-meal">Нет подходящих рецептов обеда/ужина в списке.</div>';
+    container.innerHTML = '<div class="empty-meal">' + __t('emptyCombo') + '</div>';
   }
 }
 
@@ -941,8 +996,8 @@ function buildCard(r, checked, showAll){
   card.className = 'card' + (full && !showAll ? ' full-match' : '') + (!showAll && matches===0 ? ' dim' : '');
 
   let badge = '';
-  if(!showAll && full) badge = '<div class="tag-match">Есть всё</div>';
-  else if(!showAll && matches>0) badge = '<div class="tag-match" style="background:#a8552e;">Частично</div>';
+  if(!showAll && full) badge = '<div class="tag-match">' + __t('tagAll') + '</div>';
+  else if(!showAll && matches>0) badge = '<div class="tag-match" style="background:#a8552e;">' + __t('tagPartial') + '</div>';
 
   const ingHtml = r.ingredients.map(([key,amount])=>{
     const have = checked.includes(key);
@@ -951,7 +1006,7 @@ function buildCard(r, checked, showAll){
   }).join('');
 
   const stepsHtml = r.steps.map(s=>`<li>${s}</li>`).join('');
-  const soupTag = r.soup ? '<span class="soup-badge">🍲 суп</span>' : '';
+  const soupTag = r.soup ? '<span class="soup-badge">' + __t('soupBadge') + '</span>' : '';
 
   card.innerHTML = `
     ${badge}
@@ -965,7 +1020,7 @@ function buildCard(r, checked, showAll){
       <div><b>${r.n.carbs}г</b>углеводы</div>
       <div><b>${r.n.fat}г</b>жир</div>
     </div>
-    <div class="vitamins"><b>Витамины/минералы:</b> ${r.vitamins}</div>
+    <div class="vitamins"><b>${__t('vitaminsL')}</b> ${r.vitamins}</div>
     <div class="note">${r.note}</div>
   `;
   return {card, matches};
@@ -999,12 +1054,12 @@ function render(){
     if(shownInSection === 0){
       const empty = document.createElement('div');
       empty.className = 'empty-meal';
-      empty.textContent = 'Ничего не подходит из отмеченного — попробуй отметить больше продуктов.';
+      empty.textContent = __t('emptyMeal');
       container.appendChild(empty);
     }
   });
 
-  countLabel.textContent = totalShown + (totalShown===1?' рецепт':' рецептов');
+  countLabel.textContent = totalShown + (totalShown===1?__t('recipeOne'):__t('recipeMany'));
 }
 
 document.querySelectorAll('.pantry input').forEach(el=>{
@@ -1018,6 +1073,7 @@ function resetAll(){
 
 render();
 renderPlanner();
+window.addEventListener('lang-changed', () => { render(); renderPlanner(); });
 </script>
 </body>
 </html>

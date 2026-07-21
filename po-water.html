@@ -24,6 +24,68 @@ Contact: rowan.wisere@gmail.com
 <script src="sync.js" defer></script>
 <script src="topbar.js" defer></script>
 
+<script>
+window.I18N_DICT = {
+  en: {
+    appTitle: 'Water Coach', divWater: 'WATER',
+    drankToday: '{u} DRANK TODAY',
+    unitsBottle: 'bottles', unitsGlass: 'glasses', unitsOz: 'oz', unitsMl: 'ml',
+    oneBottle: 'bottle', oneGlass: 'glass', oneOz: 'oz', oneMl: 'ml',
+    plusLabel: 'Drank a {u}',
+    healthyZone: 'healthy zone',
+    helperStart: 'Start the day — first one in.',
+    helperBehind: 'Behind pace — drink one in the next hour.',
+    helperPace: '{n} to go. Pacing well.',
+    helperHit: '✓ Target hit — top up if you train this evening.',
+    helperOver: 'Strong — way past target.',
+    whyTarget: 'Why this target?',
+    last14: 'LAST 14 DAYS',
+    settings: 'Settings', profile: 'Profile',
+    weight: 'Weight', weightUnit: 'Weight unit', ageL: 'Age', sexL: 'Sex',
+    male: 'Male', female: 'Female', other: 'Other',
+    activityL: 'Activity (training hours per week)',
+    display: 'Display', showWaterAs: 'Show water as',
+    segBottles: 'Bottles', segGlasses: 'Glasses',
+    bottleSize: 'Bottle size (ml)', glassSize: 'Glass size (ml)',
+    caffeine: 'Caffeine', avgCaffeine: 'Average caffeine per day (mg)',
+    stims: 'Stimulants & meds', searchAdd: 'Search to add',
+    phSubSearch: 'Type a name (Adderall, Concerta, Lithium…)',
+    data: 'Data', exportJson: 'Export JSON', importJson: 'Import JSON',
+    resetAll: 'Reset all', done: 'Done',
+    noSubs: 'No substances added.'
+  },
+  ru: {
+    appTitle: 'Водный коуч', divWater: 'ВОДА',
+    drankToday: '{u} ВЫПИТО СЕГОДНЯ',
+    unitsBottle: 'бутылок', unitsGlass: 'стаканов', unitsOz: 'oz', unitsMl: 'мл',
+    oneBottle: 'бутылку', oneGlass: 'стакан', oneOz: 'oz', oneMl: 'мл',
+    plusLabel: 'Выпил {u}',
+    healthyZone: 'здоровая зона',
+    helperStart: 'Начни день — первая пошла.',
+    helperBehind: 'Отстаёшь от темпа — выпей в ближайший час.',
+    helperPace: 'Осталось {n}. Хороший темп.',
+    helperHit: '✓ Цель достигнута — добавь, если вечером тренировка.',
+    helperOver: 'Мощно — цель давно позади.',
+    whyTarget: 'Почему такая цель?',
+    last14: 'ПОСЛЕДНИЕ 14 ДНЕЙ',
+    settings: 'Настройки', profile: 'Профиль',
+    weight: 'Вес', weightUnit: 'Ед. веса', ageL: 'Возраст', sexL: 'Пол',
+    male: 'Муж', female: 'Жен', other: 'Другое',
+    activityL: 'Активность (часов тренировок в неделю)',
+    display: 'Отображение', showWaterAs: 'Показывать воду как',
+    segBottles: 'Бутылки', segGlasses: 'Стаканы',
+    bottleSize: 'Объём бутылки (мл)', glassSize: 'Объём стакана (мл)',
+    caffeine: 'Кофеин', avgCaffeine: 'Кофеин в день (мг)',
+    stims: 'Стимуляторы и лекарства', searchAdd: 'Поиск',
+    phSubSearch: 'Введи название (Adderall, Concerta, Lithium…)',
+    data: 'Данные', exportJson: 'Экспорт JSON', importJson: 'Импорт JSON',
+    resetAll: 'Сбросить всё', done: 'Готово',
+    noSubs: 'Ничего не добавлено.'
+  }
+};
+</script>
+<script src="i18n.js"></script>
+
 <!-- =============================================================
      EDIT THIS BLOCK TO MAKE THE APP YOURS.
      Most settings are also editable in-app via the gear icon.
@@ -475,7 +537,7 @@ html, body {
     </button>
   </div>
 
-  <div class="divider"><span>WATER</span></div>
+  <div class="divider"><span data-i18n="divWater">WATER</span></div>
 
   <div class="card">
     <div class="water-label" id="waterUnitLabel">BOTTLES DRANK TODAY</div>
@@ -492,7 +554,7 @@ html, body {
       </div>
       <div class="water-bar-labels">
         <span id="waterBarMin">0</span>
-        <span class="water-zone-name">healthy zone</span>
+        <span class="water-zone-name" data-i18n="healthyZone">healthy zone</span>
         <span id="waterBarMax">12+</span>
       </div>
     </div>
@@ -507,14 +569,14 @@ html, body {
     <div class="water-helper" id="waterHelper">Start the day — first one in.</div>
 
     <button class="why-toggle" id="whyToggle" type="button" aria-expanded="false">
-      <span>Why this target?</span>
+      <span data-i18n="whyTarget">Why this target?</span>
       <span class="why-arrow">▾</span>
     </button>
     <div class="why-body" id="whyBody"></div>
   </div>
 
   <div class="card">
-    <div class="water-label">LAST 14 DAYS</div>
+    <div class="water-label" data-i18n="last14">LAST 14 DAYS</div>
     <div class="spark-wrap">
       <svg class="spark-svg" id="sparkSvg" viewBox="0 0 280 70" preserveAspectRatio="none"></svg>
     </div>
@@ -525,17 +587,17 @@ html, body {
 <!-- Settings modal -->
 <div class="modal-bg" id="setModalBg">
   <div class="modal">
-    <h3>Settings</h3>
+    <h3 data-i18n="settings">Settings</h3>
 
     <div class="set-section">
-      <h4>Profile</h4>
+      <h4 data-i18n="profile">Profile</h4>
       <div class="field-row">
         <div class="field">
-          <label>Weight</label>
+          <label data-i18n="weight">Weight</label>
           <input type="number" id="setWeight" step="0.5" min="20" max="300">
         </div>
         <div class="field">
-          <label>Weight unit</label>
+          <label data-i18n="weightUnit">Weight unit</label>
           <div class="seg" id="setWeightUnit">
             <button data-u="kg">kg</button>
             <button data-u="lb">lb</button>
@@ -544,51 +606,57 @@ html, body {
       </div>
       <div class="field-row">
         <div class="field">
-          <label>Age</label>
+          <label data-i18n="ageL">Age</label>
           <input type="number" id="setAge" min="13" max="100">
         </div>
         <div class="field">
-          <label>Sex</label>
+          <label data-i18n="sexL">Sex</label>
           <div class="seg" id="setSex">
-            <button data-s="m">Male</button>
-            <button data-s="f">Female</button>
-            <button data-s="o">Other</button>
+            <button data-s="m" data-i18n="male">Male</button>
+            <button data-s="f" data-i18n="female">Female</button>
+            <button data-s="o" data-i18n="other">Other</button>
           </div>
         </div>
       </div>
       <div class="field">
-        <label>Activity (training hours per week)</label>
+        <label data-i18n="activityL">Activity (training hours per week)</label>
         <input type="number" id="setActivity" min="0" max="40" step="0.5">
       </div>
     </div>
 
     <div class="set-section">
-      <h4>Display</h4>
+      <h4 data-i18n="display">Display</h4>
       <div class="field">
-        <label>Show water as</label>
+        <label data-i18n="showWaterAs">Show water as</label>
         <div class="seg" id="setUnit">
-          <button data-u="bottle">Bottles</button>
-          <button data-u="glass">Glasses</button>
+          <button data-u="bottle" data-i18n="segBottles">Bottles</button>
+          <button data-u="glass" data-i18n="segGlasses">Glasses</button>
           <button data-u="oz">oz</button>
           <button data-u="ml">ml</button>
         </div>
       </div>
       <div class="field-row">
         <div class="field">
-          <label>Bottle size (ml)</label>
-          <input type="number" id="setBottleMl" min="100" max="2000" step="50">
+          <label data-i18n="bottleSize">Bottle size (ml)</label>
+          <select id="setBottleMl">
+            <option value="200">200 ml</option>
+            <option value="300">300 ml</option>
+            <option value="500">500 ml</option>
+            <option value="1000">1000 ml</option>
+            <option value="1500">1500 ml</option>
+          </select>
         </div>
         <div class="field">
-          <label>Glass size (ml)</label>
+          <label data-i18n="glassSize">Glass size (ml)</label>
           <input type="number" id="setGlassMl" min="100" max="500" step="10">
         </div>
       </div>
     </div>
 
     <div class="set-section">
-      <h4>Caffeine</h4>
+      <h4 data-i18n="caffeine">Caffeine</h4>
       <div class="field">
-        <label>Average caffeine per day (mg)</label>
+        <label data-i18n="avgCaffeine">Average caffeine per day (mg)</label>
         <input type="number" id="setCaffeine" min="0" max="1000" step="10">
         <div style="font-size:11px;color:var(--text-3);margin-top:4px;line-height:1.4">
           ~1 cup of coffee = 95mg · espresso shot = 75mg · energy drink = 160mg.
@@ -598,11 +666,11 @@ html, body {
     </div>
 
     <div class="set-section">
-      <h4>Stimulants & meds</h4>
+      <h4 data-i18n="stims">Stimulants & meds</h4>
       <div class="field">
-        <label>Search to add</label>
+        <label data-i18n="searchAdd">Search to add</label>
         <div class="search-wrap">
-          <input type="text" class="search-input" id="subSearch" placeholder="Type a name (Adderall, Concerta, Lithium…)" autocomplete="off">
+          <input type="text" class="search-input" id="subSearch" placeholder="Type a name…" data-i18n-ph="phSubSearch" autocomplete="off">
           <div class="search-results" id="subResults"></div>
         </div>
         <div style="font-size:11px;color:var(--text-3);margin-top:4px;line-height:1.4">
@@ -614,17 +682,17 @@ html, body {
     </div>
 
     <div class="set-section">
-      <h4>Data</h4>
+      <h4 data-i18n="data">Data</h4>
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
-        <button class="btn-secondary" id="setExport">Export JSON</button>
-        <button class="btn-secondary" id="setImport">Import JSON</button>
-        <button class="btn-secondary" id="setReset" style="color:var(--bad);border-color:rgba(255,138,138,0.3)">Reset all</button>
+        <button class="btn-secondary" id="setExport" data-i18n="exportJson">Export JSON</button>
+        <button class="btn-secondary" id="setImport" data-i18n="importJson">Import JSON</button>
+        <button class="btn-secondary" id="setReset" style="color:var(--bad);border-color:rgba(255,138,138,0.3)"><span data-i18n="resetAll">Reset all</span></button>
       </div>
       <input type="file" id="setImportFile" accept=".json" style="display:none">
     </div>
 
     <div class="modal-actions">
-      <button class="btn-primary" id="setClose">Done</button>
+      <button class="btn-primary" id="setClose" data-i18n="done">Done</button>
     </div>
   </div>
 </div>
@@ -711,7 +779,7 @@ html, body {
     try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
   }
   let state = loadState();
-  $('appTitle').textContent = CONFIG.appTitle || 'Water Coach';
+  $('appTitle').textContent = __t('appTitle');
 
   // Helpers
   function dateKey(d) {
@@ -758,16 +826,16 @@ html, body {
     return 1;                                   // ml
   }
   function unitLabelPlural() {
-    if (state.unit === 'bottle') return 'bottles';
-    if (state.unit === 'glass')  return 'glasses';
-    if (state.unit === 'oz')     return 'oz';
-    return 'ml';
+    if (state.unit === 'bottle') return __t('unitsBottle');
+    if (state.unit === 'glass')  return __t('unitsGlass');
+    if (state.unit === 'oz')     return __t('unitsOz');
+    return __t('unitsMl');
   }
   function unitLabelSingular() {
-    if (state.unit === 'bottle') return 'bottle';
-    if (state.unit === 'glass')  return 'glass';
-    if (state.unit === 'oz')     return 'oz';
-    return 'ml';
+    if (state.unit === 'bottle') return __t('oneBottle');
+    if (state.unit === 'glass')  return __t('oneGlass');
+    if (state.unit === 'oz')     return __t('oneOz');
+    return __t('oneMl');
   }
   function fmtMl(ml) {
     if (ml >= 1000) return (ml / 1000).toFixed(1) + ' L';
@@ -779,8 +847,9 @@ html, body {
   // ============================================================
   function renderDayPill() {
     const d = new Date();
-    const dows = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-    const mons = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    const ru = window.__lang && __lang() === 'ru';
+    const dows = ru ? ['ВС','ПН','ВТ','СР','ЧТ','ПТ','СБ'] : ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    const mons = ru ? ['ЯНВ','ФЕВ','МАР','АПР','МАЙ','ИЮН','ИЮЛ','АВГ','СЕН','ОКТ','НОЯ','ДЕК'] : ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
     $('dayPillLabel').textContent = dows[d.getDay()] + ', ' + mons[d.getMonth()] + ' ' + d.getDate();
   }
 
@@ -790,10 +859,10 @@ html, body {
     const count = todayCount();
     const unitName = unitLabelPlural();
 
-    $('waterUnitLabel').textContent = unitName.toUpperCase() + ' DRANK TODAY';
+    $('waterUnitLabel').textContent = __t('drankToday').replace('{u}', unitName.toUpperCase());
     $('waterNum').textContent = count;
     $('waterTarget').textContent = '/ ' + targetUnits;
-    $('waterPlusLabel').textContent = 'Drank a ' + unitLabelSingular();
+    $('waterPlusLabel').textContent = __t('plusLabel').replace('{u}', unitLabelSingular());
 
     // Progress bar with three zones: low (0-65%), healthy (65-100%), over (100-150%)
     const pctRaw = (count / targetUnits) * 100;
@@ -809,11 +878,11 @@ html, body {
 
     // Helper text
     const helper = $('waterHelper');
-    if (count === 0) { helper.textContent = 'Start the day — first one in.'; helper.classList.remove('good'); }
-    else if (pctRaw < 50) { helper.textContent = 'Behind pace — drink one in the next hour.'; helper.classList.remove('good'); }
-    else if (pctRaw < 100) { helper.textContent = (targetUnits - count) + ' to go. Pacing well.'; helper.classList.remove('good'); }
-    else if (pctRaw < 130) { helper.textContent = '✓ Target hit — top up if you train this evening.'; helper.classList.add('good'); }
-    else { helper.textContent = 'Strong — way past target.'; helper.classList.add('good'); }
+    if (count === 0) { helper.textContent = __t('helperStart'); helper.classList.remove('good'); }
+    else if (pctRaw < 50) { helper.textContent = __t('helperBehind'); helper.classList.remove('good'); }
+    else if (pctRaw < 100) { helper.textContent = __t('helperPace').replace('{n}', targetUnits - count); helper.classList.remove('good'); }
+    else if (pctRaw < 130) { helper.textContent = __t('helperHit'); helper.classList.add('good'); }
+    else { helper.textContent = __t('helperOver'); helper.classList.add('good'); }
 
     // Disable minus when at zero
     $('waterMinusBtn').disabled = count <= 0;
@@ -927,7 +996,13 @@ html, body {
     $('setAge').value = state.profile.age;
     $('setActivity').value = state.profile.activityHrsPerWeek;
     $('setCaffeine').value = state.caffeineMgPerDay;
-    $('setBottleMl').value = state.bottleMl;
+    const bSel = $('setBottleMl');
+    if (bSel.tagName === 'SELECT' && ![...bSel.options].some(o => Number(o.value) === Number(state.bottleMl))) {
+      const o = document.createElement('option');
+      o.value = state.bottleMl; o.textContent = state.bottleMl + ' ml';
+      bSel.appendChild(o);
+    }
+    bSel.value = state.bottleMl;
     $('setGlassMl').value = state.glassMl;
 
     setSegActive('setUnit', state.unit);
@@ -955,6 +1030,10 @@ html, body {
   bindSeg('setUnit', 'u', (v) => { state.unit = v; saveState(); renderWater(); });
   bindSeg('setWeightUnit', 'u', (v) => { state.weightUnit = v; saveState(); renderWater(); });
   bindSeg('setSex', 's', (v) => { state.profile.sex = v; saveState(); renderWater(); });
+  window.addEventListener('lang-changed', () => {
+    $('appTitle').textContent = __t('appTitle');
+    renderDayPill(); renderWater();
+  });
 
   ['setWeight','setAge','setActivity','setCaffeine','setBottleMl','setGlassMl'].forEach(id => {
     $(id).addEventListener('input', () => {
@@ -972,7 +1051,7 @@ html, body {
   function renderSubsList() {
     const list = $('subsList');
     if (!state.substances || !state.substances.length) {
-      list.innerHTML = '<div style="font-size:12px;color:var(--text-3);text-align:center;padding:14px 0;font-style:italic;">No substances added.</div>';
+      list.innerHTML = '<div style="font-size:12px;color:var(--text-3);text-align:center;padding:14px 0;font-style:italic;">' + __t('noSubs') + '</div>';
       return;
     }
     list.innerHTML = state.substances.map((s, i) =>

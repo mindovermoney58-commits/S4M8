@@ -7,6 +7,37 @@
 <meta name="theme-color" content="#0a0a0b">
 <title>Calisthenics Progression Coach</title>
 <script src="topbar.js" defer></script>
+<script>
+window.I18N_DICT = {
+  en: {
+    tabToday: 'Today', tabProgress: 'Progression', tabHistory: 'History', tabWeek: 'Full Week',
+    footerNote: 'Synced to the cloud — progress follows you across devices',
+    mastered: 'Mastered', inProgress: 'In Progress', totalSkills: 'Total Skills',
+    badgeMastered: '✓ MASTERED', badgeLocked: '🔒 LOCKED', badgeNotYet: 'NOT YET',
+    logHold: 'Log hold', logSteps: 'Log steps', logReps: 'Log reps',
+    markMastered: 'Mark mastered', record: 'Record:',
+    live: '● LIVE',
+    histEmpty1: 'No history yet.', histEmpty2: "Log an attempt on the Progression tab and it'll show up here.",
+    newRecord: '★ NEW RECORD',
+    logEntry: 'Log — ', currentRecord: 'Current record: {v} {u}. Enter today’s best attempt.',
+    cancel: 'Cancel', save: 'Save'
+  },
+  ru: {
+    tabToday: 'Сегодня', tabProgress: 'Прогресс', tabHistory: 'История', tabWeek: 'Вся неделя',
+    footerNote: 'Синхронизируется с облаком — прогресс доступен на всех устройствах',
+    mastered: 'Освоено', inProgress: 'В работе', totalSkills: 'Всего навыков',
+    badgeMastered: '✓ ОСВОЕНО', badgeLocked: '🔒 ЗАКРЫТО', badgeNotYet: 'ПОКА НЕТ',
+    logHold: 'Записать удержание', logSteps: 'Записать шаги', logReps: 'Записать повторы',
+    markMastered: 'Отметить освоенным', record: 'Рекорд:',
+    live: '● СЕЙЧАС',
+    histEmpty1: 'Истории пока нет.', histEmpty2: 'Запиши попытку на вкладке «Прогресс» — она появится здесь.',
+    newRecord: '★ НОВЫЙ РЕКОРД',
+    logEntry: 'Запись — ', currentRecord: 'Текущий рекорд: {v} {u}. Введи лучшую попытку за сегодня.',
+    cancel: 'Отмена', save: 'Сохранить'
+  }
+};
+</script>
+<script src="i18n.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="sync.js" defer></script>
 
@@ -346,10 +377,10 @@ footer { text-align:center; color:var(--text-4); font-size:10.5px; margin-top:26
   <div class="stat-grid" id="statGrid"></div>
 
   <div class="tabbar">
-    <button class="tabbtn active" data-tab="today">Today</button>
-    <button class="tabbtn" data-tab="progress">Progression</button>
-    <button class="tabbtn" data-tab="history">History</button>
-    <button class="tabbtn" data-tab="week">Full Week</button>
+    <button class="tabbtn active" data-tab="today" data-i18n="tabToday">Today</button>
+    <button class="tabbtn" data-tab="progress" data-i18n="tabProgress">Progression</button>
+    <button class="tabbtn" data-tab="history" data-i18n="tabHistory">History</button>
+    <button class="tabbtn" data-tab="week" data-i18n="tabWeek">Full Week</button>
   </div>
 
   <div class="tabpanel active" id="tab-today"></div>
@@ -357,7 +388,7 @@ footer { text-align:center; color:var(--text-4); font-size:10.5px; margin-top:26
   <div class="tabpanel" id="tab-history"></div>
   <div class="tabpanel" id="tab-week"></div>
 
-  <footer>Saved locally in this browser — clearing site data resets progress</footer>
+  <footer data-i18n="footerNote">Saved locally in this browser</footer>
 </div>
 
 <div class="overlay" id="logOverlay">
@@ -366,8 +397,8 @@ footer { text-align:center; color:var(--text-4); font-size:10.5px; margin-top:26
     <div class="modal-sub" id="logSub"></div>
     <input type="number" id="logInput" placeholder="0" inputmode="numeric">
     <div class="modal-actions">
-      <button class="btn btn-ghost" id="logCancel">Cancel</button>
-      <button class="btn btn-primary" id="logSave">Save</button>
+      <button class="btn btn-ghost" id="logCancel" data-i18n="cancel">Cancel</button>
+      <button class="btn btn-primary" id="logSave" data-i18n="save">Save</button>
     </div>
   </div>
 </div>
@@ -434,9 +465,15 @@ footer { text-align:center; color:var(--text-4); font-size:10.5px; margin-top:26
 
   // ---------- header ----------
   document.getElementById('appTitle').textContent = CONFIG.appTitle;
-  const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
   const now = new Date();
-  document.getElementById('todayLabel').textContent = days[now.getDay()] + ' \u00b7 ' + now.toLocaleDateString();
+  function renderTodayLabel(){
+    const ru = window.__lang && __lang()==='ru';
+    const days = ru
+      ? ["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"]
+      : ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    document.getElementById('todayLabel').textContent = days[now.getDay()] + ' \u00b7 ' + now.toLocaleDateString(ru ? 'ru-RU' : undefined);
+  }
+  renderTodayLabel();
 
   // ---------- overview stats ----------
   function renderStats(){
@@ -445,9 +482,9 @@ footer { text-align:center; color:var(--text-4); font-size:10.5px; margin-top:26
     const inProgress = all.filter(d => !state.skills[d.id].mastered && d.type!=='milestone').length;
     const total = all.length;
     document.getElementById('statGrid').innerHTML = `
-      <div class="stat-card" style="--dot-color:var(--good-glow)"><div class="stat-num" style="color:var(--good)">${mastered}</div><div class="stat-label">Mastered</div></div>
-      <div class="stat-card" style="--dot-color:rgba(255,59,48,0.14)"><div class="stat-num" style="color:var(--red)">${inProgress}</div><div class="stat-label">In Progress</div></div>
-      <div class="stat-card" style="--dot-color:rgba(96,165,250,0.12)"><div class="stat-num" style="color:var(--blue)">${total}</div><div class="stat-label">Total Skills</div></div>
+      <div class="stat-card" style="--dot-color:var(--good-glow)"><div class="stat-num" style="color:var(--good)">${mastered}</div><div class="stat-label">${__t('mastered')}</div></div>
+      <div class="stat-card" style="--dot-color:rgba(255,59,48,0.14)"><div class="stat-num" style="color:var(--red)">${inProgress}</div><div class="stat-label">${__t('inProgress')}</div></div>
+      <div class="stat-card" style="--dot-color:rgba(96,165,250,0.12)"><div class="stat-num" style="color:var(--blue)">${total}</div><div class="stat-label">${__t('totalSkills')}</div></div>
     `;
   }
 
@@ -475,7 +512,7 @@ footer { text-align:center; color:var(--text-4); font-size:10.5px; margin-top:26
           <div class="skill-top">
             <div class="skill-name">${s.name}${s.lockNote && locked ? `<span class="lock-note">${s.lockNote}</span>` : ''}</div>
             <div class="skill-badge ${st.mastered?'badge-mastered':(locked?'badge-locked':'badge-progress')}">
-              ${st.mastered ? '\u2713 MASTERED' : (locked ? '\u{1F512} LOCKED' : (isMilestone ? 'NOT YET' : st.current + ' ' + (s.unit||'')))}
+              ${st.mastered ? __t('badgeMastered') : (locked ? __t('badgeLocked') : (isMilestone ? __t('badgeNotYet') : st.current + ' ' + (s.unit||'')))}
             </div>
           </div>`;
         if (!isMilestone && !st.mastered && !locked){
@@ -484,19 +521,19 @@ footer { text-align:center; color:var(--text-4); font-size:10.5px; margin-top:26
             <div class="skill-nums">${st.current}/${s.target} ${s.unit||''}</div>
           </div>
           <div class="skill-actions">
-            <button class="btn" onclick="window.__openLog('${s.id}')">Log ${s.type==='hold'?'hold':(s.type==='steps'?'steps':'reps')}</button>
-            <button class="btn btn-ghost" onclick="window.__markMastered('${s.id}')">Mark mastered</button>
+            <button class="btn" onclick="window.__openLog('${s.id}')">${s.type==='hold'?__t('logHold'):(s.type==='steps'?__t('logSteps'):__t('logReps'))}</button>
+            <button class="btn btn-ghost" onclick="window.__markMastered('${s.id}')">${__t('markMastered')}</button>
           </div>`;
         } else if (!isMilestone && !st.mastered && locked){
           // locked, no actions
         } else if (isMilestone && !st.mastered){
           html += `<div class="skill-actions">
-            <button class="btn btn-mastered" onclick="window.__markMastered('${s.id}')">Mark mastered</button>
+            <button class="btn btn-mastered" onclick="window.__markMastered('${s.id}')">${__t('markMastered')}</button>
           </div>`;
         } else if (st.mastered && !isMilestone){
           html += `<div class="skill-bar-row">
             <div class="skill-bar"><div class="skill-bar-fill done" style="width:100%"></div></div>
-            <div class="skill-nums">Record: ${st.current} ${s.unit||''}</div>
+            <div class="skill-nums">${__t('record')} ${st.current} ${s.unit||''}</div>
           </div>`;
         }
         html += `</div>`;
@@ -516,7 +553,7 @@ footer { text-align:center; color:var(--text-4); font-size:10.5px; margin-top:26
     const d = CONFIG.week[idx];
     let html = `<div class="day-card today">
       <div class="day-head">
-        <div class="day-name"><span class="pin">\u25CF LIVE</span>${d.day}</div>
+        <div class="day-name"><span class="pin">${__t('live')}</span>${d.day}</div>
         <div class="day-tag">${d.tag}${d.time ? ' \u00b7 ' + d.time : ''}</div>
       </div>
       <ul class="day-list">${d.blocks.map(b=>`<li>${b}</li>`).join('')}</ul>
@@ -559,7 +596,7 @@ footer { text-align:center; color:var(--text-4); font-size:10.5px; margin-top:26
       });
     });
     if (!entries.length){
-      el.innerHTML = `<div class="hist-empty">No history yet.<br>Log an attempt on the Progression tab and it'll show up here.</div>`;
+      el.innerHTML = `<div class="hist-empty">${__t('histEmpty1')}<br>${__t('histEmpty2')}</div>`;
       return;
     }
     // Sort newest first
@@ -571,7 +608,7 @@ footer { text-align:center; color:var(--text-4); font-size:10.5px; margin-top:26
     let html = '';
     dates.forEach(date=>{
       const d = new Date(date + 'T00:00:00');
-      const label = d.toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric' });
+      const label = d.toLocaleDateString(window.__lang && __lang()==='ru' ? 'ru-RU' : 'en-US', { weekday:'short', month:'short', day:'numeric' });
       html += `<div class="hist-day">
         <div class="hist-date">${label}</div>
         <div class="hist-line">`;
@@ -584,7 +621,7 @@ footer { text-align:center; color:var(--text-4); font-size:10.5px; margin-top:26
             </div>
             <div style="text-align:right">
               <div class="hist-val">${e.value}<span class="unit">${e.unit}</span></div>
-              ${e.isPR ? `<div class="hist-pr-tag">\u2605 NEW RECORD</div>` : ''}
+              ${e.isPR ? `<div class="hist-pr-tag">${__t('newRecord')}</div>` : ''}
             </div>
           </div>
         </div>`;
@@ -623,8 +660,8 @@ footer { text-align:center; color:var(--text-4); font-size:10.5px; margin-top:26
     activeSkillId = id;
     const def = skillDef(id);
     const st = state.skills[id];
-    logTitle.textContent = 'Log \u2014 ' + def.name;
-    logSub.textContent = 'Current record: ' + st.current + ' ' + (def.unit||'') + '. Enter today\'s best attempt.';
+    logTitle.textContent = __t('logEntry') + def.name;
+    logSub.textContent = __t('currentRecord').replace('{v}', st.current).replace('{u}', def.unit||'');
     logInput.value = '';
     overlay.classList.add('open');
     setTimeout(()=>logInput.focus(), 50);
@@ -652,6 +689,7 @@ footer { text-align:center; color:var(--text-4); font-size:10.5px; margin-top:26
   };
 
   renderAll();
+  window.addEventListener('lang-changed', () => { renderTodayLabel(); renderAll(); });
 
   // ---------- cloud sync ----------
   // Mirrors the whole app state row across devices via sync.js (Supabase).
