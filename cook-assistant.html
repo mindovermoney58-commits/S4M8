@@ -1397,27 +1397,60 @@ function render(){
 }
 
 document.querySelectorAll('.pantry input').forEach(el=>{
-  el.addEventListener('change', render);
+  el.addEventListener('change', ()=>{ render(); savePrefs(); });
 });
 
 function resetAll(){
   document.querySelectorAll('.pantry input').forEach(el=>el.checked=false);
   render();
+  savePrefs();
 }
 
+// ==================== ПРЕФЫ (цели + кладовая) ====================
+const PREFS_KEY = 'cook_prefs_v1';
+
+function savePrefs(){
+  const pantry = Array.from(document.querySelectorAll('.pantry input:checked')).map(c=>c.value);
+  localStorage.setItem(PREFS_KEY, JSON.stringify({
+    targetKcal: document.getElementById('targetKcal').value,
+    targetProtein: document.getElementById('targetProtein').value,
+    pantry
+  }));
+}
+function applyPrefs(){
+  let p = null;
+  try { p = JSON.parse(localStorage.getItem(PREFS_KEY)); } catch(e){}
+  if(!p) return;
+  if(p.targetKcal) document.getElementById('targetKcal').value = p.targetKcal;
+  if(p.targetProtein) document.getElementById('targetProtein').value = p.targetProtein;
+  if(Array.isArray(p.pantry)){
+    document.querySelectorAll('.pantry input').forEach(el=>{ el.checked = p.pantry.includes(el.value); });
+  }
+}
+
+['targetKcal','targetProtein'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', savePrefs);
+});
+
+applyPrefs();
 render();
 renderPlanner();
 renderHistory();
 window.addEventListener('lang-changed', () => { render(); renderPlanner(); renderHistory(); });
 
 // ==================== CLOUD SYNC ====================
-// Mirrors meal history across devices via sync.js (Supabase).
+// Mirrors meal history + targets + pantry across devices via sync.js (Supabase).
 document.addEventListener('DOMContentLoaded', function(){
   if (typeof initCloudSync !== 'function') return;
   initCloudSync({
     appKey: 'cook',
-    syncedKeys: [HISTORY_KEY],
-    onApplied: renderHistory
+    syncedKeys: [HISTORY_KEY, PREFS_KEY],
+    onApplied: function(){
+      applyPrefs();
+      render();
+      renderPlanner();
+      renderHistory();
+    }
   });
 });
 </script>

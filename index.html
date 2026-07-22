@@ -478,6 +478,12 @@ body::after {
     localStorage.setItem('dash_lang', lang);
     apply();
   });
+  // Re-read the stored language and re-apply (used by cloud sync).
+  window.__applyLang = function () {
+    lang = localStorage.getItem('dash_lang');
+    if (lang !== 'en' && lang !== 'ru') lang = 'en';
+    apply();
+  };
   apply();
 })();
 </script>
@@ -676,6 +682,25 @@ body::after {
     $('whAction').textContent = window.__t('whSyncing'); syncWhoop();
   });
 })();
+</script>
+
+<script>
+// Cloud sync: profile edits made here land in the shared 'health' row, and the
+// EN/RU choice mirrors across devices via the 'prefs' row. WHOOP tokens are
+// deliberately NOT synced — each device connects on its own.
+document.addEventListener('DOMContentLoaded', function () {
+  if (typeof initCloudSync !== 'function') return;
+  initCloudSync({
+    appKey: 'health',
+    syncedKeys: ['po_water_v1'],
+    onApplied: function () { window.dispatchEvent(new Event('storage')); }
+  });
+  initCloudSync({
+    appKey: 'prefs',
+    syncedKeys: ['dash_lang'],
+    onApplied: function () { if (typeof window.__applyLang === 'function') window.__applyLang(); }
+  });
+});
 </script>
 </body>
 </html>

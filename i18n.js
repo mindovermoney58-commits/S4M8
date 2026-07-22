@@ -66,7 +66,24 @@
     apply();
   });
 
-  function boot() { injectButton(); apply(); }
+  function boot() {
+    injectButton();
+    apply();
+    // Mirror the language choice across devices ('prefs' row). Skip when
+    // embedded — the parent page owns sync in that case.
+    try { if (window.self !== window.top) return; } catch (e) { return; }
+    if (typeof window.initCloudSync === 'function') {
+      window.initCloudSync({
+        appKey: 'prefs',
+        syncedKeys: [KEY],
+        onApplied: function () {
+          lang = localStorage.getItem(KEY);
+          if (lang !== 'en' && lang !== 'ru') lang = 'en';
+          apply();
+        }
+      });
+    }
+  }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
   } else {
