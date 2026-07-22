@@ -32,7 +32,30 @@ window.I18N_DICT = {
     tagAll: 'Есть всё', tagPartial: 'Частично', soupBadge: '🍲 суп',
     vitaminsL: 'Витамины/минералы:',
     emptyMeal: 'Ничего не подходит из отмеченного — попробуй отметить больше продуктов.',
-    recipeOne: ' рецепт', recipeMany: ' рецептов'
+    recipeOne: ' рецепт', recipeMany: ' рецептов',
+    histHead: 'История питания',
+    cNameL: 'Что съел', cNamePh: 'напр. Греческий йогурт',
+    cMealL: 'Приём',
+    mealBreakfast: 'Завтрак', mealLunch: 'Обед', mealDinner: 'Ужин', mealSnack: 'Перекус',
+    cKcalL: 'Ккал', cProteinL: 'Белок, г', cCarbsL: 'Углеводы, г', cFatL: 'Жир, г',
+    cAddBtn: '+ Добавить в историю',
+    clearHistoryBtn: 'Очистить всю историю',
+    confirmClear: 'Удалить всю историю питания? Это необратимо.',
+    emptyHistory: 'Пока пусто — добавляй еду из рецептов выше или впиши вручную.',
+    todayLbl: 'Сегодня',
+    delTitle: 'Удалить',
+    logBreakfastBtn: '+ Записать завтрак в историю',
+    loggedOk: 'Записано ✓', addedOk: 'Добавлено ✓',
+    logLunchBtn: '+ Обед в историю', logDinnerBtn: '+ Ужин в историю',
+    logRecipeBtn: '+ Записать в историю ({m})',
+    alertBf: 'Сначала укажи, что съел на завтрак — выше в полях.',
+    alertName: 'Впиши, что съел.',
+    alertVals: 'Укажи хотя бы калории или белок.',
+    entryOne: ' запись', entryMany: ' записей',
+    bfQuickTitle: 'Завтрак (быстрый ввод)',
+    histTotals: '<b>{k}</b> ккал (<span class="{kc}">{kd}</span>) · <b>{p}г</b> белка (<span class="{pc}">{pd}</span>)',
+    entryNutri: '{k} ккал · {p}г белка',
+    mealLabels: { breakfast:'завтрак', lunch:'обед', dinner:'ужин', snack:'перекус' }
   },
   en: {
     stamp: 'Personal recipe book',
@@ -58,7 +81,30 @@ window.I18N_DICT = {
     tagAll: 'Have everything', tagPartial: 'Partial', soupBadge: '🍲 soup',
     vitaminsL: 'Vitamins/minerals:',
     emptyMeal: 'Nothing matches what you checked — try checking more products.',
-    recipeOne: ' recipe', recipeMany: ' recipes'
+    recipeOne: ' recipe', recipeMany: ' recipes',
+    histHead: 'Meal history',
+    cNameL: 'What you ate', cNamePh: 'e.g. Greek yogurt',
+    cMealL: 'Meal',
+    mealBreakfast: 'Breakfast', mealLunch: 'Lunch', mealDinner: 'Dinner', mealSnack: 'Snack',
+    cKcalL: 'Kcal', cProteinL: 'Protein, g', cCarbsL: 'Carbs, g', cFatL: 'Fat, g',
+    cAddBtn: '+ Add to history',
+    clearHistoryBtn: 'Clear all history',
+    confirmClear: 'Delete all meal history? This cannot be undone.',
+    emptyHistory: 'Empty so far — log food from the recipes above or add it manually.',
+    todayLbl: 'Today',
+    delTitle: 'Delete',
+    logBreakfastBtn: '+ Log breakfast to history',
+    loggedOk: 'Logged ✓', addedOk: 'Added ✓',
+    logLunchBtn: '+ Lunch to history', logDinnerBtn: '+ Dinner to history',
+    logRecipeBtn: '+ Log to history ({m})',
+    alertBf: 'First enter your breakfast in the fields above.',
+    alertName: 'Enter what you ate.',
+    alertVals: 'Enter at least calories or protein.',
+    entryOne: ' entry', entryMany: ' entries',
+    bfQuickTitle: 'Breakfast (quick entry)',
+    histTotals: '<b>{k}</b> kcal (<span class="{kc}">{kd}</span>) · <b>{p}g</b> protein (<span class="{pc}">{pd}</span>)',
+    entryNutri: '{k} kcal · {p}g protein',
+    mealLabels: { breakfast:'breakfast', lunch:'lunch', dinner:'dinner', snack:'snack' }
   }
 };
 </script>
@@ -369,6 +415,85 @@ label.chk input{
 
 .note{ font-size: 11.5px; color: var(--text-tertiary); margin-top: 8px; font-style: italic; line-height: 1.4; }
 
+.log-recipe-btn{
+  margin-top: 12px; width: 100%; padding: 9px;
+  border: 1px solid color-mix(in srgb, var(--accent-soup) 40%, transparent);
+  border-radius: 10px; background: transparent; color: var(--accent-soup);
+  font-family: inherit; font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase; cursor: pointer; transition: background 0.15s, color 0.15s;
+}
+.log-recipe-btn:hover{ background: rgba(107,227,164,0.1); }
+.log-recipe-btn.logged{ color: var(--text-primary); border-color: rgba(255,255,255,0.2); }
+
+.log-breakfast-btn{ margin-top: 12px; width: auto; }
+
+.combo-log-row{ display: flex; gap: 8px; margin-top: 10px; }
+.combo-log-row .log-recipe-btn{ margin-top: 0; flex: 1; }
+
+.history-box{ width: 100%; }
+.custom-add{
+  display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 20px;
+  padding-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.custom-add label{
+  display: flex; flex-direction: column; gap: 7px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.custom-add input, .custom-add select{
+  font-family: inherit; font-size: 14px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  background: rgba(0,0,0,0.3);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.custom-add input:focus, .custom-add select:focus{ border-color: rgba(255,255,255,0.28); }
+.custom-add input[type="text"]{ width: 200px; }
+.custom-add input[type="number"]{ width: 90px; }
+
+.history-head-row{
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
+}
+.history-clear{ border-color: rgba(255,90,90,0.3); color: #E58A8A; }
+.history-clear:hover{ background: rgba(255,90,90,0.08); color: #FF9E9E; }
+
+.day-group{ margin-bottom: 18px; }
+.day-head{
+  display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 8px;
+}
+.day-head .day-label{ font-size: 13px; font-weight: 700; color: var(--text-primary); }
+.day-head .day-totals{ font-size: 11.5px; color: var(--text-tertiary); font-family: var(--font-mono); }
+.day-head .day-totals b{ color: var(--accent); }
+.day-head .day-totals .over{ color: #E58A8A; }
+.day-head .day-totals .under{ color: var(--accent-soup); }
+
+.entry-row{
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 9px 12px; border-radius: 10px;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+  margin-bottom: 6px; font-size: 13px;
+}
+.entry-row .entry-meal{
+  font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--text-tertiary); border: 1px solid rgba(255,255,255,0.1); border-radius: 999px;
+  padding: 2px 8px; flex-shrink: 0;
+}
+.entry-row .entry-title{ flex: 1; color: var(--text-secondary); }
+.entry-row .entry-nutri{
+  font-family: var(--font-mono); font-size: 11.5px; color: var(--text-tertiary); flex-shrink: 0;
+  white-space: nowrap;
+}
+.entry-row .entry-del{
+  border: 0; background: transparent; color: var(--text-tertiary); cursor: pointer;
+  font-size: 16px; line-height: 1; padding: 2px 6px; flex-shrink: 0; transition: color 0.15s;
+}
+.entry-row .entry-del:hover{ color: #E58A8A; }
+.empty-history{ color: var(--text-tertiary); font-size: 13px; font-style: italic; }
+
 footer{
   text-align: center; padding: 30px 20px; color: var(--text-tertiary); font-size: 11.5px;
   border-top: 1px solid rgba(255,255,255,0.07); max-width: 1200px; margin: 0 auto;
@@ -380,7 +505,7 @@ footer{
 <header>
   <div class="stamp" data-i18n="stamp">Личная книга рецептов</div>
   <h1 data-i18n="title">Что готовим</h1>
-  <div class="sub" data-i18n="subtitle">Введи, что было на завтрак — ниже покажу, какой обед и ужин закроют дневную норму по калориям и белку.</div>
+  <div class="sub" data-i18n="subtitle">Введи, что было на завтрак — ниже покажу, какой обед и ужин закроют дневную норму по калориям и белку. Рецепты с 🍲 — супы: минимум 2 раза в неделю, для пищеварения.</div>
 </header>
 
 <section class="planner">
@@ -403,6 +528,7 @@ footer{
         <label><span data-i18n="bananaL">Банан, шт</span> <input type="number" min="0" id="qBanana" value="0"></label>
       </div>
       <div class="breakfast-total" id="breakfastTotal"></div>
+      <button class="reset-btn log-breakfast-btn" id="logBreakfastBtn" type="button" data-i18n="logBreakfastBtn">+ Записать завтрак в историю</button>
     </div>
 
     <div class="remaining" id="remainingBox"></div>
@@ -412,6 +538,37 @@ footer{
       <div id="comboList"></div>
     </div>
 
+  </div>
+</section>
+
+<section class="planner">
+  <div class="planner-inner">
+    <div class="history-box">
+      <h2 class="meal-title" data-i18n="histHead">История питания</h2>
+
+      <div class="custom-add">
+        <label><span data-i18n="cNameL">Что съел</span> <input type="text" id="cName" placeholder="напр. Греческий йогурт" data-i18n-ph="cNamePh"></label>
+        <label><span data-i18n="cMealL">Приём</span>
+          <select id="cMeal">
+            <option value="breakfast" data-i18n="mealBreakfast">Завтрак</option>
+            <option value="lunch" data-i18n="mealLunch">Обед</option>
+            <option value="dinner" data-i18n="mealDinner">Ужин</option>
+            <option value="snack" data-i18n="mealSnack">Перекус</option>
+          </select>
+        </label>
+        <label><span data-i18n="cKcalL">Ккал</span> <input type="number" min="0" id="cKcal" value=""></label>
+        <label><span data-i18n="cProteinL">Белок, г</span> <input type="number" min="0" id="cProtein" value=""></label>
+        <label><span data-i18n="cCarbsL">Углеводы, г</span> <input type="number" min="0" id="cCarbs" value="0"></label>
+        <label><span data-i18n="cFatL">Жир, г</span> <input type="number" min="0" id="cFat" value="0"></label>
+        <button class="reset-btn" id="cAddBtn" type="button" style="width:auto;align-self:flex-end;" data-i18n="cAddBtn">+ Добавить в историю</button>
+      </div>
+
+      <div class="history-head-row">
+        <span class="count" id="historyCount">0 записей</span>
+        <button class="reset-btn history-clear" id="clearHistoryBtn" type="button" style="width:auto;" data-i18n="clearHistoryBtn">Очистить всю историю</button>
+      </div>
+      <div id="historyList"></div>
+    </div>
   </div>
 </section>
 
@@ -517,7 +674,7 @@ footer{
   </main>
 </div>
 
-<footer data-i18n="footerNote">🍲 = суп, минимум 2 раза в неделю для пищеварения</footer>
+<footer data-i18n="footerNote">🍲 = суп, минимум 2 раза в неделю для пищеварения · калории и белок посчитаны на реальные граммовки · перепроверяй порции под свою цель</footer>
 
 <script>
 // ---- BASE FOOD UNITS (for quick breakfast builder) ----
@@ -549,6 +706,8 @@ function renderPlanner(){
   const bf = computeBreakfast();
   document.getElementById('breakfastTotal').innerHTML =
     __t('bfTotal').replace('{k}',bf.kcal).replace('{p}',bf.protein).replace('{c}',bf.carbs).replace('{f}',bf.fat);
+
+  window.__currentBreakfast = bf;
 
   const remKcal = Math.round(targetKcal - bf.kcal);
   const remProtein = Math.round(targetProtein - bf.protein);
@@ -599,8 +758,23 @@ function renderPlanner(){
       <div class="combo-diff">
         ${__t('comboDiff').replace('{dk}',(kcalDiff>=0?'+':'')+kcalDiff).replace('{dp}',(proteinDiff>=0?'+':'')+proteinDiff).replace('{tk}',bf.kcal+c.kcal).replace('{tp}',bf.protein+c.protein)}
       </div>
+      <div class="combo-log-row">
+        <button class="log-recipe-btn combo-log-l" type="button">${__t('logLunchBtn')}</button>
+        <button class="log-recipe-btn combo-log-d" type="button">${__t('logDinnerBtn')}</button>
+      </div>
     `;
     container.appendChild(div);
+
+    div.querySelector('.combo-log-l').addEventListener('click', function(){
+      addHistoryEntry('lunch', c.l.title, c.l.n);
+      this.textContent = __t('addedOk'); this.classList.add('logged');
+      setTimeout(()=>{ this.textContent = __t('logLunchBtn'); this.classList.remove('logged'); }, 1400);
+    });
+    div.querySelector('.combo-log-d').addEventListener('click', function(){
+      addHistoryEntry('dinner', c.d.title, c.d.n);
+      this.textContent = __t('addedOk'); this.classList.add('logged');
+      setTimeout(()=>{ this.textContent = __t('logDinnerBtn'); this.classList.remove('logged'); }, 1400);
+    });
   });
 
   if(top.length === 0){
@@ -608,8 +782,23 @@ function renderPlanner(){
   }
 }
 
-['qEggs','qCottage','qOats','qBanana','targetKcal','targetProtein'].forEach(id=>{
+['qEggs','qCottage','qOats','qBanana'].forEach(id=>{
   document.getElementById(id).addEventListener('input', renderPlanner);
+});
+// Target changes also shift the over/under numbers in the history day totals.
+['targetKcal','targetProtein'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', ()=>{ renderPlanner(); renderHistory(); });
+});
+
+document.getElementById('logBreakfastBtn').addEventListener('click', function(){
+  const bf = window.__currentBreakfast || computeBreakfast();
+  if(bf.kcal === 0 && bf.protein === 0){
+    alert(__t('alertBf'));
+    return;
+  }
+  addHistoryEntry('breakfast', __t('bfQuickTitle'), bf);
+  this.textContent = __t('loggedOk');
+  setTimeout(()=>{ this.textContent = __t('logBreakfastBtn'); }, 1400);
 });
 
 const NAMES = {
@@ -981,6 +1170,138 @@ const recipes = [
   }
 ];
 
+// ==================== ИСТОРИЯ ПИТАНИЯ ====================
+const HISTORY_KEY = 'cook_history_v1';
+function mealLabel(key){ return (__t('mealLabels') || {})[key] || key; }
+function esc(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function loadHistory(){
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; }
+  catch(e){ return []; }
+}
+function saveHistory(list){
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
+}
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function timeStr(){
+  const d = new Date();
+  return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+function addHistoryEntry(meal, title, n){
+  const list = loadHistory();
+  list.push({
+    id: Date.now()+'_'+Math.random().toString(36).slice(2,7),
+    date: todayStr(),
+    time: timeStr(),
+    meal, title,
+    kcal: Math.round(n.kcal), protein: Math.round(n.protein),
+    carbs: Math.round(n.carbs), fat: Math.round(n.fat)
+  });
+  saveHistory(list);
+  renderHistory();
+}
+function deleteHistoryEntry(id){
+  const list = loadHistory().filter(e=>e.id !== id);
+  saveHistory(list);
+  renderHistory();
+}
+function clearHistory(){
+  if(!confirm(__t('confirmClear'))) return;
+  saveHistory([]);
+  renderHistory();
+}
+
+function renderHistory(){
+  const list = loadHistory();
+  const countEl = document.getElementById('historyCount');
+  countEl.textContent = list.length + (list.length===1?__t('entryOne'):__t('entryMany'));
+
+  const container = document.getElementById('historyList');
+  container.innerHTML = '';
+
+  if(list.length === 0){
+    container.innerHTML = '<div class="empty-history">' + __t('emptyHistory') + '</div>';
+    return;
+  }
+
+  const targetKcal = parseFloat(document.getElementById('targetKcal').value) || 2450;
+  const targetProtein = parseFloat(document.getElementById('targetProtein').value) || 175;
+
+  const byDate = {};
+  list.forEach(e=>{
+    if(!byDate[e.date]) byDate[e.date] = [];
+    byDate[e.date].push(e);
+  });
+
+  const dates = Object.keys(byDate).sort((a,b)=> b.localeCompare(a));
+
+  dates.forEach(date=>{
+    const entries = byDate[date];
+    const totalKcal = entries.reduce((s,e)=>s+e.kcal,0);
+    const totalProtein = entries.reduce((s,e)=>s+e.protein,0);
+    const kcalDiff = totalKcal - targetKcal;
+    const proteinDiff = totalProtein - targetProtein;
+
+    const group = document.createElement('div');
+    group.className = 'day-group';
+
+    const isToday = date === todayStr();
+    const dateLabel = isToday ? `${__t('todayLbl')} (${date})` : date;
+
+    group.innerHTML = `
+      <div class="day-head">
+        <span class="day-label">${dateLabel}</span>
+        <span class="day-totals">
+          ${__t('histTotals')
+            .replace('{k}', totalKcal).replace('{kc}', kcalDiff>0?'over':'under').replace('{kd}', (kcalDiff>=0?'+':'')+kcalDiff)
+            .replace('{p}', totalProtein).replace('{pc}', proteinDiff>0?'over':'under').replace('{pd}', (proteinDiff>=0?'+':'')+proteinDiff)}
+        </span>
+      </div>
+    `;
+
+    entries.forEach(e=>{
+      const row = document.createElement('div');
+      row.className = 'entry-row';
+      row.innerHTML = `
+        <span class="entry-meal">${mealLabel(e.meal)}</span>
+        <span class="entry-title">${esc(e.title)} <span style="color:var(--text-tertiary);font-size:11px;">· ${e.time}</span></span>
+        <span class="entry-nutri">${__t('entryNutri').replace('{k}', e.kcal).replace('{p}', e.protein)}</span>
+        <button class="entry-del" title="${__t('delTitle')}">×</button>
+      `;
+      row.querySelector('.entry-del').addEventListener('click', ()=>deleteHistoryEntry(e.id));
+      group.appendChild(row);
+    });
+
+    container.appendChild(group);
+  });
+}
+
+document.getElementById('cAddBtn').addEventListener('click', function(){
+  const name = document.getElementById('cName').value.trim();
+  const meal = document.getElementById('cMeal').value;
+  const kcal = parseFloat(document.getElementById('cKcal').value) || 0;
+  const protein = parseFloat(document.getElementById('cProtein').value) || 0;
+  const carbs = parseFloat(document.getElementById('cCarbs').value) || 0;
+  const fat = parseFloat(document.getElementById('cFat').value) || 0;
+
+  if(!name){ alert(__t('alertName')); return; }
+  if(kcal === 0 && protein === 0){ alert(__t('alertVals')); return; }
+
+  addHistoryEntry(meal, name, {kcal, protein, carbs, fat});
+
+  document.getElementById('cName').value = '';
+  document.getElementById('cKcal').value = '';
+  document.getElementById('cProtein').value = '';
+  document.getElementById('cCarbs').value = '0';
+  document.getElementById('cFat').value = '0';
+});
+
+document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
+
+// ==================== БИБЛИОТЕКА РЕЦЕПТОВ ====================
 const grids = {
   breakfast: document.getElementById('grid-breakfast'),
   lunch: document.getElementById('grid-lunch'),
@@ -988,7 +1309,7 @@ const grids = {
 };
 const countLabel = document.getElementById('countLabel');
 
-function buildCard(r, checked, showAll){
+function buildCard(r, checked, showAll, mealKey){
   const matches = r.need.filter(n=>checked.includes(n)).length;
   const full = matches === r.need.length && r.need.length>0;
 
@@ -1007,6 +1328,7 @@ function buildCard(r, checked, showAll){
 
   const stepsHtml = r.steps.map(s=>`<li>${s}</li>`).join('');
   const soupTag = r.soup ? '<span class="soup-badge">' + __t('soupBadge') + '</span>' : '';
+  const mLabel = mealLabel(mealKey);
 
   card.innerHTML = `
     ${badge}
@@ -1022,7 +1344,16 @@ function buildCard(r, checked, showAll){
     </div>
     <div class="vitamins"><b>${__t('vitaminsL')}</b> ${r.vitamins}</div>
     <div class="note">${r.note}</div>
+    <button class="log-recipe-btn" type="button">${__t('logRecipeBtn').replace('{m}', mLabel)}</button>
   `;
+
+  card.querySelector('.log-recipe-btn').addEventListener('click', function(){
+    addHistoryEntry(mealKey, r.title, r.n);
+    this.textContent = __t('loggedOk');
+    this.classList.add('logged');
+    setTimeout(()=>{ this.textContent = __t('logRecipeBtn').replace('{m}', mealLabel(mealKey)); this.classList.remove('logged'); }, 1400);
+  });
+
   return {card, matches};
 }
 
@@ -1045,7 +1376,7 @@ function render(){
     scored.forEach(({r, matches})=>{
       const relevant = showAll || matches > 0;
       if(!relevant) return;
-      const {card} = buildCard(r, checked, showAll);
+      const {card} = buildCard(r, checked, showAll, mealKey);
       container.appendChild(card);
       shownInSection++;
       totalShown++;
@@ -1073,7 +1404,8 @@ function resetAll(){
 
 render();
 renderPlanner();
-window.addEventListener('lang-changed', () => { render(); renderPlanner(); });
+renderHistory();
+window.addEventListener('lang-changed', () => { render(); renderPlanner(); renderHistory(); });
 </script>
 </body>
 </html>
