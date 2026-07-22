@@ -218,6 +218,156 @@ body::after {
 
 /* ── RESET BUTTON ── */
 .reset-wrap { text-align: center; margin-top: 32px; }
+
+/* ── APT REFERENCE CARD ── */
+.apt-ref-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px; border-radius: 14px;
+  background: rgba(255,92,92,0.06);
+  border: 1px solid rgba(255,92,92,0.15);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: border-color 0.15s, background 0.15s, transform 0.15s;
+}
+.apt-ref-card:active { transform: scale(0.98); }
+.apt-ref-card:hover { border-color: rgba(255,92,92,0.3); background: rgba(255,92,92,0.09); }
+.apt-ref-icon {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  background: var(--red); color: #050506;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+}
+.apt-ref-info { flex: 1; min-width: 0; }
+.apt-ref-title { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+.apt-ref-sub { font-size: 11px; color: var(--text-tertiary); }
+.apt-ref-arrow { font-size: 16px; color: var(--red); flex-shrink: 0; }
+
+.apt-detail-card {
+  border-radius: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  margin-bottom: 6px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.apt-detail-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px;
+}
+.apt-detail-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.apt-detail-toggle {
+  font-size: 12px; color: var(--text-tertiary); transition: transform 0.2s;
+}
+.apt-detail-toggle.open { transform: rotate(180deg); }
+.apt-detail-body { padding: 0 16px 16px; }
+
+.apt-phase-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  padding: 4px 10px; border-radius: 6px; display: inline-block;
+  margin-bottom: 10px; margin-top: 14px;
+}
+.apt-phase-label.strengthen { background: rgba(224,118,88,0.15); color: var(--orange); }
+.apt-phase-label.stretch { background: rgba(74,158,255,0.15); color: var(--blue); }
+.apt-phase-label:first-child { margin-top: 0; }
+
+.apt-ex-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;
+}
+.apt-ex {
+  display: flex; gap: 8px; align-items: flex-start;
+  padding: 10px 12px; border-radius: 10px;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+}
+.apt-ex-num {
+  font-family: var(--font-mono); font-size: 16px; font-weight: 700;
+  color: var(--text-tertiary); flex-shrink: 0;
+}
+.apt-ex-name { font-size: 12px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; }
+.apt-ex-target { font-size: 10px; color: var(--text-tertiary); }
+
+.apt-note {
+  margin-top: 12px; padding: 10px 12px; border-radius: 0 10px 10px 0;
+  background: rgba(255,255,255,0.03); border-left: 2px solid var(--orange);
+  font-size: 11px; color: var(--text-tertiary); line-height: 1.6;
+}
+.apt-note strong { color: var(--text-secondary); font-weight: 600; }
+
+/* ── ZINC CALCULATOR ── */
+.zinc-card {
+  padding: 18px 18px 20px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  margin-bottom: 6px;
+}
+.zinc-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.zinc-total {
+  font-size: 30px; font-weight: 700; color: var(--text-primary);
+  font-family: var(--font-mono); letter-spacing: -0.02em;
+}
+.zinc-unit { font-size: 14px; color: var(--text-tertiary); margin-left: 3px; font-weight: 500; }
+.zinc-status {
+  font-size: 11px; color: var(--text-tertiary); text-align: right;
+  max-width: 160px; line-height: 1.4;
+}
+.zinc-status.hit { color: var(--green); }
+.zinc-status.close { color: var(--yellow); }
+
+.zinc-bar-track {
+  position: relative;
+  height: 8px; border-radius: 4px;
+  background: rgba(255,255,255,0.06);
+  margin-bottom: 18px; overflow: visible;
+}
+.zinc-bar-fill {
+  height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, var(--red), var(--yellow), var(--green));
+  width: 0%; transition: width 0.3s ease;
+}
+.zinc-bar-marker {
+  position: absolute; top: -3px; width: 2px; height: 14px;
+  background: rgba(255,255,255,0.25); border-radius: 1px;
+}
+
+.zinc-inputs { display: flex; flex-direction: column; gap: 10px; }
+.zinc-input-row {
+  display: flex; align-items: center; gap: 10px;
+}
+.zinc-label {
+  flex: 1; font-size: 12px; color: var(--text-secondary); font-weight: 500;
+}
+.zinc-stepper {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.03); border-radius: 10px;
+  padding: 4px 6px; border: 1px solid rgba(255,255,255,0.05);
+}
+.zinc-stepper button {
+  width: 24px; height: 24px; border-radius: 7px; border: none;
+  background: rgba(255,255,255,0.06); color: var(--text-primary);
+  font-size: 15px; font-weight: 700; cursor: pointer; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  -webkit-tap-highlight-color: transparent; transition: background 0.15s;
+}
+.zinc-stepper button:hover { background: rgba(255,255,255,0.12); }
+.zinc-stepper button:active { transform: scale(0.92); }
+.zinc-stepper span {
+  min-width: 26px; text-align: center; font-size: 13px;
+  font-family: var(--font-mono); color: var(--text-primary); font-weight: 600;
+}
+.zinc-mg {
+  font-size: 11px; color: var(--text-tertiary); font-family: var(--font-mono);
+  width: 44px; text-align: right; flex-shrink: 0;
+}
 .reset-btn {
   font-size: 11px; color: var(--text-tertiary); background: transparent;
   border: 1px solid rgba(255,255,255,0.07); border-radius: 10px;
@@ -337,6 +487,92 @@ body::after {
   <div id="todayView">
     <div id="habitList"></div>
 
+    <div class="cat-label" style="margin-top:20px;" id="aptRefLabel">APT Protocol Reference</div>
+    <a href="https://youtu.be/5J8RIIvEj6k?si=ILTJMT-UFwrKe2_H" target="_blank" rel="noopener" class="apt-ref-card">
+      <div class="apt-ref-icon">▶</div>
+      <div class="apt-ref-info">
+        <div class="apt-ref-title" id="aptRefTitle">Watch APT Exercise Demo</div>
+        <div class="apt-ref-sub" id="aptRefSub">Reference video — form check anytime</div>
+      </div>
+      <div class="apt-ref-arrow">↗</div>
+    </a>
+
+    <div class="apt-detail-card" onclick="toggleAptDetail()">
+      <div class="apt-detail-header">
+        <span class="apt-detail-title" id="aptDetailTitle">Full Protocol Breakdown</span>
+        <span class="apt-detail-toggle" id="aptToggleIcon">▾</span>
+      </div>
+      <div class="apt-detail-body" id="aptDetailBody" style="display:none;">
+
+        <div class="apt-phase-label strengthen">STRENGTHEN — 3:00 PM · 15–20 min</div>
+        <div class="apt-ex-grid">
+          <div class="apt-ex"><span class="apt-ex-num">3A</span><div><div class="apt-ex-name">Heel Anchored Crunch</div><div class="apt-ex-target">Abs · 2×30–60 sec</div></div></div>
+          <div class="apt-ex"><span class="apt-ex-num">3B</span><div><div class="apt-ex-name">Swipers</div><div class="apt-ex-target">Lower Abs · 2×10 reps</div></div></div>
+          <div class="apt-ex"><span class="apt-ex-num">4A</span><div><div class="apt-ex-name">Bridge & Reach Over</div><div class="apt-ex-target">Glutes · 2×30–60 sec</div></div></div>
+          <div class="apt-ex"><span class="apt-ex-num">4B</span><div><div class="apt-ex-name">Sprinter Stretch Lunge</div><div class="apt-ex-target">Glutes · 2×10–12/leg</div></div></div>
+        </div>
+
+        <div class="apt-phase-label stretch">STRETCH — ~11:00 PM · 6–9 min</div>
+        <div class="apt-ex-grid">
+          <div class="apt-ex"><span class="apt-ex-num">1</span><div><div class="apt-ex-name">Kneeling Overhead Reach</div><div class="apt-ex-target">Hip Flexors · 2×60 sec/side</div></div></div>
+          <div class="apt-ex"><span class="apt-ex-num">2</span><div><div class="apt-ex-name">Double Knee to Chest</div><div class="apt-ex-target">Low Back · 2×60 sec</div></div></div>
+        </div>
+
+        <div class="apt-note"><strong>Do not stretch hamstrings.</strong> Tight hamstrings are a symptom of APT, not the cause. Stretching them wastes time and changes nothing.</div>
+      </div>
+    </div>
+
+    <div class="cat-label" style="margin-top:20px;" id="zincCatLabel">Nutrition — Zinc</div>
+    <div class="zinc-card">
+      <div class="zinc-header">
+        <div class="zinc-total" id="zincTotal">0<span class="zinc-unit">mg</span></div>
+        <div class="zinc-status" id="zincStatus">Log what you ate today</div>
+      </div>
+      <div class="zinc-bar-track">
+        <div class="zinc-bar-fill" id="zincBarFill"></div>
+        <div class="zinc-bar-marker" style="left:60%;" title="15mg minimum"></div>
+        <div class="zinc-bar-marker" style="left:100%;" title="25mg target"></div>
+      </div>
+      <div class="zinc-inputs">
+        <div class="zinc-input-row">
+          <span class="zinc-label">🥚 Eggs</span>
+          <div class="zinc-stepper">
+            <button onclick="adjustZinc('eggs', -1)">−</button>
+            <span id="zincEggsVal">0</span>
+            <button onclick="adjustZinc('eggs', 1)">+</button>
+          </div>
+          <span class="zinc-mg" id="zincEggsMg">0mg</span>
+        </div>
+        <div class="zinc-input-row">
+          <span class="zinc-label">🥩 Beef (g)</span>
+          <div class="zinc-stepper">
+            <button onclick="adjustZinc('beef', -25)">−</button>
+            <span id="zincBeefVal">0</span>
+            <button onclick="adjustZinc('beef', 25)">+</button>
+          </div>
+          <span class="zinc-mg" id="zincBeefMg">0mg</span>
+        </div>
+        <div class="zinc-input-row">
+          <span class="zinc-label">🎃 Pumpkin Seeds (g)</span>
+          <div class="zinc-stepper">
+            <button onclick="adjustZinc('seeds', -25)">−</button>
+            <span id="zincSeedsVal">0</span>
+            <button onclick="adjustZinc('seeds', 25)">+</button>
+          </div>
+          <span class="zinc-mg" id="zincSeedsMg">0mg</span>
+        </div>
+        <div class="zinc-input-row">
+          <span class="zinc-label">🌾 Oats (g)</span>
+          <div class="zinc-stepper">
+            <button onclick="adjustZinc('oats', -10)">−</button>
+            <span id="zincOatsVal">0</span>
+            <button onclick="adjustZinc('oats', 10)">+</button>
+          </div>
+          <span class="zinc-mg" id="zincOatsMg">0mg</span>
+        </div>
+      </div>
+    </div>
+
     <div class="reset-wrap">
       <button class="reset-btn" onclick="resetToday()" data-i18n="resetToday">Reset today</button>
     </div>
@@ -371,17 +607,16 @@ const CATEGORIES = [
   },
   {
     id: 'structure',
-    label: 'Posture & Structure',
+    label: 'Posture & Structure — Phase 1 (APT Priority)',
     color: 'var(--green)',
     habits: [
       { id: 'mewing',       name: 'Mewing',             detail: 'Full tongue on palate, lips sealed, nose breathing', freq: '24/7' },
       { id: 'chin_tucks',   name: 'Chin Tucks',         detail: '3×10 — chin straight back, not down',     freq: 'daily' },
       { id: 'ppt',          name: 'Posterior Pelvic Tilt', detail: 'Passive correction — walking, sitting, standing', freq: '24/7' },
-      { id: 'apt_am',       name: 'APT Strengthening',  detail: '3PM — 3A→3B→4A→4B + dead bug',           freq: 'daily' },
-      { id: 'apt_pm',       name: 'APT Stretching',     detail: '11PM — Kneeling reach + knee to chest',   freq: 'daily' },
-      { id: 'valgus',       name: 'Valgus Protocol',    detail: 'Clamshells 3×15 + band walks + single leg bridge', freq: 'daily' },
+      { id: 'apt_am',       name: 'APT Strengthening',  detail: '3PM — Heel anchored crunch, swipers, dead bug, bridge & reach over, sprinter lunge', freq: 'daily' },
+      { id: 'apt_pm',       name: 'APT Stretching',     detail: '11PM — Kneeling overhead reach + double knee to chest', freq: 'daily' },
+      { id: 'clamshells',   name: 'Clamshells',         detail: '3×15 each side — glute medius, fixes valgus', freq: 'daily' },
       { id: 'feet',         name: 'Foot Position',      detail: 'Toes forward — walking, standing, training', freq: '24/7' },
-      { id: 'neck',         name: 'Neck Training',      detail: '4 supersets — back/front/left/right',     freq: '3×/wk', days: [1,3,5] },
     ]
   },
   {
@@ -396,41 +631,28 @@ const CATEGORIES = [
       { id: 'pillow',       name: 'Pillowcase Change',  detail: 'Every 3–4 days',                          freq: 'weekly', days: [0] },
     ]
   },
-  {
-    id: 'nutrition',
-    label: 'Nutrition — Zinc',
-    color: 'var(--orange)',
-    habits: [
-      { id: 'eggs',         name: '8 Eggs',             detail: '~8mg zinc — foundation of the protocol',  freq: 'daily' },
-      { id: 'seeds',        name: '100g Pumpkin Seeds', detail: '~7–8mg zinc — 550–600 kcal, factor in',   freq: 'daily' },
-      { id: 'beef',         name: 'Beef 150–200g',      detail: '~8–10mg zinc — daily ideally',            freq: 'daily' },
-    ]
-  },
 ];
+
 
 
 // Russian variants for habit data (used when the shared toggle is on RU).
 const RU = {
-  cats: { nonneg:'Обязательно', structure:'Осанка и структура', skin:'Кожа и скальп', nutrition:'Питание — цинк' },
+  cats: { nonneg:'Обязательно', structure:'Осанка и структура — Фаза 1 (приоритет APT)', skin:'Кожа и скальп', nutrition:'Питание — цинк' },
   habits: {
     cold_shower: ['Холодный душ','Каждое утро — без исключений'],
     sleep: ['Сон 7.5ч','Пн–Чт + Сб. 9ч в Пт и Вс'],
     mewing: ['Мьюинг','Язык на нёбе, губы сомкнуты, дыхание носом'],
     chin_tucks: ['Chin tucks','3×10 — подбородок прямо назад, не вниз'],
     ppt: ['Задний наклон таза','Пассивная коррекция — ходьба, сидя, стоя'],
-    apt_am: ['Укрепление против APT','15:00 — 3A→3B→4A→4B + dead bug'],
-    apt_pm: ['Растяжка против APT','23:00 — Kneeling reach + колено к груди'],
-    valgus: ['Протокол вальгуса','Clamshells 3×15 + band walks + мост на одной ноге'],
+    apt_am: ['Укрепление против APT','15:00 — Heel anchored crunch, swipers, dead bug, bridge & reach over, sprinter lunge'],
+    apt_pm: ['Растяжка против APT','23:00 — Kneeling overhead reach + двойное колено к груди'],
+    clamshells: ['Clamshells','3×15 на каждую сторону — средняя ягодичная, исправляет вальгус'],
     feet: ['Положение стоп','Носки вперёд — ходьба, стоя, тренировка'],
-    neck: ['Тренировка шеи','4 суперсета — зад/перед/лево/право'],
     teeth: ['Чистка зубов','2 раза — утром и перед сном'],
     acne: ['Уход от акне','Умывание + средство на проблемные зоны'],
     nizoral: ['Шампунь Низорал','3 мин на коже головы — по секциям'],
     shower_time: ['Душ после тренировки','В течение 20 минут — не тянуть'],
-    pillow: ['Смена наволочки','Каждые 3–4 дня'],
-    eggs: ['8 яиц','~8мг цинка — база протокола'],
-    seeds: ['100г тыквенных семечек','~7–8мг цинка — 550–600 ккал, учитывай'],
-    beef: ['Говядина 150–200г','~8–10мг цинка — в идеале ежедневно']
+    pillow: ['Смена наволочки','Каждые 3–4 дня']
   },
   freq: { 'daily':'ежедн.', '24/7':'24/7', '3×/wk':'3×/нед', 'every 2d':'раз в 2 дня', 'post-workout':'после трен.', 'weekly':'еженед.' }
 };
@@ -705,12 +927,117 @@ function resetToday() {
   state[today] = {};
   saveState(state);
   render();
+  renderZinc();
   if (currentView === 'history') renderHistory();
+}
+
+// ── ZINC CALCULATOR ────────────────────────────────────────────────────────────
+
+function toggleAptDetail() {
+  const body = document.getElementById('aptDetailBody');
+  const icon = document.getElementById('aptToggleIcon');
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  icon.classList.toggle('open', !isOpen);
+}
+
+// mg zinc per unit
+const ZINC_RATES = {
+  eggs:  1.0,       // per egg
+  beef:  0.055,     // per gram (~8-10mg per 150-180g)
+  seeds: 0.075,     // per gram (~7-8mg per 100g)
+  oats:  0.029,     // per gram (~2.9mg per 100g)
+};
+const ZINC_TARGET_MIN = 15;
+const ZINC_TARGET_MAX = 25;
+
+function getZincKey() {
+  return 'zinc_' + todayStr();
+}
+
+function loadZinc() {
+  try {
+    return JSON.parse(localStorage.getItem(getZincKey())) || { eggs: 0, beef: 0, seeds: 0, oats: 0 };
+  } catch { return { eggs: 0, beef: 0, seeds: 0, oats: 0 }; }
+}
+
+function saveZinc(z) {
+  localStorage.setItem(getZincKey(), JSON.stringify(z));
+}
+
+function adjustZinc(type, delta) {
+  const z = loadZinc();
+  z[type] = Math.max(0, (z[type] || 0) + delta);
+  saveZinc(z);
+  renderZinc();
+}
+
+// Static strings for the sections below the habit list (mirrors RU pattern above)
+const ZINC_STR = {
+  en: {
+    aptRefLabel: 'APT Protocol Reference', aptRefTitle: 'Watch APT Exercise Demo',
+    aptRefSub: 'Reference video — form check anytime', aptDetailTitle: 'Full Protocol Breakdown',
+    zincCatLabel: 'Nutrition — Zinc',
+    logPrompt: 'Log what you ate today', targetHit: 'Target hit ✓', minHit: 'Minimum hit ✓',
+    toMin: 'mg to minimum'
+  },
+  ru: {
+    aptRefLabel: 'Протокол APT — справка', aptRefTitle: 'Видео с упражнениями APT',
+    aptRefSub: 'Справочное видео — проверка техники', aptDetailTitle: 'Полный разбор протокола',
+    zincCatLabel: 'Питание — цинк',
+    logPrompt: 'Отметь, что ел сегодня', targetHit: 'Цель достигнута ✓', minHit: 'Минимум набран ✓',
+    toMin: 'мг до минимума'
+  }
+};
+function zs(key) { return (isRu() ? ZINC_STR.ru : ZINC_STR.en)[key]; }
+
+function renderSectionLabels() {
+  ['aptRefLabel','aptRefTitle','aptRefSub','aptDetailTitle','zincCatLabel'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = zs(id);
+  });
+}
+
+function renderZinc() {
+  const z = loadZinc();
+  const eggMg = z.eggs * ZINC_RATES.eggs;
+  const beefMg = z.beef * ZINC_RATES.beef;
+  const seedsMg = z.seeds * ZINC_RATES.seeds;
+  const oatsMg = (z.oats || 0) * ZINC_RATES.oats;
+  const total = eggMg + beefMg + seedsMg + oatsMg;
+
+  document.getElementById('zincEggsVal').textContent = z.eggs;
+  document.getElementById('zincBeefVal').textContent = z.beef;
+  document.getElementById('zincSeedsVal').textContent = z.seeds;
+  document.getElementById('zincOatsVal').textContent = z.oats || 0;
+  document.getElementById('zincEggsMg').textContent = eggMg.toFixed(1) + 'mg';
+  document.getElementById('zincBeefMg').textContent = beefMg.toFixed(1) + 'mg';
+  document.getElementById('zincSeedsMg').textContent = seedsMg.toFixed(1) + 'mg';
+  document.getElementById('zincOatsMg').textContent = oatsMg.toFixed(1) + 'mg';
+
+  document.getElementById('zincTotal').innerHTML = total.toFixed(1) + '<span class="zinc-unit">mg</span>';
+
+  const pctOfMax = Math.min(100, (total / ZINC_TARGET_MAX) * 100);
+  document.getElementById('zincBarFill').style.width = pctOfMax + '%';
+
+  const statusEl = document.getElementById('zincStatus');
+  if (total >= ZINC_TARGET_MIN) {
+    statusEl.textContent = total >= ZINC_TARGET_MAX ? zs('targetHit') : zs('minHit');
+    statusEl.className = 'zinc-status hit';
+  } else if (total >= ZINC_TARGET_MIN * 0.6) {
+    statusEl.textContent = (ZINC_TARGET_MIN - total).toFixed(1) + zs('toMin');
+    statusEl.className = 'zinc-status close';
+  } else {
+    statusEl.textContent = zs('logPrompt');
+    statusEl.className = 'zinc-status';
+  }
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 render();
-window.addEventListener('lang-changed', () => { render(); if (currentView === 'history') renderHistory(); });
+renderZinc();
+renderSectionLabels();
+window.addEventListener('lang-changed', () => { render(); renderZinc(); renderSectionLabels(); if (currentView === 'history') renderHistory(); });
 
 // Auto-refresh at midnight
 const now = new Date();

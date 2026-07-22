@@ -275,12 +275,33 @@ body.topbar-modal-open {
   }
 
   // -------- Read progress from localStorage --------
+  function waterUnitVolMl(state) {
+    if (state.unit === 'glass') return state.glassMl || 250;
+    if (state.unit === 'oz') return 30;
+    if (state.unit === 'ml') return 1;
+    return state.bottleMl || 500;
+  }
+
+  // Day log is an array of ml entries (po-water format); older saves used a
+  // plain unit count — convert those on read.
+  function waterDayMl(state, key) {
+    const v = (state.logs || {})[key];
+    if (Array.isArray(v)) return v.reduce((a, b) => a + b, 0);
+    if (typeof v === 'number') return v * waterUnitVolMl(state);
+    return 0;
+  }
+
+  function fmtMl(ml) {
+    if (ml >= 1000) return (ml / 1000).toFixed(1) + ' L';
+    return Math.round(ml) + ' ml';
+  }
+
   function getWaterProgress() {
     let state = null;
     try { state = JSON.parse(localStorage.getItem('po_water_v1')); } catch (e) {}
     if (!state) return { done: 0, total: 0 };
     const todayKey = calendarDateKey();
-    const done = (state.logs || {})[todayKey] || 0;
+    const done = waterDayMl(state, todayKey);
     const p = state.profile || { weightKg: 75 };
     const wKg = state.weightUnit === 'lb' ? (p.weightKg || 0) / 2.20462 : (p.weightKg || 0);
     const base = wKg * 35;
@@ -294,13 +315,7 @@ body.topbar-modal-open {
     if (p.sex === 'm') adjust += 200;
     if ((p.age || 0) >= 50) adjust += 100;
     const totalMl = base + exercise + caffeine + subs + adjust;
-    let unitVol;
-    if (state.unit === 'glass') unitVol = state.glassMl || 250;
-    else if (state.unit === 'oz') unitVol = 30;
-    else if (state.unit === 'ml') unitVol = 1;
-    else unitVol = state.bottleMl || 500;
-    const total = Math.max(1, Math.ceil(totalMl / unitVol));
-    return { done, total };
+    return { done, total: Math.max(1, Math.round(totalMl)) };
   }
 
   function classifyStatus(done, total) {
@@ -324,7 +339,7 @@ body.topbar-modal-open {
 
     const w = getWaterProgress();
     const countEl = document.getElementById('topbarWaterCount');
-    if (countEl) countEl.textContent = w.total ? w.done + '/' + w.total : '0/0';
+    if (countEl) countEl.textContent = w.total ? fmtMl(w.done) + ' / ' + fmtMl(w.total) : '0/0';
     setPillStatus(waterEl, classifyStatus(w.done, w.total));
   }
 
@@ -332,7 +347,7 @@ body.topbar-modal-open {
   function defaultWaterState() {
     return {
       unit: 'bottle', bottleMl: 500, glassMl: 250, weightUnit: 'kg',
-      profile: { weightKg: 75, age: 25, sex: 'm', activityHrsPerWeek: 5 },
+      profile: { weightKg: 75, age: 18, sex: 'm', activityHrsPerWeek: 5 },
       caffeineMgPerDay: 200, substances: [], logs: {}
     };
   }
@@ -343,7 +358,12 @@ body.topbar-modal-open {
     if (!state || typeof state !== 'object') state = defaultWaterState();
     state.logs = state.logs || {};
     const k = calendarDateKey();
-    state.logs[k] = (state.logs[k] || 0) + 1;
+    const vol = waterUnitVolMl(state);
+    let day = state.logs[k];
+    if (typeof day === 'number') day = day > 0 ? [day * vol] : [];
+    if (!Array.isArray(day)) day = [];
+    day.push(vol);
+    state.logs[k] = day;
     try { localStorage.setItem('po_water_v1', JSON.stringify(state)); } catch (e) {}
     render();
 
