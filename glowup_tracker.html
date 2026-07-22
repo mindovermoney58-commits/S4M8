@@ -2,10 +2,13 @@
 <html lang="en">
 <head>
 <script src="lock.js"></script>
+<script src="/api/config"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050506">
 <title>Glow Up Tracker</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="sync.js" defer></script>
 <script>
 window.I18N_DICT = {
   en: {
@@ -1038,6 +1041,22 @@ render();
 renderZinc();
 renderSectionLabels();
 window.addEventListener('lang-changed', () => { render(); renderZinc(); renderSectionLabels(); if (currentView === 'history') renderHistory(); });
+
+// ── CLOUD SYNC ────────────────────────────────────────────────────────────────
+// Mirrors habit state + zinc logs across devices via sync.js (Supabase).
+document.addEventListener('DOMContentLoaded', function(){
+  if (typeof initCloudSync !== 'function') return;
+  initCloudSync({
+    appKey: 'glowup',
+    syncedKeys: [STORAGE_KEY],
+    syncedPrefixes: ['zinc_'],
+    onApplied: function(){
+      render();
+      renderZinc();
+      if (currentView === 'history') renderHistory();
+    }
+  });
+});
 
 // Auto-refresh at midnight
 const now = new Date();

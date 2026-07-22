@@ -2,10 +2,13 @@
 <html lang="ru">
 <head>
 <script src="lock.js"></script>
+<script src="/api/config"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#050506">
 <title>Что готовим</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="sync.js" defer></script>
 <script>
 window.I18N_DICT = {
   ru: {
@@ -1406,6 +1409,17 @@ render();
 renderPlanner();
 renderHistory();
 window.addEventListener('lang-changed', () => { render(); renderPlanner(); renderHistory(); });
+
+// ==================== CLOUD SYNC ====================
+// Mirrors meal history across devices via sync.js (Supabase).
+document.addEventListener('DOMContentLoaded', function(){
+  if (typeof initCloudSync !== 'function') return;
+  initCloudSync({
+    appKey: 'cook',
+    syncedKeys: [HISTORY_KEY],
+    onApplied: renderHistory
+  });
+});
 </script>
 </body>
 </html>
